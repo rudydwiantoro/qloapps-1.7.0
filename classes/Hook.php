@@ -316,7 +316,13 @@ class HookCore extends ObjectModel
             $sql->select('h.name as hook, m.id_module, h.id_hook, m.name as module, h.live_edit');
             $sql->from('module', 'm');
             if ($hook_name != 'displayBackOfficeHeader') {
-                $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
+                // Handle PostgreSQL bitwise operations differently
+                if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+                    $device_condition = '(module_shop.enable_device::integer & '.(int)Context::getContext()->getDevice().') > 0';
+                } else {
+                    $device_condition = 'module_shop.enable_device & '.(int)Context::getContext()->getDevice();
+                }
+                $sql->join(Shop::addSqlAssociation('module', 'm', true, $device_condition));
                 $sql->innerJoin('module_shop', 'ms', 'ms.id_module = m.id_module');
             }
             $sql->innerJoin('hook_module', 'hm', 'hm.id_module = m.id_module');

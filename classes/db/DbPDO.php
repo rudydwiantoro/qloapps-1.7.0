@@ -313,8 +313,11 @@ class DbPDOCore extends Db
         
         // Convert bitwise operations (MySQL & operator to PostgreSQL)
         // Handle enable_device & 1 (bitwise AND with 1 to check if bit is set)
-        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*1\\b/', '($1::integer & 1)', $sql);
-        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*([0-9]+)\\b/', '($1::integer & $2)', $sql);
+        // Skip if already translated to PostgreSQL format (contains ::integer)
+        if (!preg_match('/::integer/', $sql)) {
+            $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*1\\b/', '($1::integer & 1)', $sql);
+            $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*([0-9]+)\\b/', '($1::integer & $2)', $sql);
+        }
         
         // Convert CONCAT function
         $sql = preg_replace('/CONCAT\s*\(([^)]+)\)/', 'CONCAT($1)', $sql);
