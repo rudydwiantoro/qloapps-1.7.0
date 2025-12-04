@@ -319,6 +319,33 @@ class ShopCore extends ObjectModel
      */
     public static function initialize()
     {
+        // BYPASS: Skip heavy Shop initialization if MINIMAL_SHOP_INIT is defined
+        if (defined('MINIMAL_SHOP_INIT') && MINIMAL_SHOP_INIT) {
+            // Create Shop object without calling constructor to avoid database queries
+            $shop = new stdClass();
+            $shop->id = 1;
+            $shop->id_shop_group = 1;
+            $shop->name = 'Default Shop';
+            $shop->id_category = 2;
+            $shop->id_theme = 1;
+            $shop->theme_name = 'hotel-reservation-theme';
+            $shop->active = 1;
+            $shop->deleted = 0;
+            $shop->virtual_uri = '';
+            $shop->domain = 'localhost';
+            $shop->uri = '/qloapps/qloapps-1.7.0/';
+            
+            // Add required methods as closures
+            $shop->getTheme = function() { return 'hotel-reservation-theme'; };
+            $shop->getBaseURI = function() { return '/qloapps/qloapps-1.7.0/'; };
+            
+            if (!defined('_SHOP_ID_')) {
+                define('_SHOP_ID_', 1);
+            }
+            
+            return $shop;
+        }
+        
         // Find current shop from URL
         if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_')) {
             $found_uri = '';

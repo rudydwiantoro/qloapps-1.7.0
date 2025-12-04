@@ -114,15 +114,29 @@ $context = Context::getContext();
 /* Initialize the current Shop */
 try {
     $context->shop = Shop::initialize();
-    $context->theme = new Theme((int)$context->shop->id_theme);
-    if ((Tools::isEmpty($theme_name = $context->shop->getTheme()) || !Validate::isLoadedObject($context->theme)) && !defined('_PS_ADMIN_DIR_')) {
-        throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
+    
+    if (defined('MINIMAL_SHOP_INIT') && MINIMAL_SHOP_INIT) {
+        // Use minimal theme setup for bypass mode
+        $context->theme = new stdClass();
+        $context->theme->id = 1;
+        $context->theme->name = 'hotel-reservation-theme';
+        $theme_name = 'hotel-reservation-theme';
+    } else {
+        $context->theme = new Theme((int)$context->shop->id_theme);
+        if ((Tools::isEmpty($theme_name = $context->shop->getTheme()) || !Validate::isLoadedObject($context->theme)) && !defined('_PS_ADMIN_DIR_')) {
+            throw new PrestaShopException(Tools::displayError('Current theme unselected. Please check your theme configuration.'));
+        }
     }
 } catch (PrestaShopException $e) {
     $e->displayMessage();
 }
 define('_THEME_NAME_', $theme_name);
-define('__PS_BASE_URI__', $context->shop->getBaseURI());
+
+if (defined('MINIMAL_SHOP_INIT') && MINIMAL_SHOP_INIT) {
+    define('__PS_BASE_URI__', '/qloapps/qloapps-1.7.0/');
+} else {
+    define('__PS_BASE_URI__', $context->shop->getBaseURI());
+}
 
 /* Include all defines related to base uri and theme name */
 require_once($currentDir.'/defines_uri.inc.php');
