@@ -294,6 +294,12 @@ class DbPDOCore extends Db
         // Remove backticks
         $sql = str_replace('`', '', $sql);
         
+        // Convert double quotes to single quotes for string literals in WHERE clauses
+        // This handles cases like WHERE name = "PS_MULTISHOP_FEATURE_ACTIVE"
+        $sql = preg_replace('/=\\s*"([^"]+)"/', "= '$1'", $sql);
+        $sql = preg_replace('/IN\\s*\\(\\s*"([^"]+)"\\s*\\)/', "IN ('$1')", $sql);
+        $sql = preg_replace('/LIKE\\s*"([^"]+)"/', "LIKE '$1'", $sql);
+        
         // Convert boolean comparisons (active = 1 becomes active = true)
         $booleanFields = 'active|deleted|enable_mobile_checkout|advanced_payment_api|main|default|enabled|visible|is_active|is_default|is_main|primary|mandatory|required|cache|debug';
         
@@ -304,6 +310,11 @@ class DbPDOCore extends Db
         // Handle table alias prefix for boolean fields (e.g., su.main = 1)
         $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*)\\.('.$booleanFields.')\\s*=\\s*1\\b/', '$1.$2 = true', $sql);
         $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*)\\.('.$booleanFields.')\\s*=\\s*0\\b/', '$1.$2 = false', $sql);
+        
+        // Convert bitwise operations (MySQL & operator to PostgreSQL)
+        // Handle enable_device & 1 (bitwise AND with 1 to check if bit is set)
+        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*1\\b/', '($1::integer & 1)', $sql);
+        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)?)\\s*&\\s*([0-9]+)\\b/', '($1::integer & $2)', $sql);
         
         // Convert CONCAT function
         $sql = preg_replace('/CONCAT\s*\(([^)]+)\)/', 'CONCAT($1)', $sql);
