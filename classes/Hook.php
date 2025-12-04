@@ -354,7 +354,8 @@ class HookCore extends ObjectModel
                 }
             }
 
-            $sql->groupBy('hm.id_hook, hm.id_module');
+            // h.id_hook, m.name as module, h.live_edit
+            $sql->groupBy('hm.id_hook, hm.id_module, hm.position, h.name, m.name, h.live_edit, m.id_module');
             $sql->orderBy('hm.position');
 
             $list = array();
