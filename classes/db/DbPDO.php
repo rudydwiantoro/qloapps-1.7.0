@@ -49,19 +49,36 @@ class DbPDOCore extends Db
      */
     protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
     {
-        $dsn = 'mysql:';
-        if ($dbname) {
-            $dsn .= 'dbname='.$dbname.';';
-        }
-        if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
-            $dsn .= 'host='.$matches[1].';port='.$matches[2];
-        } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
-            $dsn .= 'unix_socket='.$matches[1];
+        // Check if PostgreSQL is configured
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            $dsn = 'pgsql:';
+            if ($dbname) {
+                $dsn .= 'dbname='.$dbname.';';
+            }
+            if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
+                $dsn .= 'host='.$matches[1].';port='.$matches[2];
+            } else {
+                $dsn .= 'host='.$host;
+                if (defined('_DB_PORT_') && _DB_PORT_) {
+                    $dsn .= ';port='._DB_PORT_;
+                }
+            }
+            return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
         } else {
-            $dsn .= 'host='.$host;
+            // MySQL connection
+            $dsn = 'mysql:';
+            if ($dbname) {
+                $dsn .= 'dbname='.$dbname.';';
+            }
+            if (preg_match('/^(.*):([0-9]+)$/', $host, $matches)) {
+                $dsn .= 'host='.$matches[1].';port='.$matches[2];
+            } elseif (preg_match('#^.*:(/.*)$#', $host, $matches)) {
+                $dsn .= 'unix_socket='.$matches[1];
+            } else {
+                $dsn .= 'host='.$host;
+            }
+            return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
         }
-
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
     }
 
     /**
@@ -78,9 +95,16 @@ class DbPDOCore extends Db
     {
         try {
             $link = DbPDO::_getPDO($host, $user, $password, false);
-            $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
-            if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
-                return true;
+            if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+                $success = $link->exec('CREATE DATABASE "'.str_replace('"', '""', $dbname).'"');
+                if ($dropit && ($link->exec('DROP DATABASE "'.str_replace('"', '""', $dbname).'"') !== false)) {
+                    return true;
+                }
+            } else {
+                $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+                if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
+                    return true;
+                }
             }
         } catch (PDOException $e) {
             return false;
@@ -103,11 +127,18 @@ class DbPDOCore extends Db
         }
 
         // UTF-8 support
-        if ($this->link->exec('SET NAMES \'utf8\'') === false) {
-            throw new PrestaShopException('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.');
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            // PostgreSQL uses UTF-8 by default, set search path if schema is defined
+            if (defined('_DB_SCHEMA_') && _DB_SCHEMA_) {
+                $this->link->exec('SET search_path TO '._DB_SCHEMA_.', public');
+            }
+        } else {
+            // MySQL UTF-8 support
+            if ($this->link->exec('SET NAMES \'utf8\'') === false) {
+                throw new PrestaShopException('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.');
+            }
+            $this->link->exec('SET SESSION sql_mode = \'\'');
         }
-
-        $this->link->exec('SET SESSION sql_mode = \'\'');
 
         return $this->link;
     }
@@ -131,6 +162,10 @@ class DbPDOCore extends Db
      */
     protected function _query($sql)
     {
+        // Translate MySQL syntax to PostgreSQL if needed
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            $sql = $this->translateMySQLToPostgreSQL($sql);
+        }
         return $this->link->query($sql);
     }
 
@@ -241,7 +276,50 @@ class DbPDOCore extends Db
      */
     public function getVersion()
     {
-        return $this->getValue('SELECT VERSION()');
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            return $this->getValue('SELECT version()');
+        } else {
+            return $this->getValue('SELECT VERSION()');
+        }
+    }
+
+    /**
+     * Translates MySQL syntax to PostgreSQL syntax
+     *
+     * @param string $sql
+     * @return string
+     */
+    protected function translateMySQLToPostgreSQL($sql)
+    {
+        // Remove backticks
+        $sql = str_replace('`', '', $sql);
+        
+        // Convert boolean comparisons (active = 1 becomes active = true)
+        $booleanFields = 'active|deleted|enable_mobile_checkout|advanced_payment_api|main|default|enabled|visible|is_active|is_default|is_main|primary|mandatory|required|cache|debug';
+        
+        // Handle direct field comparisons
+        $sql = preg_replace('/\\b('.$booleanFields.')\\s*=\\s*1\\b/', '$1 = true', $sql);
+        $sql = preg_replace('/\\b('.$booleanFields.')\\s*=\\s*0\\b/', '$1 = false', $sql);
+        
+        // Handle table alias prefix for boolean fields (e.g., su.main = 1)
+        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*)\\.('.$booleanFields.')\\s*=\\s*1\\b/', '$1.$2 = true', $sql);
+        $sql = preg_replace('/\\b([a-zA-Z_][a-zA-Z0-9_]*)\\.('.$booleanFields.')\\s*=\\s*0\\b/', '$1.$2 = false', $sql);
+        
+        // Convert CONCAT function
+        $sql = preg_replace('/CONCAT\s*\(([^)]+)\)/', 'CONCAT($1)', $sql);
+        $sql = preg_replace('/CONCAT\s*\(([^,]+),\s*([^)]+)\)/', '($1 || $2)', $sql);
+        
+        // Convert IF function to CASE WHEN
+        $sql = preg_replace('/IF\s*\(([^,]+),\s*([^,]+),\s*([^)]+)\)/', 'CASE WHEN $1 THEN $2 ELSE $3 END', $sql);
+        
+        // Add schema prefix if defined
+        if (defined('_DB_SCHEMA_') && _DB_SCHEMA_) {
+            // Replace table names with schema.table (basic implementation)
+            $sql = preg_replace('/FROM\s+([a-zA-Z_][a-zA-Z0-9_]*)/', 'FROM '._DB_SCHEMA_.'.$1', $sql);
+            $sql = preg_replace('/JOIN\s+([a-zA-Z_][a-zA-Z0-9_]*)/', 'JOIN '._DB_SCHEMA_.'.$1', $sql);
+        }
+        
+        return $sql;
     }
 
     /**
@@ -294,7 +372,12 @@ class DbPDOCore extends Db
             return false;
         }
 
-        $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            $schema = defined('_DB_SCHEMA_') && _DB_SCHEMA_ ? _DB_SCHEMA_ : 'public';
+            $sql = "SELECT table_name FROM information_schema.tables WHERE table_schema = '".$schema."' AND table_name LIKE '".$prefix."%'";
+        } else {
+            $sql = 'SHOW TABLES LIKE \''.$prefix.'%\'';
+        }
         $result = $link->query($sql);
         return (bool)$result->fetch();
     }
@@ -322,15 +405,23 @@ class DbPDOCore extends Db
             $engine = 'MyISAM';
         }
 
-        $result = $link->query('
-		CREATE TABLE `'.$prefix.'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE='.$engine);
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            $result = $link->query('CREATE TABLE "'.$prefix.'test" ("test" smallint NOT NULL)');
+        } else {
+            $result = $link->query('
+			CREATE TABLE `'.$prefix.'test` (
+				`test` tinyint(1) unsigned NOT NULL
+			) ENGINE='.$engine);
+        }
         if (!$result) {
             $error = $link->errorInfo();
             return $error[2];
         }
-        $link->query('DROP TABLE `'.$prefix.'test`');
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            $link->query('DROP TABLE "'.$prefix.'test"');
+        } else {
+            $link->query('DROP TABLE `'.$prefix.'test`');
+        }
         return true;
     }
 

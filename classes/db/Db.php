@@ -289,7 +289,7 @@ abstract class DbCore
         // Check if PostgreSQL is specifically configured
         if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
             if (extension_loaded('pdo_pgsql')) {
-                $class = 'DbPostgreSQL';
+                $class = 'DbPDO'; // Use DbPDO for PostgreSQL (modified to support both MySQL and PostgreSQL)
             } else {
                 throw new PrestaShopException('PostgreSQL PDO extension is not loaded but _DB_TYPE_ is set to PostgreSQL.');
             }
