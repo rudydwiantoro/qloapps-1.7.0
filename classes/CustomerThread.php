@@ -100,7 +100,7 @@ class CustomerThreadCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT `id_customer_message` id
-		FROM `'._DB_PREFIX_.'customer_message`
+		FROM customer_message`
 		WHERE `id_customer_thread` = '.(int)$this->id);
     }
 
@@ -113,7 +113,7 @@ class CustomerThreadCore extends ObjectModel
         $return = true;
         $result = Db::getInstance()->executeS('
 			SELECT `id_customer_message`
-			FROM `'._DB_PREFIX_.'customer_message`
+			FROM customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
         );
 
@@ -173,7 +173,7 @@ class CustomerThreadCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 			SELECT a.`id_customer_thread`
-			FROM `'._DB_PREFIX_.'customer_thread` a
+			FROM customer_thread` a
 			WHERE a.`email` = \''.pSQL($email).'\'
 				AND a.`id_shop` = '.(int)Context::getContext()->shop->id.'
 				AND a.`id_order` = '.(int)$id_order.' '.
@@ -237,7 +237,7 @@ class CustomerThreadCore extends ObjectModel
         $employee = Context::getContext()->employee;
         if (!$employee->isSuperAdmin()) {
             $where .= (($acsHtls = HotelBranchInformation::getProfileAccessedHotels($employee->id_profile, 1, 1)) ?
-                ' AND `id_order` IN (SELECT `id_order` FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE `id_hotel` IN ('.implode(',', $acsHtls).')) ' :
+                ' AND `id_order` IN (SELECT `id_order` FROM htl_booking_detail` hbd WHERE `id_hotel` IN ('.implode(',', $acsHtls).')) ' :
                 ' AND `id_order` = 0 '
             );
         }

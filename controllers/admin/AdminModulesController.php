@@ -341,7 +341,7 @@ class AdminModulesControllerCore extends AdminController
         $action = Tools::getValue('action_pref');
         $value = Tools::getValue('value_pref');
         $module = Tools::getValue('module_pref');
-        $id_module_preference = (int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
+        $id_module_preference = (int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
         if ($id_module_preference > 0) {
             if ($action == 'i') {
                 $update = array('interest' => ($value == '' ? null : (int)$value));
@@ -368,11 +368,11 @@ class AdminModulesControllerCore extends AdminController
         $values = Tools::getValue('value_pref');
         $module = Tools::getValue('module_pref');
         if (Validate::isModuleName($module)) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
+            Db::getInstance()->execute('DELETE FROM tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `module` = \''.pSQL($module).'\'');
             if (is_array($values) && count($values)) {
                 foreach ($values as $value) {
                     Db::getInstance()->execute('
-                        INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
+                        INSERT INTO tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
                         VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
                 }
             }
@@ -1241,13 +1241,13 @@ class AdminModulesControllerCore extends AdminController
             if ($module->interest === '0') {
                 return true;
             }
-        } elseif ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0) {
+        } elseif ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `interest` = 0') > 0) {
             return true;
         }
 
         // Filter on favorites
         if (Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee) == 'favorites') {
-            if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM `'._DB_PREFIX_.'module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)') < 1) {
+            if ((int)Db::getInstance()->getValue('SELECT `id_module_preference` FROM module_preference` WHERE `module` = \''.pSQL($module->name).'\' AND `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)') < 1) {
                 return true;
             }
         } else {
@@ -1425,8 +1425,8 @@ class AdminModulesControllerCore extends AdminController
         // Retrieve Modules Preferences
         $modules_preferences = array();
         $tab_modules_preferences = array();
-        $modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-        $tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
+        $modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
+        $tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
 
         foreach ($tab_modules_preferences_tmp as $i => $j) {
             $tab_modules_preferences[$j['module']][] = $j['id_tab'];

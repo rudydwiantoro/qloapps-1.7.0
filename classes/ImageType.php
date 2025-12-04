@@ -104,9 +104,9 @@ class ImageTypeCore extends ObjectModel
             }
 
             if ($order_by_size) {
-                $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+                $query = 'SELECT * FROM image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
             } else {
-                $query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
+                $query = 'SELECT * FROM image_type` '.$where.' ORDER BY `name` ASC';
             }
 
             self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
@@ -123,7 +123,7 @@ class ImageTypeCore extends ObjectModel
     public static function getByName($name)
     {
         return Db::getInstance()->getRow(
-            'SELECT `id_image_type`, `width`, `height` FROM `'._DB_PREFIX_.'image_type` WHERE `name` like "'.pSQL($name).'"'
+            'SELECT `id_image_type`, `width`, `height` FROM image_type` WHERE `name` like "'.pSQL($name).'"'
         );
     }
 
@@ -141,7 +141,7 @@ class ImageTypeCore extends ObjectModel
 
         Db::getInstance()->executeS('
 			SELECT `id_image_type`
-			FROM `'._DB_PREFIX_.'image_type`
+			FROM image_type`
 			WHERE `name` = \''.pSQL($type_name).'\'');
 
         return Db::getInstance()->NumRows();
@@ -157,7 +157,7 @@ class ImageTypeCore extends ObjectModel
         static $is_passed = false;
 
         if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed) {
-            $results = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
+            $results = Db::getInstance()->ExecuteS('SELECT * FROM image_type`');
 
             $types = array('products', 'categories', 'manufacturers', 'suppliers', 'scenes', 'stores');
             $total = count($types);

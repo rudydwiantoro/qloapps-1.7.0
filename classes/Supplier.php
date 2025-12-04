@@ -137,18 +137,18 @@ class SupplierCore extends ObjectModel
 
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
-					FROM `'._DB_PREFIX_.'product_supplier` ps
-					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+					FROM product_supplier` ps
+					JOIN product` p ON (ps.`id_product`= p.`id_product`)
 					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
+					LEFT JOIN supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
 					WHERE ps.id_product_attribute = 0'.
                     ($active ? ' AND product_shop.`active` = 1' : '').
                     ' AND product_shop.`visibility` NOT IN ("none")'.
                     ($all_groups ? '' :'
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_group` cg
-						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+						FROM category_group` cg
+						LEFT JOIN category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)').'
 					GROUP BY ps.`id_supplier`'
@@ -189,7 +189,7 @@ class SupplierCore extends ObjectModel
     {
         if (!isset(self::$cache_name[$id_supplier])) {
             self::$cache_name[$id_supplier] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `name` FROM `'._DB_PREFIX_.'supplier` WHERE `id_supplier` = '.(int)$id_supplier);
+			SELECT `name` FROM supplier` WHERE `id_supplier` = '.(int)$id_supplier);
         }
         return self::$cache_name[$id_supplier];
     }
@@ -198,7 +198,7 @@ class SupplierCore extends ObjectModel
     {
         $result = Db::getInstance()->getRow('
 		SELECT `id_supplier`
-		FROM `'._DB_PREFIX_.'supplier`
+		FROM supplier`
 		WHERE `name` = \''.pSQL($name).'\'');
 
         if (isset($result['id_supplier'])) {
@@ -241,8 +241,8 @@ class SupplierCore extends ObjectModel
         if ($get_total) {
             return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(DISTINCT ps.`id_product`)
-			FROM `'._DB_PREFIX_.'product_supplier` ps
-			JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
+			FROM product_supplier` ps
+			JOIN product` p ON (ps.`id_product`= p.`id_product`)
 			'.Shop::addSqlAssociation('product', 'p').'
 			WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 			AND ps.id_product_attribute = 0
@@ -250,9 +250,9 @@ class SupplierCore extends ObjectModel
 			'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 			AND p.`id_product` IN (
 				SELECT cp.`id_product`
-				FROM `'._DB_PREFIX_.'category_product` cp
-				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
-				'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
+				FROM category_product` cp
+				'.(Group::isFeatureActive() ? 'LEFT JOIN category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
+				'.($active_category ? ' INNER JOIN category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
 				'.$sql_groups.'
 			)');
         }
@@ -287,29 +287,29 @@ class SupplierCore extends ObjectModel
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00", INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
 					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
-				 FROM `'._DB_PREFIX_.'product` p
+				 FROM product` p
 				'.Shop::addSqlAssociation('product', 'p').'
-				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
+				JOIN product_supplier` ps ON (ps.id_product = p.id_product
 					AND ps.id_product_attribute = 0) '.
-                (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+                (Combination::isFeatureActive() ? 'LEFT JOIN product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
+				LEFT JOIN product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+				LEFT JOIN image_shop` image_shop
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image`
+				LEFT JOIN image_lang` il ON (image_shop.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
-				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
-				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN supplier` s ON s.`id_supplier` = p.`id_supplier`
+				LEFT JOIN manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				'.Product::sqlStock('p', 0);
 
         if (Group::isFeatureActive() || $active_category) {
-            $sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
+            $sql .= 'JOIN category_product` cp ON (p.id_product = cp.id_product)';
             if (Group::isFeatureActive()) {
-                $sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+                $sql .= 'JOIN category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
             }
             if ($active_category) {
-                $sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+                $sql .= 'JOIN category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
             }
         }
 
@@ -345,13 +345,13 @@ class SupplierCore extends ObjectModel
         $sql = '
 			SELECT p.`id_product`,
 				   pl.`name`
-			FROM `'._DB_PREFIX_.'product` p
+			FROM product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+			LEFT JOIN product_lang` pl ON (
 				p.`id_product` = pl.`id_product`
 				AND pl.`id_lang` = '.(int)$id_lang.'
 			)
-			INNER JOIN `'._DB_PREFIX_.'product_supplier` ps ON (
+			INNER JOIN product_supplier` ps ON (
 				ps.`id_product` = p.`id_product`
 				AND ps.`id_supplier` = '.(int)$this->id.'
 			)

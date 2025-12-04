@@ -166,10 +166,10 @@ class CartRuleCore extends ObjectModel
         $r &= Db::getInstance()->delete('cart_rule_country', '`id_cart_rule` = '.(int)$this->id);
         $r &= Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = '.(int)$this->id.' OR `id_cart_rule_2` = '.(int)$this->id);
         $r &= Db::getInstance()->delete('cart_rule_product_rule_group', '`id_cart_rule` = '.(int)$this->id);
-        $r &= Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
-			WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
-        $r &= Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
-			WHERE `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule`)');
+        $r &= Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule_group`
+			WHERE cart_rule_product_rule`.`id_product_rule_group` = cart_rule_product_rule_group`.`id_product_rule_group`)');
+        $r &= Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule`
+			WHERE cart_rule_product_rule_value`.`id_product_rule` = cart_rule_product_rule`.`id_product_rule`)');
 
         return $r;
     }
@@ -183,54 +183,54 @@ class CartRuleCore extends ObjectModel
     public static function copyConditions($id_cart_rule_source, $id_cart_rule_destination)
     {
         Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cart_rule_shop` (`id_cart_rule`, `id_shop`)
-		(SELECT '.(int)$id_cart_rule_destination.', id_shop FROM `'._DB_PREFIX_.'cart_rule_shop` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
+		INSERT INTO cart_rule_shop` (`id_cart_rule`, `id_shop`)
+		(SELECT '.(int)$id_cart_rule_destination.', id_shop FROM cart_rule_shop` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
         Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cart_rule_carrier` (`id_cart_rule`, `id_carrier`)
-		(SELECT '.(int)$id_cart_rule_destination.', id_carrier FROM `'._DB_PREFIX_.'cart_rule_carrier` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
+		INSERT INTO cart_rule_carrier` (`id_cart_rule`, `id_carrier`)
+		(SELECT '.(int)$id_cart_rule_destination.', id_carrier FROM cart_rule_carrier` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
         Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cart_rule_group` (`id_cart_rule`, `id_group`)
-		(SELECT '.(int)$id_cart_rule_destination.', id_group FROM `'._DB_PREFIX_.'cart_rule_group` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
+		INSERT INTO cart_rule_group` (`id_cart_rule`, `id_group`)
+		(SELECT '.(int)$id_cart_rule_destination.', id_group FROM cart_rule_group` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
         Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cart_rule_country` (`id_cart_rule`, `id_country`)
-		(SELECT '.(int)$id_cart_rule_destination.', id_country FROM `'._DB_PREFIX_.'cart_rule_country` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
+		INSERT INTO cart_rule_country` (`id_cart_rule`, `id_country`)
+		(SELECT '.(int)$id_cart_rule_destination.', id_country FROM cart_rule_country` WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.')');
         Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`)
-		(SELECT '.(int)$id_cart_rule_destination.', IF(id_cart_rule_1 != '.(int)$id_cart_rule_source.', id_cart_rule_1, id_cart_rule_2) FROM `'._DB_PREFIX_.'cart_rule_combination`
+		INSERT INTO cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`)
+		(SELECT '.(int)$id_cart_rule_destination.', IF(id_cart_rule_1 != '.(int)$id_cart_rule_source.', id_cart_rule_1, id_cart_rule_2) FROM cart_rule_combination`
 		WHERE `id_cart_rule_1` = '.(int)$id_cart_rule_source.' OR `id_cart_rule_2` = '.(int)$id_cart_rule_source.')');
 
         // Todo : should be changed soon, be must be copied too
-        // Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
-        // Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+        // Db::getInstance()->execute('DELETE FROM cart_rule_product_rule` WHERE `id_cart_rule` = '.(int)$this->id);
+        // Db::getInstance()->execute('DELETE FROM cart_rule_product_rule_value` WHERE `id_product_rule` NOT IN (SELECT `id_product_rule` FROM cart_rule_product_rule`)');
 
         // Copy products/category filters
         $products_rules_group_source = Db::getInstance()->ExecuteS('
-		SELECT id_product_rule_group,quantity FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
+		SELECT id_product_rule_group,quantity FROM cart_rule_product_rule_group`
 		WHERE `id_cart_rule` = '.(int)$id_cart_rule_source.' ');
 
         foreach ($products_rules_group_source as $product_rule_group_source) {
             Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
+			INSERT INTO cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
 			VALUES ('.(int)$id_cart_rule_destination.','.(int)$product_rule_group_source['quantity'].')');
             $id_product_rule_group_destination = Db::getInstance()->Insert_ID();
 
             $products_rules_source = Db::getInstance()->ExecuteS('
-			SELECT id_product_rule,type FROM `'._DB_PREFIX_.'cart_rule_product_rule`
+			SELECT id_product_rule,type FROM cart_rule_product_rule`
 			WHERE `id_product_rule_group` = '.(int)$product_rule_group_source['id_product_rule_group'].' ');
 
             foreach ($products_rules_source as $product_rule_source) {
                 Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
+				INSERT INTO cart_rule_product_rule` (`id_product_rule_group`, `type`)
 				VALUES ('.(int)$id_product_rule_group_destination.',"'.pSQL($product_rule_source['type']).'")');
                 $id_product_rule_destination = Db::getInstance()->Insert_ID();
 
                 $products_rules_values_source = Db::getInstance()->ExecuteS('
-				SELECT id_item FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`
+				SELECT id_item FROM cart_rule_product_rule_value`
 				WHERE `id_product_rule` = '.(int)$product_rule_source['id_product_rule'].' ');
 
                 foreach ($products_rules_values_source as $product_rule_value_source) {
                     Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`)
+					INSERT INTO cart_rule_product_rule_value` (`id_product_rule`, `id_item`)
 					VALUES ('.(int)$id_product_rule_destination.','.(int)$product_rule_value_source['id_item'].')');
                 }
             }
@@ -248,7 +248,7 @@ class CartRuleCore extends ObjectModel
         if (!Validate::isCleanHtml($code)) {
             return false;
         }
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM `'._DB_PREFIX_.'cart_rule` WHERE `code` = \''.pSQL($code).'\'');
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_cart_rule` FROM cart_rule` WHERE `code` = \''.pSQL($code).'\'');
     }
 
     /**
@@ -269,8 +269,8 @@ class CartRuleCore extends ObjectModel
             return array();
         }
 
-        $sql_part1 = '* FROM `'._DB_PREFIX_.'cart_rule` cr
-				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')';
+        $sql_part1 = '* FROM cart_rule` cr
+				LEFT JOIN cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')';
 
         $sql_part2 = ' AND cr.date_from < "'.date('Y-m-d H:i:s').'"
 				AND cr.date_to > "'.date('Y-m-d H:i:s').'"
@@ -365,7 +365,7 @@ class CartRuleCore extends ObjectModel
                 $country_restriction = true;
                 $countries = Db::getInstance()->ExecuteS('
                     SELECT `id_country`
-                    FROM `'._DB_PREFIX_.'address`
+                    FROM address`
                     WHERE `id_customer` = '.(int)$id_customer.'
                     AND `deleted` = 0'
                 );
@@ -423,8 +423,8 @@ class CartRuleCore extends ObjectModel
     {
         return (bool)Db::getInstance()->getValue('
 		SELECT id_cart_rule
-		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
-		LEFT JOIN `'._DB_PREFIX_.'orders` o ON ocr.`id_order` = o.`id_order`
+		FROM order_cart_rule` ocr
+		LEFT JOIN orders` o ON ocr.`id_order` = o.`id_order`
 		WHERE ocr.`id_cart_rule` = '.(int)$this->id.'
 		AND o.`id_customer` = '.(int)$id_customer);
     }
@@ -441,7 +441,7 @@ class CartRuleCore extends ObjectModel
 
         return (bool)Db::getInstance()->getValue('
 		SELECT `id_cart_rule`
-		FROM `'._DB_PREFIX_.'cart_rule`
+		FROM cart_rule`
 		WHERE `code` = \''.pSQL($code).'\''.
         ($id_customer ? 'AND `id_customer` = '.(int) $id_customer : ''));
     }
@@ -758,8 +758,8 @@ class CartRuleCore extends ObjectModel
                         case 'attributes':
                             $cart_attributes = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`, pac.`id_attribute`, cp.`id_product_attribute`
-							FROM `'._DB_PREFIX_.'cart_product` cp
-							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
+							FROM cart_product` cp
+							LEFT JOIN product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')
 							AND cp.id_product_attribute > 0');
@@ -783,7 +783,7 @@ class CartRuleCore extends ObjectModel
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`
-							FROM `'._DB_PREFIX_.'cart_product` cp
+							FROM cart_product` cp
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
                             $count_matching_products = 0;
@@ -805,8 +805,8 @@ class CartRuleCore extends ObjectModel
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`, cp.`id_product_attribute`, catp.`id_category`
-							FROM `'._DB_PREFIX_.'cart_product` cp
-							LEFT JOIN `'._DB_PREFIX_.'category_product` catp ON cp.id_product = catp.id_product
+							FROM cart_product` cp
+							LEFT JOIN category_product` catp ON cp.id_product = catp.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')
 							AND cp.`id_product` <> '.(int)$this->gift_product);
@@ -835,8 +835,8 @@ class CartRuleCore extends ObjectModel
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`, p.`id_manufacturer`
-							FROM `'._DB_PREFIX_.'cart_product` cp
-							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
+							FROM cart_product` cp
+							LEFT JOIN product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
                             $count_matching_products = 0;
@@ -855,8 +855,8 @@ class CartRuleCore extends ObjectModel
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`, p.`id_supplier`
-							FROM `'._DB_PREFIX_.'cart_product` cp
-							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
+							FROM cart_product` cp
+							LEFT JOIN product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
                             $count_matching_products = 0;
@@ -1355,7 +1355,7 @@ class CartRuleCore extends ObjectModel
 				SELECT t.*'.($i18n ? ', tl.*' : '').', IF(crt.id_'.$type.' IS NULL, 0, 1) as selected
 				FROM `'._DB_PREFIX_.$type.'` t
 				'.($i18n ? 'LEFT JOIN `'._DB_PREFIX_.$type.'_lang` tl ON (t.id_'.$type.' = tl.id_'.$type.' AND tl.id_lang = '.(int)Context::getContext()->language->id.')' : '').'
-				LEFT JOIN (SELECT id_'.$type.' FROM `'._DB_PREFIX_.'cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.($type == 'carrier' ? 'reference' : $type).' = crt.id_'.$type.'
+				LEFT JOIN (SELECT id_'.$type.' FROM cart_rule_'.$type.'` WHERE id_cart_rule = '.(int)$this->id.') crt ON t.id_'.($type == 'carrier' ? 'reference' : $type).' = crt.id_'.$type.'
 				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
                 $shop_list
                 .(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
@@ -1440,8 +1440,8 @@ class CartRuleCore extends ObjectModel
 			cr.`group_restriction` = 0
 			'.($context->customer->id ? 'OR EXISTS (
 				SELECT 1
-				FROM `'._DB_PREFIX_.'customer_group` cg
-				INNER JOIN `'._DB_PREFIX_.'cart_rule_group` crg ON cg.id_group = crg.id_group
+				FROM customer_group` cg
+				INNER JOIN cart_rule_group` crg ON cg.id_group = crg.id_group
 				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
 				AND cg.`id_customer` = '.(int)$context->customer->id.'
 				LIMIT 1
@@ -1451,8 +1451,8 @@ class CartRuleCore extends ObjectModel
 			cr.`reduction_product` <= 0
 			OR EXISTS (
 				SELECT 1
-				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `'._DB_PREFIX_.'cart_product`.`id_product` = cr.`reduction_product` AND `id_cart` = '.(int)$context->cart->id.'
+				FROM cart_product`
+				WHERE cart_product`.`id_product` = cr.`reduction_product` AND `id_cart` = '.(int)$context->cart->id.'
 			)
 		)
 		AND NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'cart_cart_rule WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_cart_rule.id_cart_rule
@@ -1501,27 +1501,27 @@ class CartRuleCore extends ObjectModel
         // Delete associated restrictions on cart rules
         Db::getInstance()->execute('
 		DELETE crprv
-		FROM `'._DB_PREFIX_.'cart_rule_product_rule` crpr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_value` crprv ON crpr.`id_product_rule` = crprv.`id_product_rule`
+		FROM cart_rule_product_rule` crpr
+		LEFT JOIN cart_rule_product_rule_value` crprv ON crpr.`id_product_rule` = crprv.`id_product_rule`
 		WHERE crpr.`type` = "'.pSQL($type).'"
 		AND crprv.`id_item` IN ('.$list.')'); // $list is checked a few lines above
 
         // Delete the product rules that does not have any values
         if (Db::getInstance()->Affected_Rows() > 0) {
-            Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`
-																							WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule`)');
+            Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule_value`
+																							WHERE cart_rule_product_rule`.`id_product_rule` = cart_rule_product_rule_value`.`id_product_rule`)');
         }
         // If the product rules were the only conditions of a product rule group, delete the product rule group
         if (Db::getInstance()->Affected_Rows() > 0) {
-            Db::getInstance()->delete('cart_rule_product_rule_group', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
-																						WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
+            Db::getInstance()->delete('cart_rule_product_rule_group', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule`
+																						WHERE cart_rule_product_rule`.`id_product_rule_group` = cart_rule_product_rule_group`.`id_product_rule_group`)');
         }
 
         // If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache
         if (Db::getInstance()->Affected_Rows() > 0) {
             Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'cart_rule` cr
-				LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_group` crprg ON cr.id_cart_rule = crprg.id_cart_rule
+				UPDATE cart_rule` cr
+				LEFT JOIN cart_rule_product_rule_group` crprg ON cr.id_cart_rule = crprg.id_cart_rule
 				SET product_restriction = IF(crprg.id_product_rule_group IS NULL, 0, 1)');
         }
 

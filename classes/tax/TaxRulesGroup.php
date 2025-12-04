@@ -143,7 +143,7 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT DISTINCT g.id_tax_rules_group, g.name, g.active
-			FROM `'._DB_PREFIX_.'tax_rules_group` g'
+			FROM tax_rules_group` g'
             .Shop::addSqlAssociation('tax_rules_group', 'g').' WHERE deleted = 0'
             .($only_active ? ' AND g.`active` = 1' : '').'
 			ORDER BY name ASC');
@@ -160,7 +160,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     public function delete()
     {
-        $res = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax_rules_group`='.(int)$this->id);
+        $res = Db::getInstance()->execute('DELETE FROM tax_rule` WHERE `id_tax_rules_group`='.(int)$this->id);
         return (parent::delete() && $res);
     }
     /**
@@ -170,9 +170,9 @@ class TaxRulesGroupCore extends ObjectModel
     {
         $rows = Db::getInstance()->executeS('
 			SELECT rg.`id_tax_rules_group`, t.`rate`
-			FROM `'._DB_PREFIX_.'tax_rules_group` rg
-			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+			FROM tax_rules_group` rg
+			LEFT JOIN tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
+			LEFT JOIN tax` t ON (t.`id_tax` = tr.`id_tax`)
 			WHERE tr.`id_country` = '.(int)$id_country.'
 			AND tr.`id_state` = 0
 			AND 0 between `zipcode_from` AND `zipcode_to`'
@@ -196,7 +196,7 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
-			FROM `'._DB_PREFIX_.'tax_rules_group` rg
+			FROM tax_rules_group` rg
 			WHERE `name` = \''.pSQL($name).'\''
         );
     }
@@ -217,7 +217,7 @@ class TaxRulesGroupCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT `id_tax_rules_group`
-		FROM `'._DB_PREFIX_.'order_detail`
+		FROM order_detail`
 		WHERE `id_tax_rules_group` = '.(int)$this->id
         );
     }

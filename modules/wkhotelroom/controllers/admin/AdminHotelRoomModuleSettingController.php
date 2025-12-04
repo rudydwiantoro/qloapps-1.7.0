@@ -34,11 +34,11 @@ class AdminHotelRoomModuleSettingController extends ModuleAdminController
 
         $this->_select = ' pl.`name`, hbil.`hotel_name` ';
 
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+        $this->_join .= ' LEFT JOIN product_lang` pl
             ON (pl.`id_product` = a.`id_product` AND pl.id_lang = '.(int) $this->context->language->id.')';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+        $this->_join .= ' LEFT JOIN htl_room_type` hrt
             ON (hrt.`id_product` = a.`id_product`)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+        $this->_join .= ' LEFT JOIN htl_branch_info_lang` hbil
             ON (hrt.`id_hotel` = hbil.`id` AND hbil.`id_lang` = pl.`id_lang`)';
 
         $this->fields_options = array(

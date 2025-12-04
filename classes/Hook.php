@@ -98,9 +98,9 @@ class HookCore extends ObjectModel
     public static function getHooks($position = false)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT * FROM `'._DB_PREFIX_.'hook` h
-			'.($position ? 'WHERE h.`position` = 1' : '').'
-			ORDER BY `name`'
+			SELECT * FROM hook h
+			'.($position ? 'WHERE h.position = 1' : '').'
+			ORDER BY name'
         );
     }
 
@@ -123,12 +123,12 @@ class HookCore extends ObjectModel
             $hook_ids = array();
             $db = Db::getInstance();
             $result = $db->ExecuteS('
-			SELECT `id_hook`, `name`
-			FROM `'._DB_PREFIX_.'hook`
+			SELECT id_hook, name
+			FROM hook
 			UNION
-			SELECT `id_hook`, ha.`alias` as name
-			FROM `'._DB_PREFIX_.'hook_alias` ha
-			INNER JOIN `'._DB_PREFIX_.'hook` h ON ha.name = h.name', false);
+			SELECT id_hook, ha.alias as name
+			FROM hook_alias ha
+			INNER JOIN hook h ON ha.name = h.name', false);
             while ($row = $db->nextRow($result)) {
                 $hook_ids[strtolower($row['name'])] = $row['id_hook'];
             }
@@ -148,9 +148,9 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_namebyid_'.$hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
-							SELECT `name`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
+							SELECT name
+							FROM hook
+							WHERE id_hook = '.(int)$hook_id);
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -165,9 +165,9 @@ class HookCore extends ObjectModel
         $cache_id = 'hook_live_editbyid_'.$hook_id;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue('
-							SELECT `live_edit`
-							FROM `'._DB_PREFIX_.'hook`
-							WHERE `id_hook` = '.(int)$hook_id);
+							SELECT live_edit
+							FROM hook
+							WHERE id_hook = '.(int)$hook_id);
             Cache::store($cache_id, $result);
             return $result;
         }
@@ -184,7 +184,7 @@ class HookCore extends ObjectModel
     {
         $cache_id = 'hook_alias';
         if (!Cache::isStored($cache_id)) {
-            $hook_alias_list = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_alias`');
+            $hook_alias_list = Db::getInstance()->executeS('SELECT * FROM hook_alias');
             $hook_alias = array();
             if ($hook_alias_list) {
                 foreach ($hook_alias_list as $ha) {
@@ -230,9 +230,9 @@ class HookCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
-			FROM `'._DB_PREFIX_.'hook_module` hm
-			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
-			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
+			FROM hook_module hm
+			STRAIGHT_JOIN hook h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+			STRAIGHT_JOIN module as m ON (m.id_module = hm.id_module)
 			ORDER BY hm.position');
             $list = array();
             foreach ($results as $result) {
@@ -313,43 +313,43 @@ class HookCore extends ObjectModel
 
             // SQL Request
             $sql = new DbQuery();
-            $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
+            $sql->select('h.name as hook, m.id_module, h.id_hook, m.name as module, h.live_edit');
             $sql->from('module', 'm');
             if ($hook_name != 'displayBackOfficeHeader') {
                 $sql->join(Shop::addSqlAssociation('module', 'm', true, 'module_shop.enable_device & '.(int)Context::getContext()->getDevice()));
-                $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
+                $sql->innerJoin('module_shop', 'ms', 'ms.id_module = m.id_module');
             }
-            $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
-            $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
+            $sql->innerJoin('hook_module', 'hm', 'hm.id_module = m.id_module');
+            $sql->innerJoin('hook', 'h', 'hm.id_hook = h.id_hook');
             if ($hook_name != 'displayPayment' && $hook_name != 'displayPaymentEU') {
-                $sql->where('h.`name` != "displayPayment" AND h.`name` != "displayPaymentEU"');
+                $sql->where('h.name != "displayPayment" AND h.name != "displayPaymentEU"');
             }
             // For payment modules, we check that they are available in the contextual country
             elseif ($frontend) {
                 // if (Validate::isLoadedObject($context->country)) {
-                //     $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU") AND (SELECT `id_country` FROM `'._DB_PREFIX_.'module_country` mc WHERE mc.`id_module` = m.`id_module` AND `id_country` = '.(int)$context->country->id.' AND `id_shop` = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
+                //     $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_country FROM module_country mc WHERE mc.id_module = m.id_module AND id_country = '.(int)$context->country->id.' AND id_shop = '.(int)$context->shop->id.' LIMIT 1) = '.(int)$context->country->id.')');
                 // }
                 if (Validate::isLoadedObject($context->currency)) {
-                    $sql->where('((h.`name` = "displayPayment" OR h.`name` = "displayPaymentEU") AND (SELECT `id_currency` FROM `'._DB_PREFIX_.'module_currency` mcr WHERE mcr.`id_module` = m.`id_module` AND `id_currency` IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
+                    $sql->where('((h.name = "displayPayment" OR h.name = "displayPaymentEU") AND (SELECT id_currency FROM module_currency mcr WHERE mcr.id_module = m.id_module AND id_currency IN ('.(int)$context->currency->id.', -1, -2) LIMIT 1) IN ('.(int)$context->currency->id.', -1, -2))');
                 }
             }
             if (Validate::isLoadedObject($context->shop)) {
-                $sql->where('hm.`id_shop` = '.(int)$context->shop->id);
+                $sql->where('hm.id_shop = '.(int)$context->shop->id);
             }
 
             if ($frontend) {
                 if ($use_groups) {
-                    $sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
+                    $sql->leftJoin('module_group', 'mg', 'mg.id_module = m.id_module');
                     if (Validate::isLoadedObject($context->shop)) {
-                        $sql->where('mg.`id_shop` = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
+                        $sql->where('mg.id_shop = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.id_group IN ('.implode(', ', $groups).')' : ''));
                     } elseif (count($groups)) {
-                        $sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
+                        $sql->where('mg.id_group IN ('.implode(', ', $groups).')');
                     }
                 }
             }
 
             $sql->groupBy('hm.id_hook, hm.id_module');
-            $sql->orderBy('hm.`position`');
+            $sql->orderBy('hm.position');
 
             $list = array();
             if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
@@ -608,7 +608,7 @@ class HookCore extends ObjectModel
         $memory_end = memory_get_usage(true);
 
         Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+		INSERT INTO modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
 		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
 
         return $r;
@@ -773,9 +773,9 @@ class HookCore extends ObjectModel
         }
 
         $result = Db::getInstance()->getRow('
-		SELECT `id_hook`, `name`
-		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hook_name).'\'');
+		SELECT id_hook, name
+		FROM hook
+		WHERE name = \''.pSQL($hook_name).'\'');
 
         return ($result ? $result['id_hook'] : false);
     }

@@ -58,8 +58,8 @@ class WkHotelFeaturesData extends ObjectModel
             $idLang = Context::getContext()->language->id;
         }
         $sql = 'SELECT fb.*, fbl.`feature_title`, fbl.`feature_description`
-				FROM `'._DB_PREFIX_.'htl_features_block_data` fb
-				INNER JOIN `'._DB_PREFIX_.'htl_features_block_data_lang` fbl
+				FROM htl_features_block_data` fb
+				INNER JOIN htl_features_block_data_lang` fbl
                 ON (fbl.`id_features_block` = fb.`id_features_block`)
                 WHERE fbl.`id_lang` = '.(int)$idLang;
         if ($active != 2) {
@@ -88,7 +88,7 @@ class WkHotelFeaturesData extends ObjectModel
     public static function getHigherPosition()
     {
         $position = DB::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_features_block_data`'
+            'SELECT MAX(`position`) FROM htl_features_block_data`'
         );
         $result = (is_numeric($position)) ? $position : -1;
         return $result + 1;
@@ -97,7 +97,7 @@ class WkHotelFeaturesData extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$result = Db::getInstance()->executeS(
-            'SELECT htb.`id_features_block`, htb.`position` FROM `'._DB_PREFIX_.'htl_features_block_data` htb
+            'SELECT htb.`id_features_block`, htb.`position` FROM htl_features_block_data` htb
             WHERE htb.`id_features_block` = '.(int) $this->id.' ORDER BY `position` ASC'
         )
         ) {
@@ -115,12 +115,12 @@ class WkHotelFeaturesData extends ObjectModel
             return false;
         }
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_features_block_data` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_features_block_data` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int)$movedBlock['position'].' AND `position` <= '.(int)$position : '< '
             .(int)$movedBlock['position'].' AND `position` >= '.(int)$position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_features_block_data`
+            'UPDATE htl_features_block_data`
             SET `position` = '.(int)$position.'
             WHERE `id_features_block`='.(int)$movedBlock['id_features_block']
         ));
@@ -134,7 +134,7 @@ class WkHotelFeaturesData extends ObjectModel
     public function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_features_block_data` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_features_block_data` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool) Db::getInstance()->execute($sql);
     }
 

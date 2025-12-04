@@ -50,14 +50,14 @@ function insert_table_cms_to_cms_shop()
 {
     // /!\ : _cms_shop and _cms are wrong tables name (fixed in 1.5.0.12.sql : upgrade_cms_15_rename() )
     $res &= Db::getInstance()->execute(
-        'INSERT INTO `'._DB_PREFIX_.'cms_shop` (id_shop, id_cms)
+        'INSERT INTO cms_shop` (id_shop, id_cms)
 	 	(SELECT 1, id_cms FROM '._DB_PREFIX_.'_cms)');
 }
 
 function create_table_cms_shop()
 {
     return Db::getInstance()->execute(
-            'CREATE TABLE `'._DB_PREFIX_.'cms_shop` (
+            'CREATE TABLE cms_shop` (
 				`id_cms` INT( 11 ) UNSIGNED NOT NULL,
 				`id_shop` INT( 11 ) UNSIGNED NOT NULL ,
 			PRIMARY KEY (`id_cms`, `id_shop`),

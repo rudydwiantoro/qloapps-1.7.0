@@ -334,7 +334,7 @@ class WkPaypalCommerceHelper
     public static function getOrdersByCartId($idCart)
     {
         return Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int) $idCart
+            'SELECT * FROM orders` WHERE `id_cart` = '.(int) $idCart
         );
     }
 

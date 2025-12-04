@@ -57,11 +57,11 @@ if (Tools::isSubmit('ajaxProductPackItems')) {
     $jsonArray = array();
     $products = Db::getInstance()->executeS('
 	SELECT p.`id_product`, pl.`name`
-	FROM `'._DB_PREFIX_.'product` p
-	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+	FROM product` p
+	NATURAL LEFT JOIN product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
 	'.Shop::addSqlRestrictionOnLang('pl').'
-	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
+	AND NOT EXISTS (SELECT 1 FROM pack` WHERE `id_product_pack` = p.`id_product`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
     foreach ($products as $packItem) {
@@ -89,8 +89,8 @@ if (Tools::isSubmit('searchCategory')) {
     $q = Tools::getValue('q');
     $limit = Tools::getValue('limit');
     $results = Db::getInstance()->executeS('SELECT c.`id_category`, cl.`name`
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+		FROM category` c
+		LEFT JOIN category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 		WHERE cl.`id_lang` = '.(int)$context->language->id.' AND c.`level_depth` <> 0
 		AND cl.`name` LIKE \'%'.pSQL($q).'%\'
 		GROUP BY c.id_category
@@ -105,7 +105,7 @@ if (Tools::isSubmit('searchCategory')) {
 
 if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('id_category')) {
     $category = new Category((int)$id_category);
-    $results = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
+    $results = Db::getInstance()->executeS('SELECT `id_category` FROM category` c WHERE c.`nleft` < '.(int)$category->nleft.' AND c.`nright` > '.(int)$category->nright.'');
     $output = array();
     foreach ($results as $result) {
         $output[] = $result;

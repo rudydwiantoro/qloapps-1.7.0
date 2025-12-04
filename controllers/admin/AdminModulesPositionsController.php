@@ -567,7 +567,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
             $hook_name = Tools::getValue('hook');
             $hookableModulesList = array();
-            $modules = Db::getInstance()->executeS('SELECT id_module, name FROM `'._DB_PREFIX_.'module` ');
+            $modules = Db::getInstance()->executeS('SELECT id_module, name FROM module` ');
             foreach ($modules as $module) {
                 if (!Validate::isModuleName($module['name'])) {
                     continue;
@@ -606,7 +606,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
             foreach ($hooks_list as $id_hook => $modules) {
                 // 1st, drop all previous hooked modules
-                $sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
+                $sql = 'DELETE FROM hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
                 $res &= Db::getInstance()->execute($sql);
 
                 $i = 1;
@@ -625,7 +625,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
                     if ($value) {
                         $value = rtrim($value, ',');
-                        $res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module` (id_module, id_shop, id_hook, position) VALUES '.$value);
+                        $res &= Db::getInstance()->execute('INSERT INTO  hook_module` (id_module, id_shop, id_hook, position) VALUES '.$value);
                     }
                 }
             }

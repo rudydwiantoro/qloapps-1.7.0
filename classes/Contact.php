@@ -67,9 +67,9 @@ class ContactCore extends ObjectModel
     {
         $shop_ids = Shop::getContextListShopID();
         $sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'contact` c
+				FROM contact` c
 				'.Shop::addSqlAssociation('contact', 'c', false).'
-				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
+				LEFT JOIN contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
 				GROUP BY c.`id_contact`

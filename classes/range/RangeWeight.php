@@ -91,7 +91,7 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
-            FROM `'._DB_PREFIX_.'range_weight`
+            FROM range_weight`
             WHERE `id_carrier` = '.(int)$id_carrier.'
             ORDER BY `delimiter1` ASC');
     }
@@ -100,9 +100,9 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `'._DB_PREFIX_.'range_weight` rw'.
+            FROM range_weight` rw'.
             (is_null($id_carrier) && $id_reference ? '
-            INNER JOIN `'._DB_PREFIX_.'carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '').'
+            INNER JOIN carrier` c on (rw.`id_carrier` = c.`id_carrier`)' : '').'
             WHERE'.
             ($id_carrier ? ' `id_carrier` = '.(int)$id_carrier : '').
             (is_null($id_carrier) && $id_reference ? ' c.`id_reference` = '.(int)$id_reference : '').'
@@ -113,7 +113,7 @@ class RangeWeightCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT count(*)
-            FROM `'._DB_PREFIX_.'range_weight`
+            FROM range_weight`
             WHERE `id_carrier` = '.(int)$id_carrier.'
             AND ((`delimiter1` >= '.(float)$delimiter1.' AND `delimiter1` < '.(float)$delimiter2.')
                 OR (`delimiter2` > '.(float)$delimiter1.' AND `delimiter2` < '.(float)$delimiter2.')

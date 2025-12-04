@@ -48,7 +48,7 @@ class ServiceProductOption extends ObjectModel
     {
 
         $sql = 'SELECT po.`id_product_option`
-            FROM `'._DB_PREFIX_.'product_option` po
+            FROM product_option` po
             WHERE po.`id_product` = '.(int)$idProduct;
         if ($idProductOption) {
             $sql .= ' AND po.`id_product_option` = '.(int)$idProductOption;
@@ -63,8 +63,8 @@ class ServiceProductOption extends ObjectModel
         }
 
         $sql = 'SELECT po.`id_product_option`, po.`id_product`, pol.`id_lang`, pol.`name`, po.`price_impact`
-            FROM `'._DB_PREFIX_.'product_option` po
-            INNER JOIN `'._DB_PREFIX_.'product_option_lang` pol
+            FROM product_option` po
+            INNER JOIN product_option_lang` pol
             ON (po.`id_product_option` = pol.`id_product_option`)
             WHERE po.`id_product` = '.(int)$idProduct.' AND pol.`id_lang` = '.(int)$idLang;
 

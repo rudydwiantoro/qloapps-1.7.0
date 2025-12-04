@@ -29,7 +29,7 @@
  */
 function regenerate_level_depth()
 {
-    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` SET `level_depth` = 0 WHERE `id_category` = 1');
+    Db::getInstance()->execute('UPDATE category` SET `level_depth` = 0 WHERE `id_category` = 1');
     regenerate_children_categories(1, 0);
 }
 
@@ -41,7 +41,7 @@ function regenerate_level_depth()
  */
 function regenerate_children_categories($id_category, $level_depth)
 {
-    $categories = Db::getInstance()->executeS('SELECT `id_category` FROM `'._DB_PREFIX_.'category` WHERE `id_parent` = '.(int)$id_category);
+    $categories = Db::getInstance()->executeS('SELECT `id_category` FROM category` WHERE `id_parent` = '.(int)$id_category);
     if (!$categories) {
         return;
     }
@@ -53,5 +53,5 @@ function regenerate_children_categories($id_category, $level_depth)
     }
     $cat_ids = substr($cat_ids, 0, -1);
 
-    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'category` SET `level_depth` = '.(int)$new_depth.' WHERE `id_category` IN ('.$cat_ids.')');
+    Db::getInstance()->execute('UPDATE category` SET `level_depth` = '.(int)$new_depth.' WHERE `id_category` IN ('.$cat_ids.')');
 }

@@ -56,7 +56,7 @@ class StatsVisits extends ModuleGraph
     public function getTotalVisits()
     {
         $sql = 'SELECT COUNT(c.`id_connections`)
-				FROM `'._DB_PREFIX_.'connections` c
+				FROM connections` c
 				WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(false, 'c');
 
@@ -66,7 +66,7 @@ class StatsVisits extends ModuleGraph
     public function getTotalGuests()
     {
         $sql = 'SELECT COUNT(DISTINCT c.`id_guest`)
-				FROM `'._DB_PREFIX_.'connections` c
+				FROM connections` c
 				WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(false, 'c');
 
@@ -144,12 +144,12 @@ class StatsVisits extends ModuleGraph
                 $this->_titles['main'][] = $this->l('Visits');
                 $this->_titles['main'][] = $this->l('Number of visits and unique visitors');
                 $this->query[0] = 'SELECT date_add, COUNT(`date_add`) as total
-					FROM `'._DB_PREFIX_.'connections`
+					FROM connections`
 					WHERE 1
 						'.Shop::addSqlRestriction().'
 						AND `date_add` BETWEEN ';
                 $this->query[1] = 'SELECT date_add, COUNT(DISTINCT `id_guest`) as total
-					FROM `'._DB_PREFIX_.'connections`
+					FROM connections`
 					WHERE 1
 						'.Shop::addSqlRestriction().'
 						AND `date_add` BETWEEN ';

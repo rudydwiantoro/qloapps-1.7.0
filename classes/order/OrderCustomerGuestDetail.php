@@ -52,7 +52,7 @@ class OrderCustomerGuestDetailCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
             SELECT `id_order_customer_guest_detail`
-            FROM `'._DB_PREFIX_.'order_customer_guest_detail`
+            FROM order_customer_guest_detail`
             WHERE `id_order` = '.(int)$id_order
         );
     }

@@ -103,8 +103,8 @@ class WkPaypalCommerceDb
     {
         return Db::getInstance()->execute(
             'DROP TABLE IF EXISTS
-            `'._DB_PREFIX_.'wk_paypal_commerce_order`,
-            `'._DB_PREFIX_.'wk_paypal_commerce_refund`'
+            wk_paypal_commerce_order`,
+            wk_paypal_commerce_refund`'
         );
     }
 

@@ -108,7 +108,7 @@ class StatsNewsletter extends ModuleGraph
     private function getTotals()
     {
         $sql = 'SELECT COUNT(*) as customers
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE 1
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					AND `newsletter_date_add` BETWEEN '.ModuleGraph::getDateBetween();
@@ -134,7 +134,7 @@ class StatsNewsletter extends ModuleGraph
         $this->_formats['y'] = 'd';
 
         $this->_query = 'SELECT newsletter_date_add
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE 1
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					AND `newsletter_date_add` BETWEEN ';

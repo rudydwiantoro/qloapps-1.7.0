@@ -492,8 +492,8 @@ function getConfValue($name)
     $full = version_compare('1.5.0.10', _PS_VERSION_) < 0;
 
     $sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
-			FROM `'._DB_PREFIX_.'configuration` c
-			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
+			FROM configuration` c
+			LEFT JOIN configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
 			WHERE c.`name`=\''.pSQL($name).'\'';
 
     if ($full) {

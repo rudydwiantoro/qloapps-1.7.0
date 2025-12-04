@@ -60,28 +60,28 @@ class AdminOrdersControllerCore extends AdminController
         CONCAT(c.`firstname`, \' \', c.`lastname`) AS `customer`,
         osl.`name` AS `osname`, os.`color`,
         cu.iso_code AS currency,
-        IF((SELECT so.id_order FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
+        IF((SELECT so.id_order FROM orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
         IF(a.valid, 1, 0) badge_success,
         hbil.`hotel_name`,
-        (SELECT COUNT(hbd.`id`) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as num_rooms,
-        (SELECT SUM(hbd.`adults`) + SUM(hbd.`children`) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as total_guests_count,
+        (SELECT COUNT(hbd.`id`) FROM htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as num_rooms,
+        (SELECT SUM(hbd.`adults`) + SUM(hbd.`children`) FROM htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as total_guests_count,
         (SELECT CONCAT(
             SUM(hbd.`adults`),
             \' '.$this->l('Adult(s)').' \',
             IF(SUM(hbd.`children`), CONCAT(SUM(hbd.`children`), \' '.$this->l('Children').'\'), \'\')
-        ) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as total_guests,
-        (SELECT SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as los,
+        ) FROM htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as total_guests,
+        (SELECT SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)) FROM htl_booking_detail` hbd WHERE hbd.`id_order` = a.`id_order`) as los,
         hbd.`id_room` AS id_room_information,
-        (SELECT COUNT(spod.`id_service_product_order_detail`) FROM `'._DB_PREFIX_.'service_product_order_detail` spod WHERE spod.`id_order` = a.`id_order` AND spod.`id_htl_booking_detail`=0) as num_products';
+        (SELECT COUNT(spod.`id_service_product_order_detail`) FROM service_product_order_detail` spod WHERE spod.`id_order` = a.`id_order` AND spod.`id_htl_booking_detail`=0) as num_products';
 
         $this->_join = '
-        LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = a.`id_customer`)
-        LEFT JOIN `'._DB_PREFIX_.'currency` cu ON (cu.`id_currency` = a.`id_currency`)
-        LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = a.`current_state`)
-        LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) $this->context->language->id.')
-        LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (hbd.`id_order` = a.`id_order`)
-        LEFT JOIN `'._DB_PREFIX_.'service_product_order_detail` spod ON (spod.`id_order` = a.`id_order`)
-        LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil ON (IF(hbd.`id_hotel`, (hbil.`id` = hbd.`id_hotel`), (hbil.`id` = spod.`id_hotel`)))';
+        LEFT JOIN customer` c ON (c.`id_customer` = a.`id_customer`)
+        LEFT JOIN currency` cu ON (cu.`id_currency` = a.`id_currency`)
+        LEFT JOIN order_state` os ON (os.`id_order_state` = a.`current_state`)
+        LEFT JOIN order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int) $this->context->language->id.')
+        LEFT JOIN htl_booking_detail` hbd ON (hbd.`id_order` = a.`id_order`)
+        LEFT JOIN service_product_order_detail` spod ON (spod.`id_order` = a.`id_order`)
+        LEFT JOIN htl_branch_info_lang` hbil ON (IF(hbd.`id_hotel`, (hbil.`id` = hbd.`id_hotel`), (hbil.`id` = spod.`id_hotel`)))';
 
         $this->_orderBy = 'id_order';
         $this->_orderWay = 'DESC';
@@ -109,7 +109,7 @@ class AdminOrdersControllerCore extends AdminController
         foreach ($statuses as $status) {
             $this->statuses_array[$status['id_order_state']] = $status['name'];
         }
-        $all_order_sources = Db::getInstance()->executeS('SELECT DISTINCT(`source`) FROM  `'._DB_PREFIX_.'orders`');
+        $all_order_sources = Db::getInstance()->executeS('SELECT DISTINCT(`source`) FROM  orders`');
         foreach ($all_order_sources as $source) {
             $this->all_order_sources[$source['source']] = $source['source'];
         }
@@ -135,7 +135,7 @@ class AdminOrdersControllerCore extends AdminController
             $this->roomsArray[$hotelRoom['id']] = $hotelRoom['room_num'].', '.$hotelRoom['room_type_name'].', '.$hotelRoom['hotel_name'];
         }
 
-        $orderCurrencies = Db::getInstance()->executeS('SELECT DISTINCT(`id_currency`) FROM `'._DB_PREFIX_.'orders`');
+        $orderCurrencies = Db::getInstance()->executeS('SELECT DISTINCT(`id_currency`) FROM orders`');
         foreach ($orderCurrencies as $orderCurrency) {
             $this->orderCurrenciesArray[$orderCurrency['id_currency']] = Currency::getCurrencyInstance($orderCurrency['id_currency'])->name;
         }
@@ -1411,14 +1411,14 @@ class AdminOrdersControllerCore extends AdminController
                 cy.`iso_code` AS country, st.`iso_code` as state, ad.`city`,
                 CONCAT(ad.`address1`, \', \', ad.`postcode`) AS `cus_address`, hbdtl.*';
 
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'address` ad ON a.`id_customer`= ad.`id_customer` AND ad.`id_customer`!=0
-                LEFT JOIN `'._DB_PREFIX_.'country` cy ON cy.`id_country`= ad.`id_country`
-                LEFT JOIN `'._DB_PREFIX_.'state` st ON st.`id_state`= ad.`id_state`
+            $this->_join .= ' LEFT JOIN address` ad ON a.`id_customer`= ad.`id_customer` AND ad.`id_customer`!=0
+                LEFT JOIN country` cy ON cy.`id_country`= ad.`id_country`
+                LEFT JOIN state` st ON st.`id_state`= ad.`id_state`
                 LEFT JOIN (
                     SELECT ref.`id_order`, IF(refst.refunded = 1, GROUP_CONCAT(ref.`date_upd`), NULL) AS `cancellation_date`,
                         IF(refst.refunded = 1, SUM(ref.`refunded_amount`), NULL) AS `cancellation_fee`
-                    FROM `'._DB_PREFIX_.'order_return` ref
-                    LEFT JOIN `'._DB_PREFIX_.'order_return_state` refst
+                    FROM order_return` ref
+                    LEFT JOIN order_return_state` refst
                         ON refst.`id_order_return_state` = ref.`state` AND refst.`refunded` = 1
                     GROUP BY ref.`id_order`
                 ) AS orf ON orf.`id_order` = a.`id_order`
@@ -1437,7 +1437,7 @@ class AdminOrdersControllerCore extends AdminController
                     GROUP_CONCAT(`room_num`) AS `rooms`,
                     GROUP_CONCAT(`check_in`) AS `check_in_dates`,
                     GROUP_CONCAT(`check_out`) AS `check_out_dates`
-                    FROM `'._DB_PREFIX_.'htl_booking_detail`
+                    FROM htl_booking_detail`
                     GROUP BY `id_order`
                 ) AS hbdtl ON hbdtl.`id_order` = a.`id_order`';
 

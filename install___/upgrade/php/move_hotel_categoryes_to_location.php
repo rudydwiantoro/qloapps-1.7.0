@@ -26,7 +26,7 @@ function move_hotel_categoryes_to_location()
     if ($idLocationCategory = Configuration::get('PS_LOCATIONS_CATEGORY')) {
 
         $sql = 'SELECT hbi.`id`, hbi.`id_category`
-        FROM `'._DB_PREFIX_.'htl_branch_info` hbi';
+        FROM htl_branch_info` hbi';
         $hotels = Db::getInstance()->executeS($sql);
         $categoriesToUpdate = array();
         foreach ($hotels as $hotel) {

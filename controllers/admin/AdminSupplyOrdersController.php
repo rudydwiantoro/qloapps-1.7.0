@@ -477,14 +477,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			a.id_supply_order as id_export';
 
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'supply_order_state_lang` stl ON
+			LEFT JOIN supply_order_state_lang` stl ON
 			(
 				a.id_supply_order_state = stl.id_supply_order_state
 				AND stl.id_lang = '.(int)$this->context->language->id.'
 			)
-			LEFT JOIN `'._DB_PREFIX_.'supply_order_state` st ON a.id_supply_order_state = st.id_supply_order_state
-			LEFT JOIN `'._DB_PREFIX_.'supplier` s ON a.id_supplier = s.id_supplier
-			LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
+			LEFT JOIN supply_order_state` st ON a.id_supply_order_state = st.id_supply_order_state
+			LEFT JOIN supplier` s ON a.id_supplier = s.id_supplier
+			LEFT JOIN warehouse` w ON (w.id_warehouse = a.id_warehouse)';
 
         $this->_where = ' AND a.is_template = 0';
 
@@ -1657,8 +1657,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				sos.`color` as color';
 
             $this->_join = '
-				LEFT JOIN `'._DB_PREFIX_.'supply_order_state` sos ON (a.`id_state` = sos.`id_supply_order_state`)
-				LEFT JOIN `'._DB_PREFIX_.'supply_order_state_lang` sosl ON
+				LEFT JOIN supply_order_state` sos ON (a.`id_state` = sos.`id_supply_order_state`)
+				LEFT JOIN supply_order_state_lang` sosl ON
 				(
 					a.`id_state` = sosl.`id_supply_order_state`
 					AND sosl.`id_lang` = '.(int)$lang_id.'
@@ -1751,7 +1751,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
         $query->leftJoin('attribute_group_lang', 'agl', 'agl.id_attribute_group = atr.id_attribute_group AND agl.id_lang = '.$id_lang);
         $query->leftJoin('product_supplier', 'ps', 'ps.id_product = p.id_product AND ps.id_product_attribute = IFNULL(pa.id_product_attribute, 0)');
         $query->where('(pl.name LIKE \'%'.$pattern.'%\' OR p.reference LIKE \'%'.$pattern.'%\' OR ps.product_supplier_reference LIKE \'%'.$pattern.'%\')');
-        $query->where('NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))');
+        $query->where('NOT EXISTS (SELECT 1 FROM product_download` pd WHERE (pd.id_product = p.id_product))');
         $query->where('p.is_virtual = 0 AND p.cache_is_pack = 0');
 
         if ($id_supplier) {

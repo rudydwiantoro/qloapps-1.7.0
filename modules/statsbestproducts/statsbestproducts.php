@@ -161,8 +161,8 @@ class StatsBestProducts extends ModuleGrid
         p.`active`, hrt.`id_hotel`, hbil.`hotel_name` AS hotelName,
         (
             SELECT IFNULL(SUM(DATEDIFF(LEAST(hbd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hbd.`date_from`, "'.pSQL($date_from).'"))), 0)
-            FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'orders` o
+            FROM htl_booking_detail` hbd
+            LEFT JOIN orders` o
             ON (o.`id_order` = hbd.`id_order`)
             WHERE hbd.`id_product` = p.`id_product` AND o.`valid` = 1
             AND hbd.`date_to` > "'.pSQL($date_from).'" AND hbd.`date_from` < "'.pSQL($date_to).'"
@@ -172,8 +172,8 @@ class StatsBestProducts extends ModuleGrid
                 SUM(hbd.`total_price_tax_excl` * DATEDIFF(LEAST(hbd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hbd.`date_from`, "'.pSQL($date_from).'")) / (o.`conversion_rate` * DATEDIFF(hbd.`date_to`, hbd.`date_from`))) / SUM(DATEDIFF(LEAST(hbd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hbd.`date_from`, "'.pSQL($date_from).'"))),
                 2
             ), 0)
-            FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'orders` o
+            FROM htl_booking_detail` hbd
+            LEFT JOIN orders` o
             ON (o.`id_order` = hbd.`id_order`)
             WHERE hbd.`id_product` = p.`id_product` AND o.`valid` = 1
             AND hbd.`date_to` > "'.pSQL($date_from).'" AND hbd.`date_from` < "'.pSQL($date_to).'"
@@ -183,8 +183,8 @@ class StatsBestProducts extends ModuleGrid
                 SUM(hbd.`total_price_tax_excl` * DATEDIFF(LEAST(hbd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hbd.`date_from`, "'.pSQL($date_from).'")) / (o.`conversion_rate` * DATEDIFF(hbd.`date_to`, hbd.`date_from`))),
                 2
             ), 0)
-            FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'orders` o
+            FROM htl_booking_detail` hbd
+            LEFT JOIN orders` o
             ON (o.`id_order` = hbd.`id_order`)
             WHERE hbd.`id_product` = p.`id_product` AND o.`valid` = 1
             AND hbd.`date_to` > "'.pSQL($date_from).'" AND hbd.`date_from` < "'.pSQL($date_to).'"
@@ -198,19 +198,19 @@ class StatsBestProducts extends ModuleGrid
                     WHEN hri.`id_status` = '.(int) HotelRoomInformation::STATUS_TEMPORARY_INACTIVE.' THEN IF(hrdd.`date_to` > "'.pSQL($date_from).'" AND hrdd.`date_from` < "'.pSQL($date_to).'", SUM(ABS(DATEDIFF(LEAST(hrdd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hrdd.`date_from`, "'.pSQL($date_from).'")))), 0)
                     ELSE 0
                 END AS disabled_room_nights
-                FROM `'._DB_PREFIX_.'htl_room_information` hri
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_disable_dates` hrdd
+                FROM htl_room_information` hri
+                LEFT JOIN htl_room_disable_dates` hrdd
                 ON (hrdd.`id_room` = hri.`id`)
                 GROUP BY hri.`id`
             ) AS t
             WHERE t.`id_product` = p.`id_product`
         ) AS totalRooms
-        FROM `'._DB_PREFIX_.'product` p
-        LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+        FROM product` p
+        LEFT JOIN product_lang` pl
         ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $id_lang .')
-        INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+        INNER JOIN htl_room_type` hrt
         ON (hrt.`id_product` = p.`id_product`)
-        LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+        LEFT JOIN htl_branch_info_lang` hbil
         ON (hbil.`id` = hrt.`id_hotel` AND hbil.`id_lang` = '.(int) $id_lang .')
         WHERE p.`booking_product` = 1
         '.HotelBranchInformation::addHotelRestriction(false, 'hbil', 'id');

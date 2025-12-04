@@ -47,7 +47,7 @@ class SearchEngineCore extends ObjectModel
         if (!isset($parsed_url['host']) || !isset($parsed_url['query'])) {
             return false;
         }
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM `'._DB_PREFIX_.'search_engine`');
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM search_engine`');
         foreach ($result as $row) {
             $host =& $row['server'];
             $varname =& $row['getvar'];

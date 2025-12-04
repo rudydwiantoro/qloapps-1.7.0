@@ -352,7 +352,7 @@ class AdminNewsletterController extends ModuleAdminController
             $idMerged = (int) substr($idMerged, 1);
             $email = Db::getInstance()->getValue(
                 'SELECT n.`email`
-                FROM `'._DB_PREFIX_.'newsletter` n
+                FROM newsletter` n
                 WHERE n.`id` = '.(int) $idMerged
             );
         } else {
@@ -478,12 +478,12 @@ class AdminNewsletterController extends ModuleAdminController
             $sqlLimit = ' '.(($useLimit === true) ? ' LIMIT '.(int) $start.', '.(int) $limit : '');
 
             $this->_listsql = 'SELECT c.`id_customer` AS id_merged, gl.`name` AS id_gender, c.`email`, c.`firstname`, c.`lastname`, c.`newsletter` AS subscribed, c.`newsletter_date_add`
-            FROM `'._DB_PREFIX_.'customer` c
+            FROM customer` c
             LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (gl.`id_gender` = c.`id_gender` AND gl.`id_lang` = '.(int) $this->context->language->id.')
             WHERE c.`newsletter` = 1 '.$this->_filterCustomer.'
             UNION
             SELECT CONCAT(\'N\', n.`id`) AS id_merged, NULL AS id_gender, n.`email`, NULL AS firstname, NULL AS lastname, n.`active` AS subscribed, n.`newsletter_date_add`
-            FROM `'._DB_PREFIX_.'newsletter` n WHERE n.`active` = 1 '.$this->_filterNewsletter.$sqlOrderBy;
+            FROM newsletter` n WHERE n.`active` = 1 '.$this->_filterNewsletter.$sqlOrderBy;
 
             $listCount = 'SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`';
 

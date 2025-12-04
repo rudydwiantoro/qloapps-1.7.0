@@ -114,7 +114,7 @@ class AdminTrackingControllerCore extends AdminController
         $this->_join = Shop::addSqlAssociation('category', 'a');
         $this->_filter = ' AND NOT EXISTS (
 			SELECT 1
-			FROM `'._DB_PREFIX_.'category_product` cp
+			FROM category_product` cp
 			WHERE a.`id_category` = cp.id_category
 		)
 		AND a.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY');
@@ -154,11 +154,11 @@ class AdminTrackingControllerCore extends AdminController
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND EXISTS (
 			SELECT 1
-			FROM `'._DB_PREFIX_.'product` p
+			FROM product` p
 			'.Product::sqlStock('p').'
 			WHERE a.id_product = p.id_product AND EXISTS (
 				SELECT 1
-				FROM `'._DB_PREFIX_.'product_attribute` WHERE `'._DB_PREFIX_.'product_attribute`.id_product = p.id_product
+				FROM product_attribute` WHERE product_attribute`.id_product = p.id_product
 			)
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';
@@ -197,11 +197,11 @@ class AdminTrackingControllerCore extends AdminController
         $this->_join = Shop::addSqlAssociation('product', 'a');
         $this->_filter = 'AND EXISTS (
 			SELECT 1
-			FROM `'._DB_PREFIX_.'product` p
+			FROM product` p
 			'.Product::sqlStock('p').'
 			WHERE a.id_product = p.id_product AND NOT EXISTS (
 				SELECT 1
-				FROM `'._DB_PREFIX_.'product_attribute` pa WHERE pa.id_product = p.id_product
+				FROM product_attribute` pa WHERE pa.id_product = p.id_product
 			)
 			AND IFNULL(stock.quantity, 0) <= 0
 		)';

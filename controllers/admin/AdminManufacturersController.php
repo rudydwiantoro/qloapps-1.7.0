@@ -147,11 +147,11 @@ class AdminManufacturersControllerCore extends AdminController
         $this->_select = '
 			COUNT(`id_product`) AS `products`, (
 				SELECT COUNT(ad.`id_manufacturer`) as `addresses`
-				FROM `'._DB_PREFIX_.'address` ad
+				FROM address` ad
 				WHERE ad.`id_manufacturer` = a.`id_manufacturer`
 					AND ad.`deleted` = 0
 				GROUP BY ad.`id_manufacturer`) as `addresses`';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
+        $this->_join = 'LEFT JOIN product` p ON (a.`id_manufacturer` = p.`id_manufacturer`)';
         $this->_group = 'GROUP BY a.`id_manufacturer`';
 
         $this->context->smarty->assign('title_list', $this->l('List of manufacturers'));
@@ -250,10 +250,10 @@ class AdminManufacturersControllerCore extends AdminController
 
         $this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+			LEFT JOIN country_lang` cl
 				ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.') ';
         $this->_join .= '
-			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
+			LEFT JOIN manufacturer` m
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
         $this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
 

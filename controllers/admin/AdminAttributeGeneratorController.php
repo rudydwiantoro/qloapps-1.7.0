@@ -184,7 +184,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         }
 
         return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
+		INSERT INTO attribute_impact` (`id_product`, `id_attribute`, `price`, `weight`)
 		VALUES '.implode(',', $attributes).'
 		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }

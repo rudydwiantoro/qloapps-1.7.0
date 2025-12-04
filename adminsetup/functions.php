@@ -252,7 +252,7 @@ function checkingTab($tab)
     if (!Validate::isTabName($tab)) {
         return false;
     }
-    $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
+    $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
     if (!$row['id_tab']) {
         if (isset(AdminTab::$tabParenting[$tab])) {
             Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));

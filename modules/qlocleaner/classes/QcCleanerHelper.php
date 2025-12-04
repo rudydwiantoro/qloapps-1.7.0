@@ -51,7 +51,7 @@ class QcCleanerHelper extends ObjectModel
         $moduleConfKeys = implode(",", $moduleConfKeys);
         $dbInst = Db::getInstance();
         if ($result = $dbInst->ExecuteS(
-            'SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` IN ('.$moduleConfKeys.')'
+            'SELECT `id_configuration` FROM configuration` WHERE `name` IN ('.$moduleConfKeys.')'
         )) {
             $moduleConfIds = array();
             foreach ($result as $confRow) {

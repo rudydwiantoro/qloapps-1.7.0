@@ -124,8 +124,8 @@ class HotelRoomTypeGlobalDemand extends ObjectModel
         if (!$idLang) {
             $idLang = Context::getContext()->language->id;
         }
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_global_demand` has
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_lang` hasl
+        $sql = 'SELECT * FROM htl_room_type_global_demand` has
+            LEFT JOIN htl_room_type_global_demand_lang` hasl
             ON (has.`id_global_demand` = hasl.`id_global_demand` AND hasl.`id_lang` = '.(int)$idLang.')';
         if ($demands = Db::getInstance()->executeS($sql)) {
             $objAdvOption = new HotelRoomTypeGlobalDemandAdvanceOption();
@@ -143,7 +143,7 @@ class HotelRoomTypeGlobalDemand extends ObjectModel
     {
         $context = Context::getContext();
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_tax_rules_group` FROM `'._DB_PREFIX_.'htl_room_type_global_demand`
+            'SELECT `id_tax_rules_group` FROM htl_room_type_global_demand`
             WHERE `id_global_demand` = '.(int)$idGlobalDemand
         );
     }
@@ -152,7 +152,7 @@ class HotelRoomTypeGlobalDemand extends ObjectModel
     public function getWsDemandAdvanceOptions()
     {
         return Db::getInstance()->executeS(
-            'SELECT `id_option` as `id` FROM `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option` WHERE `id_global_demand` = '.(int)$this->id.' ORDER BY `id` ASC'
+            'SELECT `id_option` as `id` FROM htl_room_type_global_demand_advance_option` WHERE `id_global_demand` = '.(int)$this->id.' ORDER BY `id` ASC'
         );
     }
 
@@ -165,12 +165,12 @@ class HotelRoomTypeGlobalDemand extends ObjectModel
 
         return Db::getInstance()->executeS('
             SELECT rtgd.*, rtgdl.*, rtgdao.`price` AS `option_price`, rtgdaol.`name` AS `option_name`
-            FROM `'._DB_PREFIX_.'htl_room_type_global_demand` rtgd
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_lang` rtgdl
+            FROM htl_room_type_global_demand` rtgd
+            LEFT JOIN htl_room_type_global_demand_lang` rtgdl
                 ON rtgdl.`id_global_demand` = rtgd.`id_global_demand`
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option` rtgdao
+            LEFT JOIN htl_room_type_global_demand_advance_option` rtgdao
                 ON rtgdao.`id_global_demand` = rtgd.`id_global_demand`
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option_lang` rtgdaol
+            LEFT JOIN htl_room_type_global_demand_advance_option_lang` rtgdaol
                 ON (rtgdaol.`id_option` = rtgdao.`id_option` AND rtgdl.`id_lang` = rtgdaol.`id_lang`)
             WHERE (
                 rtgdl.`name` LIKE \'%'.pSQL($query).'%\' OR

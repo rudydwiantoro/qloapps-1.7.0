@@ -297,7 +297,7 @@ class CustomerCore extends ObjectModel
                 $obj->delete();
             }
         }
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
+        Db::getInstance()->execute('DELETE FROM customer_group` WHERE `id_customer` = '.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'message WHERE id_customer='.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'compare WHERE id_customer='.(int)$this->id);
@@ -345,7 +345,7 @@ class CustomerCore extends ObjectModel
     public static function getCustomers($active = null, $deleted = null, $havingAddress = null)
     {
         $sqlSelect = 'SELECT c.`id_customer`, c.`email`, c.`firstname`, c.`lastname`';
-        $sqlFrom = 'FROM `'._DB_PREFIX_.'customer` c';
+        $sqlFrom = 'FROM customer` c';
         $sqlJoin = '';
 		$sqlWhere = 'WHERE 1 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).
                 (!is_null($active) ?  ' AND c.`active` = '.(int) $active: ' ' ).
@@ -354,7 +354,7 @@ class CustomerCore extends ObjectModel
 		$sqlGroupBy = 'GROUP BY c.`id_customer`';
 
         if (!is_null($havingAddress)) {
-            $sqlJoin .= ' LEFT JOIN `'._DB_PREFIX_.'address` a
+            $sqlJoin .= ' LEFT JOIN address` a
                 ON a.`id_customer` = c.`id_customer` AND a.`deleted`=0';
             $sqlWhere .= (($havingAddress) ? ' AND a.`id_address` IS NOT NULL': ' AND a.`id_address` IS NULL');
         }
@@ -380,7 +380,7 @@ class CustomerCore extends ObjectModel
 
         $result = Db::getInstance()->getRow('
 		SELECT *
-		FROM `'._DB_PREFIX_.'customer`
+		FROM customer`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::encrypt($passwd)).'\'' : '').'
@@ -408,7 +408,7 @@ class CustomerCore extends ObjectModel
     public static function getCustomersByEmail($email)
     {
         $sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE `email` = \''.pSQL($email).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
 
@@ -430,7 +430,7 @@ class CustomerCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (bool)!Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `id_customer`
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE `id_customer` = \''.(int)$id_customer.'\'
 			AND active = 1
 			AND `deleted` = 0');
@@ -459,7 +459,7 @@ class CustomerCore extends ObjectModel
 
         $result = Db::getInstance()->getValue('
 		SELECT `id_customer`
-		FROM `'._DB_PREFIX_.'customer`
+		FROM customer`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
@@ -479,7 +479,7 @@ class CustomerCore extends ObjectModel
         if (!array_key_exists($key, self::$_customerHasAddress)) {
             self::$_customerHasAddress[$key] = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_address`
-			FROM `'._DB_PREFIX_.'address`
+			FROM address`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `id_address` = '.(int)$id_address.'
 			AND `deleted` = 0');
@@ -507,10 +507,10 @@ class CustomerCore extends ObjectModel
         $cache_id = 'Customer::getAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
         if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
-					FROM `'._DB_PREFIX_.'address` a
-					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
-					LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-					LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
+					FROM address` a
+					LEFT JOIN country` c ON (a.`id_country` = c.`id_country`)
+					LEFT JOIN country_lang` cl ON (c.`id_country` = cl.`id_country`)
+					LEFT JOIN state` s ON (s.`id_state` = a.`id_state`)
 					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).'
 					WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
 
@@ -526,7 +526,7 @@ class CustomerCore extends ObjectModel
         $cache_id = 'Customer::getCustomerIdAddress'.(int)$id_customer;
         if (!$use_cache || !Cache::isStored($cache_id)) {
             $sql = 'SELECT id_address
-					FROM `'._DB_PREFIX_.'address` a
+					FROM address` a
 					WHERE `id_customer` = '.(int)$id_customer.' AND a.`deleted` = 0';
 
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -546,7 +546,7 @@ class CustomerCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(`id_address`)
-			FROM `'._DB_PREFIX_.'address`
+			FROM address`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `deleted` = 0'
         );
@@ -567,7 +567,7 @@ class CustomerCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_customer`
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `passwd` = \''.pSQL($passwd).'\'');
             Cache::store($cache_id, $result);
@@ -587,7 +587,7 @@ class CustomerCore extends ObjectModel
     public static function searchByName($query, $limit = null, $skip_deleted = false)
     {
         $sql_base = 'SELECT *
-        FROM `'._DB_PREFIX_.'customer`';
+        FROM customer`';
         $where_deleted = $skip_deleted ? ' AND `deleted` = 0' : '';
 
         $sql = '('.$sql_base.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.$where_deleted.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
@@ -612,9 +612,9 @@ class CustomerCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT c.*
-		FROM `'._DB_PREFIX_.'customer` c
-		LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
-		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
+		FROM customer` c
+		LEFT JOIN guest` g ON g.id_customer = c.id_customer
+		LEFT JOIN connections` co ON g.id_guest = co.id_guest
 		WHERE co.`ip_address` = \''.(int)ip2long(trim($ip)).'\'');
     }
 
@@ -628,19 +628,19 @@ class CustomerCore extends ObjectModel
         $result = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order`) AS nb_orders, SUM(`total_paid` / o.`conversion_rate`) AS total_orders,
         SUM(o.`total_paid_real` / o.`conversion_rate`) AS total_spent
-		FROM `'._DB_PREFIX_.'orders` o
+		FROM orders` o
 		WHERE o.`id_customer` = '.(int)$this->id.'
 		AND o.valid = 1');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT MAX(c.`date_add`) AS last_visit
-		FROM `'._DB_PREFIX_.'guest` g
-		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
+		FROM guest` g
+		LEFT JOIN connections` c ON c.id_guest = g.id_guest
 		WHERE g.`id_customer` = '.(int)$this->id);
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
-		FROM `'._DB_PREFIX_.'customer` c
+		FROM customer` c
 		WHERE c.`id_customer` = '.(int)$this->id);
 
         $result['last_visit'] = $result2['last_visit'];
@@ -655,8 +655,8 @@ class CustomerCore extends ObjectModel
         }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT m.*, l.name as language
-		FROM `'._DB_PREFIX_.'mail` m
-		LEFT JOIN `'._DB_PREFIX_.'lang` l ON m.id_lang = l.id_lang
+		FROM mail` m
+		LEFT JOIN lang` l ON m.id_lang = l.id_lang
 		WHERE `recipient` = "'.pSQL($this->email).'"
 		ORDER BY m.date_add DESC
 		LIMIT 10');
@@ -669,9 +669,9 @@ class CustomerCore extends ObjectModel
         }
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.id_connections, c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
-		FROM `'._DB_PREFIX_.'guest` g
-		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
-		LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
+		FROM guest` g
+		LEFT JOIN connections` c ON c.id_guest = g.id_guest
+		LEFT JOIN connections_page` cp ON c.id_connections = cp.id_connections
 		WHERE g.`id_customer` = '.(int)$this->id.'
 		GROUP BY c.`id_connections`
 		ORDER BY c.date_add DESC
@@ -772,8 +772,8 @@ class CustomerCore extends ObjectModel
     public function getBoughtProducts()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT * FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
+		SELECT * FROM orders` o
+		LEFT JOIN order_detail` od ON o.id_order = od.id_order
         WHERE od.`product_auto_add`= 0 AND o.valid = 1 AND o.`id_customer` = '.(int)$this->id);
     }
 
@@ -790,7 +790,7 @@ class CustomerCore extends ObjectModel
         if (!isset(self::$_defaultGroupId[(int)$id_customer])) {
             self::$_defaultGroupId[(int)$id_customer] = Db::getInstance()->getValue('
 				SELECT `id_default_group`
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE `id_customer` = '.(int)$id_customer
             );
         }
@@ -806,7 +806,7 @@ class CustomerCore extends ObjectModel
         if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $id_address = (int)Db::getInstance()->getValue('
 				SELECT `id_address`
-				FROM `'._DB_PREFIX_.'address`
+				FROM address`
 				WHERE `id_customer` = '.(int)$id_customer.'
 				AND `deleted` = 0 ORDER BY `id_address`'
             );

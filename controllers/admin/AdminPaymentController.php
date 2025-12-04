@@ -129,7 +129,7 @@ class AdminPaymentControllerCore extends AdminController
         }
 
         Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'module_'.bqSQL($type).'`
+			DELETE FROM module_'.bqSQL($type).'`
 			WHERE id_shop = '.Context::getContext()->shop->id.'
 			AND `id_module` IN ('.implode(', ', $modules).')'
         );
@@ -146,7 +146,7 @@ class AdminPaymentControllerCore extends AdminController
 
         if (count($values)) {
             Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'module_'.bqSQL($type).'`
+				INSERT INTO module_'.bqSQL($type).'`
 				(`id_module`, `id_shop`, `id_'.bqSQL($type).'`)
 				VALUES '.implode(',', $values));
         }

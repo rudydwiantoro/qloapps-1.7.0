@@ -24,9 +24,9 @@
 function clean_product_description_161()
 {
     if ($descriptions = Db::getInstance()->executeS(
-        'SELECT `id_product`, `id_lang`, `description_short` FROM `'._DB_PREFIX_.'product_lang`'
+        'SELECT `id_product`, `id_lang`, `description_short` FROM product_lang`'
     )) {
-        $sql = 'UPDATE `'._DB_PREFIX_.'product_lang`
+        $sql = 'UPDATE product_lang`
         SET description_short = CASE';
         foreach ($descriptions as $description) {
             $sql .= ' WHEN id_product = '.(int)$description['id_product'].' AND id_lang = '.(int)$description['id_lang'].'

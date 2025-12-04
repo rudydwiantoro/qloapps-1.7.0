@@ -50,30 +50,30 @@ function p15018_change_image_types()
     foreach ($new_types as $type => $type_array) {
         foreach ($type_array as $old_type => $new_type) {
             if (is_array($new_type) && count($new_type)) {
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
+                Db::getInstance()->execute('INSERT INTO image_type` (
 					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
-					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
+					FROM image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
             }
         }
     }
 
-    $option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
+    $option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM theme` WHERE directory != "default" AND directory != "prestashop"');
         
     // If there is another theme than the default one, duplicate
     if ($option) {
         foreach ($replace_types as $type => $type_array) {
             foreach ($type_array as $old_type => $new_type) {
                 if (is_array($new_type) && count($new_type)) {
-                    Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'image_type` (
+                    Db::getInstance()->execute('INSERT INTO image_type` (
 					SELECT NULL, "'.$new_type[0].'", "'.$new_type[1].'", "'.$new_type[2].'", products, categories, manufacturers, suppliers, scenes, stores
-					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
+					FROM image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
                 }
     // But if there is only the default one, we can update de names
     else {
         foreach ($replace_types as $type => $type_array) {
             foreach ($type_array as $old_type => $new_type) {
                 if (is_array($new_type) && count($new_type)) {
-                    Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
+                    Db::getInstance()->execute('UPDATE image_type` SET name = "'.$new_type[0].'" WHERE name = "'.$old_type.'"');
                 }
             }
         }
@@ -83,7 +83,7 @@ function p15018_change_image_types()
     }
 
     // If there is less than 500 images, copy to the new format (if there is more, the merchant will have to click "regenerate thumbnails")
-    $result = Db::getInstance()->executeS('SELECT id_image, id_product FROM `'._DB_PREFIX_.'image`');
+    $result = Db::getInstance()->executeS('SELECT id_image, id_product FROM image`');
     if (Db::getInstance()->numRows() < 500) {
         if (!defined('_PS_ROOT_DIR_')) {
             define('_PS_ROOT_DIR_', realpath(INSTALL_PATH.'/../'));

@@ -179,7 +179,7 @@ class Dashactivity extends Module
         } else {
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
                 'SELECT COUNT(*) AS visits, COUNT(DISTINCT `id_guest`) AS unique_visitors
-                FROM `'._DB_PREFIX_.'connections`
+                FROM connections`
                 WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
                 '.Shop::addSqlRestriction(false)
             );
@@ -192,9 +192,9 @@ class Dashactivity extends Module
 
         if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
             $sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer
-                FROM `'._DB_PREFIX_.'connections` c
-                LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-                INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+                FROM connections` c
+                LEFT JOIN connections_page` cp ON c.id_connections = cp.id_connections
+                INNER JOIN guest` g ON c.id_guest = g.id_guest
                 WHERE (g.id_customer IS NULL OR g.id_customer = 0)
                     '.Shop::addSqlRestriction(false, 'c').'
                     AND cp.`time_end` IS NULL
@@ -204,8 +204,8 @@ class Dashactivity extends Module
                 ORDER BY c.date_add DESC';
         } else {
             $sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, "-" as page
-                FROM `'._DB_PREFIX_.'connections` c
-                INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+                FROM connections` c
+                INNER JOIN guest` g ON c.id_guest = g.id_guest
                 WHERE (g.id_customer IS NULL OR g.id_customer = 0)
                     '.Shop::addSqlRestriction(false, 'c').'
                     AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', c.`date_add`)) < 900
@@ -218,9 +218,9 @@ class Dashactivity extends Module
         // Pending bookings will be those bookings which are not paid yet and not in Canceled|Refunded|Payment error state.
         $pending_orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(DISTINCT o.`id_order`)
-			FROM `'._DB_PREFIX_.'orders` o
-            LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (hbd.`id_order` = o.`id_order`)
-			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (o.`current_state` = os.`id_order_state`)
+			FROM orders` o
+            LEFT JOIN htl_booking_detail` hbd ON (hbd.`id_order` = o.`id_order`)
+			LEFT JOIN order_state` os ON (o.`current_state` = os.`id_order_state`)
 			WHERE (o.total_paid - o.total_paid_real) > 0
             AND o.`current_state` NOT IN ('.implode(',', array(
                 Configuration::get('PS_OS_CANCELED'),
@@ -233,27 +233,27 @@ class Dashactivity extends Module
         // Abandoned cart are which are added to the cart between Min and Max hours conditions
         $abandoned_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart`
+			FROM cart`
 			WHERE `date_upd` BETWEEN "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MAX').' HOUR'))).'" AND "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ABANDONED_MIN').' HOUR'))).'"
-			AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+			AND id_cart NOT IN (SELECT id_cart FROM orders`)
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
         );
 
         // pending refunds are the refunds requests which are not denied or refunded yet
         $return_exchanges = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'orders` o
-			LEFT JOIN `'._DB_PREFIX_.'order_return` or2 ON o.id_order = or2.id_order
-            LEFT JOIN `'._DB_PREFIX_.'order_return_state` ors ON (or2.state = ors.id_order_return_state)
+			FROM orders` o
+			LEFT JOIN order_return` or2 ON o.id_order = or2.id_order
+            LEFT JOIN order_return_state` ors ON (or2.state = ors.id_order_return_state)
 			WHERE (ors.`denied` = 0 AND ors.`refunded` = 0)
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o')
         );
 
         $products_out_of_stock = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(IF(IFNULL(stock.quantity, 0) > 0, 0, 1))
-			FROM `'._DB_PREFIX_.'product` p
+			FROM product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
+			LEFT JOIN product_attribute` pa ON p.id_product = pa.id_product
 			'.Product::sqlStock('p', 'pa').'
 			WHERE p.active = 1'
         );
@@ -262,14 +262,14 @@ class Dashactivity extends Module
 
         $active_shopping_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'cart`
+			FROM cart`
 			WHERE date_upd > "'.pSQL(date('Y-m-d H:i:s', strtotime('-'.(int)Configuration::get('DASHACTIVITY_CART_ACTIVE').' MIN'))).'"
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
         );
 
         $new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE `date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
             AND `deleted` = 0
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
@@ -277,7 +277,7 @@ class Dashactivity extends Module
 
         $new_registrations = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 			AND newsletter = 1
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
@@ -285,14 +285,14 @@ class Dashactivity extends Module
 
         $total_suscribers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE newsletter = 1
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
         );
         if (Module::isInstalled('blocknewsletter')) {
             $new_registrations += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'newsletter`
+				FROM newsletter`
 				WHERE active = 1
 				AND `newsletter_date_add` BETWEEN "'.pSQL($params['date_from']).'" AND "'.pSQL($params['date_to']).'"
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
@@ -300,7 +300,7 @@ class Dashactivity extends Module
             $total_suscribers += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 '
 							SELECT COUNT(*)
-							FROM `'._DB_PREFIX_.'newsletter`
+							FROM newsletter`
 			WHERE active = 1
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
             );

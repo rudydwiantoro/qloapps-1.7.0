@@ -51,7 +51,7 @@ class AdminCartsControllerCore extends AdminController
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
-		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', co.`date_add`)) < 1800)';
+		LEFT JOIN connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', co.`date_add`)) < 1800)';
         $this->_group = ' GROUP BY a.`id_cart`';
 
         $this->fields_list = array(

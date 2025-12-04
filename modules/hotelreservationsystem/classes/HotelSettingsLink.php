@@ -56,8 +56,8 @@ class HotelSettingsLink extends ObjectModel
     public function getAllSettingsLinks($active = true)
     {
         return Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_settings_link` hsl
-            LEFT JOIN `'._DB_PREFIX_.'htl_settings_link_lang` hsll
+            'SELECT * FROM htl_settings_link` hsl
+            LEFT JOIN htl_settings_link_lang` hsll
             ON (hsll.`id_settings_link` = hsl.`id_settings_link` AND hsll.`id_lang` = '.(int) Context::getContext()->language->id.')
             WHERE hsl.`active` = '.(int) $active.'
             ORDER BY hsl.`position`'
@@ -92,7 +92,7 @@ class HotelSettingsLink extends ObjectModel
     {
         return Db::getInstance()->executeS(
             'SELECT *
-            FROM `'._DB_PREFIX_.'htl_settings_link` hsl
+            FROM htl_settings_link` hsl
             WHERE hsl.`unremovable` = 1'
         );
     }
@@ -100,7 +100,7 @@ class HotelSettingsLink extends ObjectModel
     public function getHigherPosition()
     {
         $position = Db::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_settings_link`'
+            'SELECT MAX(`position`) FROM htl_settings_link`'
         );
 
         $result = (is_numeric($position)) ? $position : -1;
@@ -112,7 +112,7 @@ class HotelSettingsLink extends ObjectModel
     {
         if (!$result = Db::getInstance()->executeS(
             'SELECT hsl.`id_settings_link`, hsl.`position`
-            FROM `'._DB_PREFIX_.'htl_settings_link` hsl
+            FROM htl_settings_link` hsl
             WHERE hsl.`id_settings_link` = '.(int) $this->id.' ORDER BY `position` ASC')
         ) {
             return false;
@@ -130,12 +130,12 @@ class HotelSettingsLink extends ObjectModel
         }
 
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_settings_link` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_settings_link` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int) $movedBlock['position'].' AND `position` <= '.(int) $position : '< '
             .(int) $movedBlock['position'].' AND `position` >= '.(int) $position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_settings_link`
+            'UPDATE htl_settings_link`
             SET `position` = '.(int) $position.'
             WHERE `id_settings_link`='.(int) $movedBlock['id_settings_link']
         ));
@@ -144,7 +144,7 @@ class HotelSettingsLink extends ObjectModel
     public function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_settings_link` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_settings_link` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
 
         return Db::getInstance()->execute($sql);
     }

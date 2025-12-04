@@ -95,8 +95,8 @@ class HotelBookingDemands extends ObjectModel
             $idCurrency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
         }
         $totalDemandsPrice = 0;
-        $sql = 'SELECT hb.`id_room`, hb.`adults`, hb.`children`, hd.* FROM `'._DB_PREFIX_.'htl_booking_demands` hd
-        LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hb ON (hd.`id_htl_booking` = hb.`id`)
+        $sql = 'SELECT hb.`id_room`, hb.`adults`, hb.`children`, hd.* FROM htl_booking_demands` hd
+        LEFT JOIN htl_booking_detail` hb ON (hd.`id_htl_booking` = hb.`id`)
         WHERE hb.`id_order` ='.(int) $idOrder;
 
 
@@ -167,15 +167,15 @@ class HotelBookingDemands extends ObjectModel
     public static function getTaxListStatic($idBookingDemand)
     {
         return Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_booking_demands_tax` WHERE `id_booking_demand` = '.(int)$idBookingDemand
+            'SELECT * FROM htl_booking_demands_tax` WHERE `id_booking_demand` = '.(int)$idBookingDemand
         );
     }
 
     public static function getTaxCalculatorStatic($idBookingDemand)
     {
         $sql = 'SELECT t.*, d.`tax_computation_method`
-				FROM `'._DB_PREFIX_.'htl_booking_demands_tax` t
-				LEFT JOIN `'._DB_PREFIX_.'htl_booking_demands` d ON (d.`id_booking_demand` = t.`id_booking_demand`)
+				FROM htl_booking_demands_tax` t
+				LEFT JOIN htl_booking_demands` d ON (d.`id_booking_demand` = t.`id_booking_demand`)
 				WHERE d.`id_booking_demand` = '.(int)$idBookingDemand;
 
         $computationMethod = 1;
@@ -219,11 +219,11 @@ class HotelBookingDemands extends ObjectModel
 
                 // if delete previous details and save new details
                 if ($replace) {
-                    Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'htl_booking_demands_tax` WHERE id_booking_demand='.(int)$this->id);
+                    Db::getInstance()->execute('DELETE FROM htl_booking_demands_tax` WHERE id_booking_demand='.(int)$this->id);
                 }
 
                 $values = rtrim($values, ',');
-                $sql = 'INSERT INTO `'._DB_PREFIX_.'htl_booking_demands_tax`
+                $sql = 'INSERT INTO htl_booking_demands_tax`
                 (id_booking_demand, id_tax, unit_amount, total_amount)
                 VALUES '.$values;
 
@@ -288,7 +288,7 @@ class HotelBookingDemands extends ObjectModel
         // first delete all tax details of this booking demands
         Db::getInstance()->delete(
             'htl_booking_demands_tax',
-            'id_booking_demand IN (SELECT `id_booking_demand` FROM `'._DB_PREFIX_.'htl_booking_demands` WHERE `id_htl_booking` = '.(int)$idHotelBooking.')'
+            'id_booking_demand IN (SELECT `id_booking_demand` FROM htl_booking_demands` WHERE `id_htl_booking` = '.(int)$idHotelBooking.')'
         );
 
         // delete all the demands

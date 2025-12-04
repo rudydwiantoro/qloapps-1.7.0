@@ -26,7 +26,7 @@ function add_order_detail_meta_page_161()
 
     if (!Db::getInstance()->getValue('
         SELECT id_meta
-        FROM `'._DB_PREFIX_.'meta` m
+        FROM meta` m
         WHERE m.`page` = "order-detail"')
     ) {
         // meta
@@ -49,7 +49,7 @@ function add_order_detail_meta_page_161()
                     'url_rewrite' => 'details-de-reservation'
                 )
             );
-            if ($languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`')) {
+            if ($languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM lang`')) {
                 $row = array();
                 foreach ($languages as $lang) {
                     if (in_array(strtolower($lang['iso_code']), array_keys($pageDetail))) {
@@ -82,7 +82,7 @@ function add_order_detail_meta_page_161()
 
             // meta themes
             $row = array();
-            if ($themes = Db::getInstance()->executeS('SELECT id_theme FROM `'._DB_PREFIX_.'theme`')) {
+            if ($themes = Db::getInstance()->executeS('SELECT id_theme FROM theme`')) {
                 foreach ($themes as $theme) {
                     $row[] = array(
                         'id_theme' => (int)$theme,

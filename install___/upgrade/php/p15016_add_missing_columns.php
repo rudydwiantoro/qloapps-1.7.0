@@ -28,34 +28,34 @@ function p15016_add_missing_columns()
 {
     $errors = array();
 
-    $id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blockreinsurance"');
+    $id_module = Db::getInstance()->getValue('SELECT id_module FROM module` WHERE name="blockreinsurance"');
     if ($id_module) {
-        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance`');
+        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM reinsurance`');
         foreach ($list_fields as $k => $field) {
             $list_fields[$k] = $field['Field'];
         }
             
         if (in_array('id_contactinfos', $list_fields)) {
-            if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `id_contactinfos` `id_reinsurance` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT')) {
+            if (!Db::getInstance()->execute('ALTER TABLE reinsurance` CHANGE `id_contactinfos` `id_reinsurance` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
         if (!in_array('id_shop', $list_fields)) {
-            if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_reinsurance')) {
+            if (!Db::getInstance()->execute('ALTER TABLE reinsurance` ADD `id_shop` INT(10) NOT NULL default "1" AFTER id_reinsurance')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
         if (in_array('filename', $list_fields)) {
-            if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `filename` `file_name` VARCHAR(100) NOT NULL')) {
+            if (!Db::getInstance()->execute('ALTER TABLE reinsurance` CHANGE `filename` `file_name` VARCHAR(100) NOT NULL')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
         
-        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance_lang`');
+        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM reinsurance_lang`');
         
         if (!is_array($list_fields) || $list_fields == false) {
             $return = Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'reinsurance_lang` (
+				CREATE TABLE IF NOT EXISTS reinsurance_lang` (
 					`id_reinsurance` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 					`id_lang` int(10) unsigned NOT NULL ,
 					`text` VARCHAR(300) NOT NULL,
@@ -67,26 +67,26 @@ function p15016_add_missing_columns()
         }
     }
     
-    $id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blocktopmenu"');
+    $id_module = Db::getInstance()->getValue('SELECT id_module FROM module` WHERE name="blocktopmenu"');
     if ($id_module) {
-        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'linksmenutop`');
+        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM linksmenutop`');
         foreach ($list_fields as $k => $field) {
             $list_fields[$k] = $field['Field'];
         }
 
         if (in_array('id_link', $list_fields) && !in_array('id_linksmenutop', $list_fields)) {
-            if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'linksmenutop` CHANGE `id_link` `id_linksmenutop` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT')) {
+            if (!Db::getInstance()->execute('ALTER TABLE linksmenutop` CHANGE `id_link` `id_linksmenutop` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }
                 
-        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'linksmenutop_lang`');
+        $list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM linksmenutop_lang`');
         foreach ($list_fields as $k => $field) {
             $list_fields[$k] = $field['Field'];
         }
 
         if (in_array('id_link', $list_fields) && !in_array('id_linksmenutop', $list_fields)) {
-            if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'linksmenutop_lang` CHANGE `id_link` `id_linksmenutop` INT(10) UNSIGNED NOT NULL')) {
+            if (!Db::getInstance()->execute('ALTER TABLE linksmenutop_lang` CHANGE `id_link` `id_linksmenutop` INT(10) UNSIGNED NOT NULL')) {
                 $errors[] = Db::getInstance()->getMsgError();
             }
         }

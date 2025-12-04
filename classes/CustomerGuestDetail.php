@@ -59,7 +59,7 @@ class CustomerGuestDetailCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
             SELECT `id_customer_guest_detail`
-            FROM `'._DB_PREFIX_.'cart_customer_guest`
+            FROM cart_customer_guest`
             WHERE `id_cart` = '.(int) $id_cart
         );
     }
@@ -188,7 +188,7 @@ class CustomerGuestDetailCore extends ObjectModel
     {
         return Db::getInstance()->getRow('
             SELECT `id_gender`, `firstname`, `lastname`, `email`, `phone`
-            FROM `'._DB_PREFIX_.'customer_guest_detail`
+            FROM customer_guest_detail`
             WHERE `id_customer_guest_detail` = '.(int) $idCustomerGuestDetail
         );
     }
@@ -202,8 +202,8 @@ class CustomerGuestDetailCore extends ObjectModel
     public static function getCustomerGuestByEmail($email, $idCustomer = null, $idCart = 0)
     {
         return Db::getInstance()->getValue(
-            'SELECT cgd.`id_customer_guest_detail` FROM `'._DB_PREFIX_.'customer_guest_detail` as cgd
-            LEFT JOIN `'._DB_PREFIX_.'cart_customer_guest` ccg
+            'SELECT cgd.`id_customer_guest_detail` FROM customer_guest_detail` as cgd
+            LEFT JOIN cart_customer_guest` ccg
             ON ccg.`id_customer_guest_detail` = cgd.`id_customer_guest_detail`
             WHERE cgd.`email` = "'.pSQL($email).'"'.
             (!is_null($idCart) ? ' AND (ccg.`id_cart` = '.(int) $idCart.' '. (($idCart) ? ')'  : ' OR ISNULL(ccg.`id_cart`)) ') : ' ').

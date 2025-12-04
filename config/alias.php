@@ -68,6 +68,10 @@ function pSQL($string, $htmlOK = false)
 
 function bqSQL($string)
 {
+    // For PostgreSQL compatibility, don't add backticks - they cause case sensitivity issues
+    if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+        return pSQL($string);
+    }
     return str_replace('`', '\`', pSQL($string));
 }
 

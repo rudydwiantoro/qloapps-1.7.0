@@ -24,7 +24,7 @@
 function update_order_payment_detail_160()
 {
 
-    if ($orderPayment = Db::getInstance()->executeS('SELECT `order_reference`, `id_order_payment`, `amount` FROM `'._DB_PREFIX_.'order_payment`')) {
+    if ($orderPayment = Db::getInstance()->executeS('SELECT `order_reference`, `id_order_payment`, `amount` FROM order_payment`')) {
         $references = array();
         foreach ($orderPayment as $payment) {
             if (!isset($references[$payment['order_reference']])) {
@@ -37,7 +37,7 @@ function update_order_payment_detail_160()
         }
         if (!empty($references)) {
             foreach ($references as $key => $reference) {
-                $orders = Db::getInstance()->executeS('SELECT `id_order`, `advance_paid_amount` FROM `'._DB_PREFIX_.'orders` WHERE `reference` = "'.pSQL($key).'"');
+                $orders = Db::getInstance()->executeS('SELECT `id_order`, `advance_paid_amount` FROM orders` WHERE `reference` = "'.pSQL($key).'"');
                 if (count($orders) == 1) {
                     $order = array_shift($orders);
                     foreach ($reference as $payment) {
@@ -73,8 +73,8 @@ function update_order_payment_detail_160()
                             foreach ($orders as $order) {
                                 $ordersPayment = Db::getInstance()->getRow('
                                     SELECT `total_paid_real`, IFNULL(SUM(`amount`), 0) as payment_amount
-                                    FROM `'._DB_PREFIX_.'orders` o
-                                    LEFT JOIN `'._DB_PREFIX_.'order_payment_detail` opd
+                                    FROM orders` o
+                                    LEFT JOIN order_payment_detail` opd
                                     ON (opd.`id_order` = o.`id_order`)
                                     WHERE o.`id_order` = '.(int) $order['id_order'].'
                                     GROUP BY o.`id_order`'

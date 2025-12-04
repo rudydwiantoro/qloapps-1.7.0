@@ -83,12 +83,12 @@ class CustomerMessageCore extends ObjectModel
 				e.`firstname` AS efirstname,
 				e.`lastname` AS elastname,
 				(COUNT(cm.id_customer_message) = 0 AND ct.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'customer_message` cm
-			LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct
+			FROM customer_message` cm
+			LEFT JOIN customer_thread` ct
 				ON ct.`id_customer_thread` = cm.`id_customer_thread`
-			LEFT JOIN `'._DB_PREFIX_.'customer` c
+			LEFT JOIN customer` c
 				ON ct.`id_customer` = c.`id_customer`
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e
+			LEFT OUTER JOIN employee` e
 				ON e.`id_employee` = cm.`id_employee`
 			WHERE ct.id_order = '.(int)$id_order.'
 			'.(!is_null($private) ? 'AND cm.`private` = '.(int) $private : '').'
@@ -102,7 +102,7 @@ class CustomerMessageCore extends ObjectModel
     {
         $sql = 'SELECT COUNT(*)
             FROM '._DB_PREFIX_.'customer_message cm
-            LEFT JOIN `'._DB_PREFIX_.'customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`) ';
+            LEFT JOIN customer_thread` ct ON (cm.`id_customer_thread` = ct.`id_customer_thread`) ';
         if (is_null($where)) {
             $where = ' 1 ';
         }
@@ -110,7 +110,7 @@ class CustomerMessageCore extends ObjectModel
         $employee = Context::getContext()->employee;
         if (!$employee->isSuperAdmin()) {
             $where .= (($acsHtls = HotelBranchInformation::getProfileAccessedHotels($employee->id_profile, 1, 1)) ?
-                ' AND ct.`id_order` IN (SELECT `id_order` FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE `id_hotel` IN ('.implode(',', $acsHtls).')) ' :
+                ' AND ct.`id_order` IN (SELECT `id_order` FROM htl_booking_detail` hbd WHERE `id_hotel` IN ('.implode(',', $acsHtls).')) ' :
                 ' AND ct.`id_order` = 0 '
             );
         }
@@ -132,7 +132,7 @@ class CustomerMessageCore extends ObjectModel
     {
         return Db::getInstance()->getValue(
             'SELECT COUNT(cm.`id_customer_message`)
-            FROM `'._DB_PREFIX_.'customer_message` cm
+            FROM customer_message` cm
             WHERE cm.`date_add` BETWEEN "'.pSQL($date).' 00:00:00" AND "'.pSQL($date).' 23:59:59"'
         );
     }
@@ -141,7 +141,7 @@ class CustomerMessageCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
             SELECT cm.*, ct.*, CONCAT(c.`firstname`, \' \', c.`lastname`) `customer_name`
-            FROM `'._DB_PREFIX_.'customer_message` cm
+            FROM customer_message` cm
             LEFT JOIN '._DB_PREFIX_.'customer_thread ct
                 ON (ct.`id_customer_thread` = cm.`id_customer_thread`)
             LEFT JOIN '._DB_PREFIX_.'customer c

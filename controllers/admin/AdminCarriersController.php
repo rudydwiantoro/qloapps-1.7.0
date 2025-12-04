@@ -151,7 +151,7 @@ class AdminCarriersControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'b.*';
-        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+        $this->_join = 'INNER JOIN carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
         $this->_use_found_rows = false;
         return parent::renderList();
     }
@@ -613,7 +613,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
         if ($delete) {
             Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_group WHERE id_carrier = '.(int)$id_carrier);
         }
-        $groups = Db::getInstance()->executeS('SELECT id_group FROM `'._DB_PREFIX_.'group`');
+        $groups = Db::getInstance()->executeS('SELECT id_group FROM group`');
         foreach ($groups as $group) {
             if (Tools::getIsset('groupBox') && in_array($group['id_group'], Tools::getValue('groupBox'))) {
                 Db::getInstance()->execute('

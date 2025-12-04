@@ -130,7 +130,7 @@ class HotelRoomInformation extends ObjectModel
     public function deleteByProductId($idProduct)
     {
         if ($rooms = Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_information` WHERE `id_product`='.(int) $idProduct
+            'SELECT * FROM htl_room_information` WHERE `id_product`='.(int) $idProduct
         )) {
             foreach ($rooms as $room) {
                 $objRoomInfo = new HotelRoomInformation($room['id']);
@@ -182,7 +182,7 @@ class HotelRoomInformation extends ObjectModel
      */
     public function getHotelRoomInfoByProductId($id_product)
     {
-        $result = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_room_information` WHERE `id_product`='.(int) $id_product);
+        $result = Db::getInstance()->executeS('SELECT * FROM htl_room_information` WHERE `id_product`='.(int) $id_product);
         if ($result) {
             return $result;
         }
@@ -250,12 +250,12 @@ class HotelRoomInformation extends ObjectModel
 
         $sql = 'SELECT hri.*, hri.`id_product`, hri.`id_hotel`, hrt.`adults`, hrt.`children`, hrt.`max_adults`,
         hrt.`max_children`, hrt.`max_guests`, hrt.`min_los`, hrt.`max_los`, pl.`name` AS room_type_name, hbil.`hotel_name` AS hotel_name
-        FROM `'._DB_PREFIX_.'htl_room_information` hri
-        INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (hrt.`id_product` = hri.`id_product`)
-        INNER JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON (hbi.`id` = hri.`id_hotel`)
-        INNER JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil ON (hbil.`id` = hri.`id_hotel` AND hbil.`id_lang` = '.(int) $idLang.')
-        INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = hri.`id_product`)
-        INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $idLang.')
+        FROM htl_room_information` hri
+        INNER JOIN htl_room_type` hrt ON (hrt.`id_product` = hri.`id_product`)
+        INNER JOIN htl_branch_info` hbi ON (hbi.`id` = hri.`id_hotel`)
+        INNER JOIN htl_branch_info_lang` hbil ON (hbil.`id` = hri.`id_hotel` AND hbil.`id_lang` = '.(int) $idLang.')
+        INNER JOIN product` p ON (p.`id_product` = hri.`id_product`)
+        INNER JOIN product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $idLang.')
         WHERE 1 '.($idHotel ? ' AND hri.`id_hotel` = '.(int) $idHotel : '').
         ($idProduct ? ' AND hri.`id_product` = '.(int) $idProduct : '').'
         ORDER BY hri.`id_product`, hri.`id`';
@@ -278,22 +278,22 @@ class HotelRoomInformation extends ObjectModel
 
     public function getRoomTypeAvailableRoomsForDateRange($id_hotel, $id_product, $date_from, $date_to)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_room_information` where `id_hotel`='.(int) $id_hotel.' AND `id_product`='.(int) $id_product.' AND `id` NOT IN (SELECT `id_room` from `'._DB_PREFIX_.'htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel.')');
+        return Db::getInstance()->executeS('SELECT * FROM htl_room_information` where `id_hotel`='.(int) $id_hotel.' AND `id_product`='.(int) $id_product.' AND `id` NOT IN (SELECT `id_room` from htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel.')');
     }
 
     public function getRoomTypeDisabledRoomsForDateRange($id_hotel, $id_product, $date_from, $date_to)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_room_information` where `id_hotel`='.(int) $id_hotel.' AND `id_product`='.(int) $id_product.' AND `id_status`=3 AND `id` NOT IN (SELECT `id_room` from `'._DB_PREFIX_.'htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel.')');
+        return Db::getInstance()->executeS('SELECT * FROM htl_room_information` where `id_hotel`='.(int) $id_hotel.' AND `id_product`='.(int) $id_product.' AND `id_status`=3 AND `id` NOT IN (SELECT `id_room` from htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel.')');
     }
 
     public function getRoomTypeBookedRoomsForDateRange($id_hotel, $id_product, $date_from, $date_to)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel);
+        return Db::getInstance()->executeS('SELECT * FROM htl_booking_detail` where `date_from`< \''.pSQL($date_to).'\' AND `date_to`>\''.pSQL($date_from).'\' AND `id_product`='.(int) $id_product.' AND `id_hotel`='.(int) $id_hotel);
     }
 
     public function getFutureBookings($idRoom)
     {
-        return Db::getInstance()->executeS('SELECT `id`, `id_order`, `date_from`, `date_to` FROM `'._DB_PREFIX_.'htl_booking_detail` where `date_to` > \''.pSQL(date('Y-m-d')).'\' AND `is_refunded` = 0 AND `id_room`='.(int) $idRoom);
+        return Db::getInstance()->executeS('SELECT `id`, `id_order`, `date_from`, `date_to` FROM htl_booking_detail` where `date_to` > \''.pSQL(date('Y-m-d')).'\' AND `is_refunded` = 0 AND `id_room`='.(int) $idRoom);
     }
 
     // Webservice :: webservice add function

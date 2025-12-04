@@ -121,9 +121,9 @@ class AdminWarehousesControllerCore extends AdminController
 
         // query: join
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
-			LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
-			LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
+			LEFT JOIN employee` e ON (e.id_employee = a.id_employee)
+			LEFT JOIN address` ad ON (ad.id_address = a.id_address)
+			LEFT JOIN country` c ON (c.id_country = ad.id_country)';
         $this->_use_found_rows = false;
         // display help informations
         $this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');

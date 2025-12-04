@@ -57,10 +57,10 @@ class HotelRoomTypeDemand extends ObjectModel
     {
         $idLang = Context::getContext()->language->id;
         $roomTypeDemands = Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_demand` rd
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand` rgd
+            'SELECT * FROM htl_room_type_demand` rd
+            LEFT JOIN htl_room_type_global_demand` rgd
             ON (rd.`id_global_demand` = rgd.`id_global_demand`)
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_lang` rgdl
+            LEFT JOIN htl_room_type_global_demand_lang` rgdl
             ON (rgd.`id_global_demand` = rgdl.`id_global_demand` AND rgdl.`id_lang` = '.(int)$idLang.')
             WHERE rd.`id_product`='.(int)$idProductOld
         );
@@ -128,10 +128,10 @@ class HotelRoomTypeDemand extends ObjectModel
         }
         $roomTypeDemandInfo = array();
         if ($roomTypeDemands = Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_demand` rd
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand` rgd
+            'SELECT * FROM htl_room_type_demand` rd
+            LEFT JOIN htl_room_type_global_demand` rgd
             ON (rd.`id_global_demand` = rgd.`id_global_demand`)
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_lang` rgdl
+            LEFT JOIN htl_room_type_global_demand_lang` rgdl
             ON (rgd.`id_global_demand` = rgdl.`id_global_demand` AND rgdl.`id_lang` = '.(int)$idLang.')
             WHERE rd.`id_product`='.(int)$idProduct
         )) {

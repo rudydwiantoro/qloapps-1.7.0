@@ -78,8 +78,8 @@ class WebserviceKeyCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.*
-			FROM `'._DB_PREFIX_.'webservice_permission` p
-			LEFT JOIN `'._DB_PREFIX_.'webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
+			FROM webservice_permission` p
+			LEFT JOIN webservice_account` a ON (a.id_webservice_account = p.id_webservice_account)
 			WHERE a.key = \''.pSQL($auth_key).'\'
 		');
         $permissions = array();
@@ -95,7 +95,7 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT active
-		FROM `'._DB_PREFIX_.'webservice_account`
+		FROM webservice_account`
 		WHERE `key` = "'.pSQL($auth_key).'"');
     }
 
@@ -103,14 +103,14 @@ class WebserviceKeyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT class_name
-		FROM `'._DB_PREFIX_.'webservice_account`
+		FROM webservice_account`
 		WHERE `key` = "'.pSQL($auth_key).'"');
     }
 
     public static function setPermissionForAccount($id_account, $permissions_to_set)
     {
         $ok = true;
-        $sql = 'DELETE FROM `'._DB_PREFIX_.'webservice_permission` WHERE `id_webservice_account` = '.(int)$id_account;
+        $sql = 'DELETE FROM webservice_permission` WHERE `id_webservice_account` = '.(int)$id_account;
         if (!Db::getInstance()->execute($sql)) {
             $ok = false;
         }
@@ -129,7 +129,7 @@ class WebserviceKeyCore extends ObjectModel
             }
             $account = new WebserviceKey($id_account);
             if ($account->deleteAssociations() && $permissions) {
-                $sql = 'INSERT INTO `'._DB_PREFIX_.'webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
+                $sql = 'INSERT INTO webservice_permission` (`id_webservice_permission` ,`resource` ,`method` ,`id_webservice_account`) VALUES ';
                 foreach ($permissions as $permission) {
                     $sql .= '(NULL , \''.pSQL($permission[1]).'\', \''.pSQL($permission[0]).'\', '.(int)$id_account.'), ';
                 }

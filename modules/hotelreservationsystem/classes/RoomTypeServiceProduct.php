@@ -68,7 +68,7 @@ class RoomTypeServiceProduct extends ObjectModel
         // Get the list of elements before deleting associations to clean positions of remaining associations
         $elements = Db::getInstance()->executeS(
             'SELECT rsp.`id_element`, rsp.`element_type`
-            FROM `'._DB_PREFIX_.'htl_room_type_service_product` rsp
+            FROM htl_room_type_service_product` rsp
             WHERE '.$where.'
             GROUP BY rsp.`element_type`, rsp.`id_element`'
         );
@@ -105,7 +105,7 @@ class RoomTypeServiceProduct extends ObjectModel
 
     public function getAssociatedHotelsAndRoomType($idProduct, $elementType = 0, $idElement = 0, $formated = true) {
         $rows = Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_service_product` AS rsp
+            'SELECT * FROM htl_room_type_service_product` AS rsp
             WHERE `id_product` = '.(int)$idProduct . ($elementType ? ' AND rsp.`element_type` = ' . (int)$elementType : "" . ($idElement ? ' AND rsp.`id_element` = ' . (int)$idElement : ""))
         );
 
@@ -123,7 +123,7 @@ class RoomTypeServiceProduct extends ObjectModel
 
     public function getProductsForRoomType($idProductRoomType)
     {
-        $sql = 'SELECT `id_room_type_service_product`, `id_product`, `position` FROM `'._DB_PREFIX_.'htl_room_type_service_product`
+        $sql = 'SELECT `id_room_type_service_product`, `id_product`, `position` FROM htl_room_type_service_product`
             WHERE `element_type` = '.self::WK_ELEMENT_TYPE_ROOM_TYPE.' AND `id_element` = '.(int)$idProductRoomType.'
             ORDER BY `position` ASC';
 
@@ -132,7 +132,7 @@ class RoomTypeServiceProduct extends ObjectModel
 
     public function isRoomTypeLinkedWithProduct($idProductRoomType, $idServiceProduct)
     {
-        $sql = 'SELECT `id_room_type_service_product` FROM  `'._DB_PREFIX_.'htl_room_type_service_product`
+        $sql = 'SELECT `id_room_type_service_product` FROM  htl_room_type_service_product`
             WHERE `id_product` = '.(int)$idServiceProduct.' AND `id_element` = '.(int)$idProductRoomType.'
             AND `element_type` = '.self::WK_ELEMENT_TYPE_ROOM_TYPE;
 
@@ -148,8 +148,8 @@ class RoomTypeServiceProduct extends ObjectModel
                 $front = false;
             }
 
-            $sql = 'SELECT p.`id_product` FROM  `'._DB_PREFIX_.'htl_room_type_service_product` rsp
-            INNER JOIN `'._DB_PREFIX_.'product` p ON (rsp.`id_product` = p.`id_product` AND p.`auto_add_to_cart` = 1)
+            $sql = 'SELECT p.`id_product` FROM  htl_room_type_service_product` rsp
+            INNER JOIN product` p ON (rsp.`id_product` = p.`id_product` AND p.`auto_add_to_cart` = 1)
             WHERE p.`active` = 1 AND `id_element` = '.(int)$idProduct.' AND `element_type` = '.self::WK_ELEMENT_TYPE_ROOM_TYPE.
             ($front ? ' AND p.`available_for_order` = 1':'');
             if (!is_null($priceAdditionType)) {
@@ -269,7 +269,7 @@ class RoomTypeServiceProduct extends ObjectModel
     {
         $position = DB::getInstance()->getValue(
             'SELECT MAX(rsp.`position`)
-            FROM `'._DB_PREFIX_.'htl_room_type_service_product` AS rsp
+            FROM htl_room_type_service_product` AS rsp
             WHERE rsp.`id_element` = '.(int) $idElement.'
             AND rsp.`element_type` = '.(int) $elementType
         );
@@ -283,7 +283,7 @@ class RoomTypeServiceProduct extends ObjectModel
         foreach ($elements as $element) {
             Db::getInstance()->execute('SET @i = -1', false);
             $result &= Db::getInstance()->execute(
-                'UPDATE `'._DB_PREFIX_.'htl_room_type_service_product` rsp
+                'UPDATE htl_room_type_service_product` rsp
                 SET rsp.`position` = @i:=@i+1
                 WHERE rsp.`element_type` = '.(int) $element['element_type'].'
                 AND rsp.`id_element` = '.(int) $element['id_element'].'
@@ -311,7 +311,7 @@ class RoomTypeServiceProduct extends ObjectModel
     ) {
         if (!$result = Db::getInstance()->executeS(
             'SELECT rsp.`id_product`, rsp.`position`
-            FROM `'._DB_PREFIX_.'htl_room_type_service_product` rsp
+            FROM htl_room_type_service_product` rsp
             WHERE rsp.`id_element` = '.(int) $idElement.'
             AND rsp.`element_type` = '.(int) $elementType.'
             ORDER BY rsp.`position` ASC'
@@ -333,7 +333,7 @@ class RoomTypeServiceProduct extends ObjectModel
         $way = ($newPosition >= $movedBlock['position']) ? 1 : 0;
 
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_room_type_service_product` rsp
+            'UPDATE htl_room_type_service_product` rsp
             SET rsp.`position` = `position` '.($way ? '- 1' : '+ 1').'
             WHERE rsp.`id_element` = '.(int) $idElement.'
             AND rsp.`element_type` = '.(int) $elementType.'
@@ -341,7 +341,7 @@ class RoomTypeServiceProduct extends ObjectModel
             (int) $movedBlock['position'].' AND rsp.`position` <= '.(int) $newPosition : '< '.
             (int) $movedBlock['position'].' AND rsp.`position` >= '.(int) $newPosition)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_room_type_service_product` rsp
+            'UPDATE htl_room_type_service_product` rsp
             SET rsp.`position` = '.(int) $newPosition.'
             WHERE rsp.`id_element` = '.(int) $idElement.'
             AND rsp.`element_type` = '.(int) $elementType.'

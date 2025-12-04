@@ -76,7 +76,7 @@ class MessageCore extends ObjectModel
     {
         return Db::getInstance()->getRow('
 			SELECT *
-			FROM `'._DB_PREFIX_.'message`
+			FROM message`
 			WHERE `id_cart` = '.(int)$id_cart
         );
     }
@@ -101,12 +101,12 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'message` m
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr
+			FROM message` m
+			LEFT JOIN customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN message_readed` mr
 				ON mr.`id_message` = m.`id_message`
 				AND mr.`id_employee` = '.(isset($context->employee) ? (int)$context->employee->id : '\'\'').'
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
+			LEFT OUTER JOIN employee` e ON e.`id_employee` = m.`id_employee`
 			WHERE id_order = '.(int)$id_order.'
 			'.(!is_null($private) ? ' AND m.`private` = '.(int) $private : '').'
 			GROUP BY m.id_message
@@ -134,10 +134,10 @@ class MessageCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT m.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname, e.`firstname` AS efirstname, e.`lastname` AS elastname,
 			(COUNT(mr.id_message) = 0 AND m.id_customer != 0) AS is_new_for_me
-			FROM `'._DB_PREFIX_.'message` m
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON m.`id_customer` = c.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = '.(int)$context->employee->id.')
-			LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e ON e.`id_employee` = m.`id_employee`
+			FROM message` m
+			LEFT JOIN customer` c ON m.`id_customer` = c.`id_customer`
+			LEFT JOIN message_readed` mr ON (mr.id_message = m.id_message AND mr.id_employee = '.(int)$context->employee->id.')
+			LEFT OUTER JOIN employee` e ON e.`id_employee` = m.`id_employee`
 			WHERE id_cart = '.(int)$id_cart.'
 			'.(!$private ? ' AND m.`private` = 0' : '').'
 			GROUP BY m.id_message

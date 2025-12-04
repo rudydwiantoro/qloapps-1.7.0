@@ -77,10 +77,10 @@ class RoomTypeServiceProductPrice extends ObjectModel
             $objServiceProduct = new Product((int)$idProduct);
             if ($result = Db::getInstance()->getRow('
                 SELECT spp.`price`, spp.`id_tax_rules_group`, p.`auto_add_to_cart`, p.`price_addition_type`
-                FROM `'._DB_PREFIX_.'product` p
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_type_service_product` sp
+                FROM product` p
+                LEFT JOIN htl_room_type_service_product` sp
                 ON (sp.`id_product` = p.`id_product`)
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_type_service_product_price` spp
+                LEFT JOIN htl_room_type_service_product_price` spp
                 ON (spp.`id_product` = sp.`id_product` AND spp.`id_element` = sp.`id_element` AND spp.`element_type` = sp.`element_type`)
                 WHERE p.`id_product`='.(int)$idProduct.
                 ' AND sp.`id_element`='.(int)$idElement.
@@ -113,7 +113,7 @@ class RoomTypeServiceProductPrice extends ObjectModel
     public function getProductRoomTypeLinkPriceInfo($idProduct, $idElement, $elementType)
     {
         return Db::getInstance()->getRow(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_service_product_price`
+            'SELECT * FROM htl_room_type_service_product_price`
             WHERE `id_product`='.(int)$idProduct.
             ' AND `id_element`='.(int)$idElement.
             ' AND `element_type`='.(int)$elementType

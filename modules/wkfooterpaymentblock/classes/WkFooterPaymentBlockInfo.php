@@ -64,7 +64,7 @@ class WkFooterPaymentBlockInfo extends ObjectModel
 
     public function getAllPaymentBlocks($active = null, $orderBy = '', $orderWay = 'ASC')
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'htl_footer_payment_block_info` WHERE 1';
+        $sql = 'SELECT * FROM htl_footer_payment_block_info` WHERE 1';
         if (!is_null($active)) {
             $sql .= ' AND `active` = '.(int)$active;
         }
@@ -77,7 +77,7 @@ class WkFooterPaymentBlockInfo extends ObjectModel
     public static function getHigherPosition()
     {
         $position = DB::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_footer_payment_block_info`'
+            'SELECT MAX(`position`) FROM htl_footer_payment_block_info`'
         );
         $result = (is_numeric($position)) ? $position : -1;
         return $result + 1;
@@ -86,7 +86,7 @@ class WkFooterPaymentBlockInfo extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$res = Db::getInstance()->executeS(
-            'SELECT hpb.`id_payment_block`, hpb.`position` FROM `'._DB_PREFIX_.'htl_footer_payment_block_info` hpb
+            'SELECT hpb.`id_payment_block`, hpb.`position` FROM htl_footer_payment_block_info` hpb
             WHERE hpb.`id_payment_block` = '.(int) $this->id.' ORDER BY `position` ASC'
         )
         ) {
@@ -104,12 +104,12 @@ class WkFooterPaymentBlockInfo extends ObjectModel
             return false;
         }
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_footer_payment_block_info` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_footer_payment_block_info` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int)$movedPaymentBlock['position'].' AND `position` <= '.(int)$position : '< '
             .(int)$movedPaymentBlock['position'].' AND `position` >= '.(int)$position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_footer_payment_block_info`
+            'UPDATE htl_footer_payment_block_info`
             SET `position` = '.(int)$position.'
             WHERE `id_payment_block`='.(int)$movedPaymentBlock['id_payment_block']
         ));
@@ -123,7 +123,7 @@ class WkFooterPaymentBlockInfo extends ObjectModel
     public static function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_footer_payment_block_info` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_footer_payment_block_info` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool) Db::getInstance()->execute($sql);
     }
 }

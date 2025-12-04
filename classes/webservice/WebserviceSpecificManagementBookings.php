@@ -304,7 +304,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
                     // @todo: add filters for the booking webservice
                     // $filters = $this->manageFilters();
                     $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('bookings', array());
-                    $bookings = Db::getInstance()->executeS('SELECT `id_order` FROM `'._DB_PREFIX_.'orders` WHERE 1');
+                    $bookings = Db::getInstance()->executeS('SELECT `id_order` FROM orders` WHERE 1');
                     foreach ($bookings as $booking) {
                         $more_attr = array(
                             'xlink_resource' => $this->wsObject->wsUrl.$this->wsObject->urlSegment[0].'/'.$booking['id_order'],
@@ -1091,7 +1091,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
                         $this->wsRequestedRooms[$dateRoomJoinKey]['id_tax_rules_group'] = $this->createTaxRule(($this->wsRequestedRooms[$dateRoomJoinKey]['total_tax']/$objHotelBookingDetail->total_price_tax_excl)*100, $objAddress);
                     } else if (isset($this->wsRequestedRooms[$dateRoomJoinKey]['total_tax'])) {
                         $objOrderDetail->id_tax_rules_group = 0;
-                        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
+                        Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
                         $priceWithTax = $objHotelBookingDetail->total_price_tax_excl + $this->wsRequestedRooms[$dateRoomJoinKey]['total_tax'];
                     }
 
@@ -1134,7 +1134,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
 
     public function saveTaxCalculator($idOrderDetail, $idTaxRulesGroup)
     {
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$idOrderDetail);
+        Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$idOrderDetail);
 
         $idTax = $this->wsTaxRulesGroup[$idTaxRulesGroup]['tax'];
         $objOrderDetail = new OrderDetail($idOrderDetail);
@@ -1142,7 +1142,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
             (float)($objOrderDetail->unit_price_tax_incl - $objOrderDetail->unit_price_tax_excl).','.
             (float)($objOrderDetail->total_price_tax_incl - $objOrderDetail->total_price_tax_excl).'),';
         $values = rtrim($values, ',');
-        $sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+        $sql = 'INSERT INTO order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
 				VALUES '.$values;
 
         return Db::getInstance()->execute($sql);
@@ -1253,7 +1253,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
                                 $this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['id_tax_rules_group'] = $this->createTaxRule(($this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax']/$objServiceProductOrderDetail->total_price_tax_excl)*100, $objAddress);
                             } else if (isset($this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax'])) {
                                 $objOrderDetail->id_tax_rules_group = 0;
-                                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
+                                Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
                                 $unitPriceTaxIncl = $objServiceProductOrderDetail->total_price_tax_excl + $this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax'];
                                 $priceDiffTaxIncl = $unitPriceTaxIncl - $objServiceProductOrderDetail->total_price_tax_incl;
 
@@ -2360,7 +2360,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
                                     $this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['id_tax_rules_group'] = $this->createTaxRule(($this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax']/$totalPriceTaxExcl)*100, $objAddress);
                                 } else if (isset($this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax'])) {
                                     $objOrderDetail->id_tax_rules_group = 0;
-                                    Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
+                                    Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
                                     $unitPriceTaxIncl = $objServiceProductOrderDetail->total_price_tax_excl + $this->wsRequestedRoomTypes[$dateRoomJoinKey]['services'][$service['id_product']]['total_tax'];
                                     $priceDiffTaxIncl = $unitPriceTaxIncl - $objServiceProductOrderDetail->total_price_tax_incl;
                                 }
@@ -3325,7 +3325,7 @@ class WebserviceSpecificManagementBookingsCore Extends ObjectModel implements We
                         $unitPriceTaxIncl = Tools::ps_round($totalPriceTaxIncl / $quantity, _PS_PRICE_COMPUTE_PRECISION_);
                     } else if (isset($services[$product['id_product']]['total_tax'])) {
                         $objOrderDetail->id_tax_rules_group = 0;
-                        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
+                        Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$objOrderDetail->id);
                         $unitPriceTaxIncl = $unitPriceTaxExcl + $services[$product['id_product']]['total_tax'];
                         $totalPriceTaxIncl = Tools::ps_round(($unitPriceTaxIncl * $quantity), _PS_PRICE_COMPUTE_PRECISION_);
                     }

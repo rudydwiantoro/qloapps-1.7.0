@@ -60,8 +60,8 @@ class StatsCatalog extends Module
     {
         $sql = 'SELECT COUNT(DISTINCT p.`id_product`) AS total,
         IFNULL(SUM(p.`price`) / COUNT(p.`price`), 0) AS average_price
-        FROM `'._DB_PREFIX_.'product` p
-        INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (hrt.`id_product` = p.`id_product`)
+        FROM product` p
+        INNER JOIN htl_room_type` hrt ON (hrt.`id_product` = p.`id_product`)
         '.$this->join.'
         WHERE p.`active` = 1
         '.HotelBranchInformation::addHotelRestriction(false, 'hrt').'
@@ -76,11 +76,11 @@ class StatsCatalog extends Module
     public function getTotalHotelPageViewed()
     {
         $sql = 'SELECT SUM(pv.`counter`)
-        FROM `'._DB_PREFIX_.'page_viewed` pv
-        LEFT JOIN `'._DB_PREFIX_.'page` p ON (p.`id_page` = pv.`id_page`)
-        LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON (pt.`id_page_type` = p.`id_page_type`)
-        LEFT JOIN `'._DB_PREFIX_.'category` cl ON (cl.`id_category` = p.`id_object`)
-        LEFT JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON (hbi.`id_category` = cl.`id_category`)
+        FROM page_viewed` pv
+        LEFT JOIN page` p ON (p.`id_page` = pv.`id_page`)
+        LEFT JOIN page_type` pt ON (pt.`id_page_type` = p.`id_page_type`)
+        LEFT JOIN category` cl ON (cl.`id_category` = p.`id_object`)
+        LEFT JOIN htl_branch_info` hbi ON (hbi.`id_category` = cl.`id_category`)
         '.$this->join.'
         WHERE pt.`name` = "'.pSQL('category').'"
         '.HotelBranchInformation::addHotelRestriction(false, 'hbi', 'id').'
@@ -97,12 +97,12 @@ class StatsCatalog extends Module
     public function getTotalRoomTypePageViewed()
     {
         $sql = 'SELECT SUM(pv.`counter`)
-		FROM `'._DB_PREFIX_.'product` p
+		FROM product` p
 		'.Shop::addSqlAssociation('product', 'p').'
-		INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
-		LEFT JOIN `'._DB_PREFIX_.'page` pa ON p.`id_product` = pa.`id_object`
-		LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON (pt.`id_page_type` = pa.`id_page_type` AND pt.`name` IN ("product.php", "product"))
-		LEFT JOIN `'._DB_PREFIX_.'page_viewed` pv ON pv.`id_page` = pa.`id_page`
+		INNER JOIN htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
+		LEFT JOIN page` pa ON p.`id_product` = pa.`id_object`
+		LEFT JOIN page_type` pt ON (pt.`id_page_type` = pa.`id_page_type` AND pt.`name` IN ("product.php", "product"))
+		LEFT JOIN page_viewed` pv ON pv.`id_page` = pa.`id_page`
 		'.$this->join.'
 		WHERE product_shop.`active` = 1
         '.HotelBranchInformation::addHotelRestriction(false, 'hrt').'
@@ -118,11 +118,11 @@ class StatsCatalog extends Module
     public function getTotalProductViewed()
     {
         $sql = 'SELECT COUNT(DISTINCT pa.`id_object`)
-		FROM `'._DB_PREFIX_.'page_viewed` pv
-		LEFT JOIN `'._DB_PREFIX_.'page` pa ON pv.`id_page` = pa.`id_page`
-		LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = pa.`id_page_type`
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = pa.`id_object`
-		INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
+		FROM page_viewed` pv
+		LEFT JOIN page` pa ON pv.`id_page` = pa.`id_page`
+		LEFT JOIN page_type` pt ON pt.`id_page_type` = pa.`id_page_type`
+		LEFT JOIN product` p ON p.`id_product` = pa.`id_object`
+		INNER JOIN htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
 		'.Shop::addSqlAssociation('product', 'p').'
 		'.$this->join.'
 		WHERE pt.`name` IN ("product.php", "product")
@@ -145,19 +145,19 @@ class StatsCatalog extends Module
                 SELECT hbi.`id`,
                 (
                     SELECT COUNT(*)
-                    FROM `'._DB_PREFIX_.'htl_image` hi
+                    FROM htl_image` hi
                     WHERE hi.`id_hotel` = hbi.`id`
                 ) AS hotel_images,
                 (
                     SELECT COUNT(*)
-                    FROM `'._DB_PREFIX_.'image` i
-                    LEFT JOIN `'._DB_PREFIX_.'product` p
+                    FROM image` i
+                    LEFT JOIN product` p
                     ON (p.`id_product` = i.`id_product`)
-                    INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+                    INNER JOIN htl_room_type` hrt
                     ON (hrt.`id_product` = i.`id_product`)
                     WHERE hrt.`id_hotel` = hbi.`id`
                 ) AS room_type_images
-                FROM `'._DB_PREFIX_.'htl_branch_info` hbi
+                FROM htl_branch_info` hbi
                 WHERE 1 '.HotelBranchInformation::addHotelRestriction(false, 'hbi', 'id').'
             ) AS t
             '.($this->id_hotel ? ' WHERE t.`id` = '.(int) $this->id_hotel : '')
@@ -168,7 +168,7 @@ class StatsCatalog extends Module
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT IFNULL(SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)), 0)
-            FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+            FROM htl_booking_detail` hbd
             WHERE 1 '.HotelBranchInformation::addHotelRestriction(false, 'hbd').'
             '.($this->id_hotel ? ' AND hbd.`id_hotel` = '.(int) $this->id_hotel : '')
         );
@@ -177,10 +177,10 @@ class StatsCatalog extends Module
     public function getProductsNB($id_lang)
     {
         $sql = 'SELECT p.`id_product`
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.`id_order` = od.`id_order`
-				LEFT JOIN `'._DB_PREFIX_.'product` p ON p.`id_product` = od.`product_id`
-				INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
+				FROM orders` o
+				LEFT JOIN order_detail` od ON o.`id_order` = od.`id_order`
+				LEFT JOIN product` p ON p.`id_product` = od.`product_id`
+				INNER JOIN htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
 				'.Shop::addSqlAssociation('product', 'p').'
 				'.$this->join.'
 				WHERE o.valid = 1
@@ -199,10 +199,10 @@ class StatsCatalog extends Module
         }
 
         $sql = 'SELECT p.id_product, pl.name, pl.link_rewrite
-				FROM `'._DB_PREFIX_.'product` p
+				FROM product` p
 				'.Shop::addSqlAssociation('product', 'p').'
-				INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+				INNER JOIN htl_room_type` hrt ON (p.`id_product` = hrt.`id_product`)
+				LEFT JOIN product_lang` pl
 					ON (pl.`id_product` = p.`id_product` AND pl.id_lang = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				'.$this->join.'
 				WHERE product_shop.`active` = 1

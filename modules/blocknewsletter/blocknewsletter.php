@@ -184,7 +184,7 @@ class Blocknewsletter extends Module
         }
         Configuration::updateValue('NW_SALT', Tools::passwdGen(16));
         return Db::getInstance()->execute(
-            'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'newsletter` (
+            'CREATE TABLE IF NOT EXISTS newsletter` (
 				`id` int(6) NOT NULL AUTO_INCREMENT,
 				`id_shop` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 				`id_shop_group` INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -360,7 +360,7 @@ class Blocknewsletter extends Module
         )) {
             $sqlCustomer = 'SELECT c.`id_customer` AS id, gl.`name` AS gender, c.`email`, c.`firstname`, c.`lastname`,
             c.`newsletter` AS subscribed, c.`newsletter_date_add`
-            FROM `'._DB_PREFIX_.'customer` c
+            FROM customer` c
             LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (gl.`id_gender` = c.`id_gender` AND gl.`id_lang` = '.(int) $this->context->language->id.')
             WHERE c.`newsletter` = '.($subscribersType == self::EXPORT_NON_SUBSCRIBERS ? '0' : '1');
 
@@ -377,7 +377,7 @@ class Blocknewsletter extends Module
         )) {
             $sqlNewsletter = 'SELECT CONCAT(\'N\', n.`id`) AS id, NULL AS id_gender, n.`email`, NULL AS firstname,
             NULL AS lastname, n.`active` AS subscribed, n.`newsletter_date_add`
-            FROM `'._DB_PREFIX_.'newsletter` n WHERE n.`active` = '.($subscribersType == self::EXPORT_NON_SUBSCRIBERS ? '0' : '1');
+            FROM newsletter` n WHERE n.`active` = '.($subscribersType == self::EXPORT_NON_SUBSCRIBERS ? '0' : '1');
 
             $subscribers = array_merge($subscribers, Db::getInstance()->executeS($sqlNewsletter));
         }
@@ -488,7 +488,7 @@ class Blocknewsletter extends Module
     public function activateGuest($email)
     {
         return Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'newsletter`
+            'UPDATE newsletter`
 						SET `active` = 1
 						WHERE `email` = \''.pSQL($email).'\''
         );
@@ -504,7 +504,7 @@ class Blocknewsletter extends Module
     protected function getGuestEmailByToken($token, $active = false)
     {
         $sql = 'SELECT `email`
-				FROM `'._DB_PREFIX_.'newsletter`
+				FROM newsletter`
 				WHERE MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.
                 pSQL($token).'\'
 				AND `active` = '.(int) $active;
@@ -522,7 +522,7 @@ class Blocknewsletter extends Module
     protected function getUserEmailByToken($token, $active = false)
     {
         $sql = 'SELECT `email`
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE MD5(CONCAT( `email` , `date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) = \''.
                 pSQL($token).'\' AND `newsletter` = '.(int) $active;
 
@@ -539,11 +539,11 @@ class Blocknewsletter extends Module
     {
         if (in_array($register_status, array(self::GUEST_NOT_REGISTERED, self::GUEST_REGISTERED))) {
             $sql = 'SELECT MD5(CONCAT( `email` , `newsletter_date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\')) as token
-					FROM `'._DB_PREFIX_.'newsletter`
+					FROM newsletter`
 					WHERE 1 AND `email` = \''.pSQL($email).'\'';
         } elseif (in_array($register_status, array(self::CUSTOMER_NOT_REGISTERED, self::CUSTOMER_REGISTERED))) {
             $sql = 'SELECT MD5(CONCAT( `email` , `date_add`, \''.pSQL(Configuration::get('NW_SALT')).'\' )) as token
-					FROM `'._DB_PREFIX_.'customer`
+					FROM customer`
 					WHERE 1 AND `email` = \''.pSQL($email).'\'';
         }
 

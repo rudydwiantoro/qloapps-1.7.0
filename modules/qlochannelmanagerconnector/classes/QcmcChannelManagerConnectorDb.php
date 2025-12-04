@@ -25,7 +25,7 @@ class QcmcChannelManagerConnectorDb
 {
     public function createTables()
     {
-        $sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'qcmc_channel_manager_booking` (
+        $sql = 'CREATE TABLE IF NOT EXISTS qcmc_channel_manager_booking` (
             `id_channel_manager_booking` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
             `id_order` INT(11) UNSIGNED NOT NULL,
             `date_add` DATETIME NOT NULL,

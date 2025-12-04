@@ -33,7 +33,7 @@ class AdminHotelReviewHotelReviewController extends ModuleAdminController
 
         // add profile access restriction
         $this->access_select = 'SELECT a.`id_hotel_review`
-        FROM `'._DB_PREFIX_.'qhr_hotel_review` a';
+        FROM qhr_hotel_review` a';
 
         $accessibleHotels = HotelBranchInformation::getProfileAccessedHotels(
             $this->context->employee->id_profile,
@@ -50,11 +50,11 @@ class AdminHotelReviewHotelReviewController extends ModuleAdminController
         $this->_select .= ' hbl.`hotel_name`, c.`id_customer`,
         CONCAT(c.`firstname`, " ", c.`lastname`) as `customer_name`,
         CONVERT(a.`rating`, DECIMAL(10, 1)) AS `rating`,
-        (SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_review_report` rr
+        (SELECT COUNT(*) FROM qhr_review_report` rr
         WHERE rr.`id_hotel_review` = a.`id_hotel_review`) AS `total_report`';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = a.`id_order`)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+        $this->_join .= ' LEFT JOIN orders` o ON (o.`id_order` = a.`id_order`)';
+        $this->_join .= ' LEFT JOIN customer` c ON (c.`id_customer` = o.`id_customer`)';
+        $this->_join .= ' LEFT JOIN htl_branch_info_lang` hbl
         ON (hbl.`id` = a.`id_hotel` AND hbl.`id_lang` = '.(int) $this->context->language->id.')';
         $this->_orderBy .= 'a.date_add';
         $this->_orderWay .= 'DESC';

@@ -285,7 +285,15 @@ abstract class DbCore
     public static function getClass()
     {
         $class = '';
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
+        
+        // Check if PostgreSQL is specifically configured
+        if (defined('_DB_TYPE_') && _DB_TYPE_ == 'PostgreSQL') {
+            if (extension_loaded('pdo_pgsql')) {
+                $class = 'DbPostgreSQL';
+            } else {
+                throw new PrestaShopException('PostgreSQL PDO extension is not loaded but _DB_TYPE_ is set to PostgreSQL.');
+            }
+        } elseif (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
             $class = 'DbPDO';
         } elseif (extension_loaded('mysqli')) {
             $class = 'DbMySQLi';

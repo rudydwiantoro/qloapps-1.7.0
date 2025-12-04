@@ -64,8 +64,8 @@ class WkTestimonialBlockDb
     {
         return DB::getInstance()->execute(
             'DROP TABLE IF EXISTS
-            `'._DB_PREFIX_.'htl_testimonials_block_data`,
-            `'._DB_PREFIX_.'htl_testimonials_block_data_lang`
+            htl_testimonials_block_data`,
+            htl_testimonials_block_data_lang`
         ');
     }
 }

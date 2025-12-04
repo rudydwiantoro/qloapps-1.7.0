@@ -62,7 +62,7 @@ class StatsRegistrations extends ModuleGraph
     public function getTotalRegistrations()
     {
         $sql = 'SELECT COUNT(`id_customer`) as total
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE `date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 				'.Shop::addSqlRestriction(Shop::SHARE_ORDER);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -76,11 +76,11 @@ class StatsRegistrations extends ModuleGraph
     public function getBlockedVisitors()
     {
         $sql = 'SELECT COUNT(DISTINCT c.`id_guest`) as blocked
-				FROM `'._DB_PREFIX_.'page_type` pt
-				LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page_type = pt.id_page_type
-				LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON p.id_page = cp.id_page
-				LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_connections = cp.id_connections
-				LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+				FROM page_type` pt
+				LEFT JOIN page` p ON p.id_page_type = pt.id_page_type
+				LEFT JOIN connections_page` cp ON p.id_page = cp.id_page
+				LEFT JOIN connections` c ON c.id_connections = cp.id_connections
+				LEFT JOIN guest` g ON c.id_guest = g.id_guest
 				WHERE pt.name = "authentication"
 					'.Shop::addSqlRestriction(false, 'c').'
 					AND (g.id_customer IS NULL OR g.id_customer = 0)
@@ -93,10 +93,10 @@ class StatsRegistrations extends ModuleGraph
     public function getFirstBuyers()
     {
         $sql = 'SELECT COUNT(DISTINCT o.`id_customer`) as buyers
-				FROM `'._DB_PREFIX_.'orders` o
-                INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (hbd.`id_order` = o.`id_order`)
-				LEFT JOIN `'._DB_PREFIX_.'guest` g ON o.id_customer = g.id_customer
-				LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
+				FROM orders` o
+                INNER JOIN htl_booking_detail` hbd ON (hbd.`id_order` = o.`id_order`)
+				LEFT JOIN guest` g ON o.id_customer = g.id_customer
+				LEFT JOIN connections` c ON c.id_guest = g.id_guest
 				WHERE o.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
                     '.HotelBranchInformation::addHotelRestriction(false, 'hbd').'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -168,7 +168,7 @@ class StatsRegistrations extends ModuleGraph
     {
         $this->query = '
 			SELECT `date_add`
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE 1
 				'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				AND `date_add` BETWEEN';

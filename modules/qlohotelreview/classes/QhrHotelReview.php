@@ -125,7 +125,7 @@ class QhrHotelReview extends ObjectModel
         $cache_id = 'QhrHotelReview::getAverageRatingByIdHotel_'.(int) $id_hotel.'-'.(int) $validate;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue(
-                'SELECT SUM(hr.`rating`) / COUNT(hr.`rating`) FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
+                'SELECT SUM(hr.`rating`) / COUNT(hr.`rating`) FROM qhr_hotel_review` hr
                 WHERE hr.`id_hotel` = '.(int) ($id_hotel).
                 ($validate == '1' ? ' AND hr.`status` = '. (int) self::QHR_STATUS_APPROVED : '')
             );
@@ -140,7 +140,7 @@ class QhrHotelReview extends ObjectModel
         $cache_id = 'QhrHotelReview::getCountByIdHotel_'.(int) $id_hotel.'-'.(int) $validate;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->getValue(
-                'SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
+                'SELECT COUNT(*) FROM qhr_hotel_review` hr
                 WHERE hr.`id_hotel` = '.(int) ($id_hotel).($validate == '1' ?
                 ' AND hr.`status` = '. (int) self::QHR_STATUS_APPROVED : '')
             );
@@ -251,7 +251,7 @@ class QhrHotelReview extends ObjectModel
     {
         return (int) Db::getInstance()->getValue(
             'SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'qhr_review_usefulness` ru
+            FROM qhr_review_usefulness` ru
             WHERE ru.`id_hotel_review` = '.(int) $this->id_hotel_review
         );
     }
@@ -395,8 +395,8 @@ class QhrHotelReview extends ObjectModel
         $cache_id = 'QhrHotelReview::getByCustomer_'.(int) $id_customer.'-'.(int) $id_hotel.'-'.(int) $id_order;
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS(
-                'SELECT * FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
-                LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = hr.`id_order`
+                'SELECT * FROM qhr_hotel_review` hr
+                LEFT JOIN orders` o ON o.`id_order` = hr.`id_order`
                 WHERE o.`id_customer` = '.(int) $id_customer.
                 ($id_hotel ? ' AND hr.`id_hotel` = '.(int) $id_hotel : '').
                 ($id_order ? ' AND hr.`id_order` = '.(int) $id_order : '').'
@@ -413,7 +413,7 @@ class QhrHotelReview extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int) Db::getInstance()->getValue('
                 SELECT `id_hotel_review`
-                FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
+                FROM qhr_hotel_review` hr
                 WHERE hr.`id_order` = '.(int) $id_order
             );
             Cache::store($cache_id, $result);
@@ -449,21 +449,21 @@ class QhrHotelReview extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT hr.*, CONCAT(c.`firstname`, " ", c.`lastname`) as `customer_name`,
             hbil.`hotel_name`, qrr.`id_employee`, qrr.`message`, qrr.`date_add` AS `reply_date`,
-            (SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_review_usefulness` ru
+            (SELECT COUNT(*) FROM qhr_review_usefulness` ru
                 WHERE ru.`id_hotel_review` = hr.`id_hotel_review`) AS `total_useful`,
-            (SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_review_report` rr
+            (SELECT COUNT(*) FROM qhr_review_report` rr
                 WHERE rr.`id_hotel_review` = hr.`id_hotel_review`) AS `total_report`'.
-            ((int) $id_customer ? ', (SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_review_usefulness` ru
+            ((int) $id_customer ? ', (SELECT COUNT(*) FROM qhr_review_usefulness` ru
                 WHERE ru.`id_hotel_review` = hr.`id_hotel_review`
                 AND ru.id_customer = '.(int) $id_customer.') AS `response_helpful`' : '').
-            ((int) $id_customer ? ', (SELECT COUNT(*) FROM `'._DB_PREFIX_.'qhr_review_report` rr
+            ((int) $id_customer ? ', (SELECT COUNT(*) FROM qhr_review_report` rr
                 WHERE rr.`id_hotel_review` = hr.`id_hotel_review`
                 AND rr.id_customer = '.(int)$id_customer.') AS `response_report` ' : '').'
-            FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
-            LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = hr.`id_order`
-            LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
-            LEFT JOIN `'._DB_PREFIX_.'qhr_review_reply` qrr ON qrr.`id_hotel_review` = hr.`id_hotel_review`
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+            FROM qhr_hotel_review` hr
+            LEFT JOIN orders` o ON o.`id_order` = hr.`id_order`
+            LEFT JOIN customer` c ON c.`id_customer` = o.`id_customer`
+            LEFT JOIN qhr_review_reply` qrr ON qrr.`id_hotel_review` = hr.`id_hotel_review`
+            LEFT JOIN htl_branch_info_lang` hbil
             ON hbil.`id` = hr.`id_hotel` AND hbil.`id_lang` = '.(int) $id_lang.'
             WHERE hr.`id_hotel` = '.(int) ($id_hotel).($validate == '1' ? ' AND
             hr.`status` = '.(int) self::QHR_STATUS_APPROVED : '');
@@ -502,7 +502,7 @@ class QhrHotelReview extends ObjectModel
         $cache_id = 'QhrHotelReview::hasNextPage'.(int) $id_hotel.'-'.(int) $p.'-'.(int) $n.'-'.'-'.(bool) $validate;
         if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT *
-            FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
+            FROM qhr_hotel_review` hr
             WHERE hr.`id_hotel` = '.(int) ($id_hotel).($validate == '1' ?
             ' AND hr.`status` = '. (int) self::QHR_STATUS_APPROVED : '');
             $sql .= ($n ? ' LIMIT '.(int) (($p - 1) * $n).', '.(int) ($n) : '');
@@ -520,18 +520,18 @@ class QhrHotelReview extends ObjectModel
         $validate = Configuration::get('QHR_ADMIN_APPROVAL_ENABLED');
         $sql = 'SELECT (SUM(hr.`rating`) / COUNT(hr.`rating`)) AS `average`, MIN(hr.`rating`) AS `minimum`,
         MAX(hr.`rating`) AS `maximum`, COUNT(hr.`id_hotel_review`) AS `total_reviews`
-        FROM `'._DB_PREFIX_.'qhr_hotel_review` hr
+        FROM qhr_hotel_review` hr
         WHERE hr.`id_hotel` = '.(int) ($id_hotel).($validate == '1' ?
         ' AND hr.`status` = '. (int) self::QHR_STATUS_APPROVED : '');
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
         $sql2 = 'SELECT rcr.`id_category`, cl.`name`, SUM(rcr.`rating`) / COUNT(rcr.`rating`) AS `average`
-        FROM `'._DB_PREFIX_.'qhr_review_category_rating` rcr
-        LEFT JOIN `'._DB_PREFIX_.'qhr_hotel_review` hr
+        FROM qhr_review_category_rating` rcr
+        LEFT JOIN qhr_hotel_review` hr
         ON hr.`id_hotel_review` = rcr.`id_hotel_review`
-        LEFT JOIN `'._DB_PREFIX_.'qhr_category` c
+        LEFT JOIN qhr_category` c
         ON c.`id_category` = rcr.`id_category`
-        LEFT JOIN `'._DB_PREFIX_.'qhr_category_lang` cl
+        LEFT JOIN qhr_category_lang` cl
         ON cl.`id_category` = rcr.`id_category` AND cl.`id_lang` = '.(int) $id_lang.'
         WHERE c.`active` = 1 AND hr.`id_hotel` = '.(int) ($id_hotel).
         ($validate == '1' ? ' AND hr.`status` = '. (int) self::QHR_STATUS_APPROVED : '').'
@@ -588,10 +588,10 @@ class QhrHotelReview extends ObjectModel
         $id_lang = Context::getContext()->language->id;
 
         return Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'qhr_category` qc
-            LEFT JOIN `'._DB_PREFIX_.'qhr_category_lang` qcl
+            'SELECT * FROM qhr_category` qc
+            LEFT JOIN qhr_category_lang` qcl
             ON qcl.`id_category` = qc.`id_category` AND qcl.`id_lang` = '.(int) $id_lang.'
-            LEFT JOIN `'._DB_PREFIX_.'qhr_review_category_rating` qrcr
+            LEFT JOIN qhr_review_category_rating` qrcr
             ON qrcr.`id_category` = qc.`id_category`
             WHERE qc.`active` = 1 AND qrcr.`id_hotel_review` = '.(int) $id_hotel_review
         );
@@ -601,7 +601,7 @@ class QhrHotelReview extends ObjectModel
     {
         return (bool) Db::getInstance()->getValue('
             SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'qhr_review_usefulness`
+            FROM qhr_review_usefulness`
             WHERE `id_customer` = '.(int) $id_customer.'
             AND `id_hotel_review` = '.(int) $id_hotel_review
         );
@@ -610,7 +610,7 @@ class QhrHotelReview extends ObjectModel
     public static function markHelpful($id_hotel_review, $id_customer)
     {
         return Db::getInstance()->execute('
-            INSERT INTO `'._DB_PREFIX_.'qhr_review_usefulness` (`id_hotel_review`, `id_customer`)
+            INSERT INTO qhr_review_usefulness` (`id_hotel_review`, `id_customer`)
             VALUES ('.(int) $id_hotel_review.', '.(int) $id_customer.')'
         );
     }
@@ -619,7 +619,7 @@ class QhrHotelReview extends ObjectModel
     {
         return (bool) Db::getInstance()->getValue('
             SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'qhr_review_report`
+            FROM qhr_review_report`
             WHERE `id_customer` = '.(int) $id_customer.'
             AND `id_hotel_review` = '.(int) $id_hotel_review
         );
@@ -628,7 +628,7 @@ class QhrHotelReview extends ObjectModel
     public static function reportAbuse($id_hotel_review, $id_customer)
     {
         return Db::getInstance()->execute('
-            INSERT INTO `'._DB_PREFIX_.'qhr_review_report` (`id_hotel_review`, `id_customer`)
+            INSERT INTO qhr_review_report` (`id_hotel_review`, `id_customer`)
             VALUES ('.(int) $id_hotel_review.', '.(int) $id_customer.')'
         );
     }

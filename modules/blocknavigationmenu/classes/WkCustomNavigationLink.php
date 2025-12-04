@@ -60,8 +60,8 @@ class WkCustomNavigationLink extends ObjectModel
         if (!$idLang) {
             $idLang = Context::getContext()->language->id;
         }
-        $sql = 'SELECT el.*, ell.`name` FROM `'._DB_PREFIX_.'htl_custom_navigation_link` el
-        INNER JOIN `'._DB_PREFIX_.'htl_custom_navigation_link_lang` AS ell ON
+        $sql = 'SELECT el.*, ell.`name` FROM htl_custom_navigation_link` el
+        INNER JOIN htl_custom_navigation_link_lang` AS ell ON
         (ell.`id_navigation_link` = el.`id_navigation_link`)
         WHERE ell.`id_lang` = '.(int)$idLang;
 
@@ -100,7 +100,7 @@ class WkCustomNavigationLink extends ObjectModel
     public function getHigherPosition()
     {
         $position = DB::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_custom_navigation_link`'
+            'SELECT MAX(`position`) FROM htl_custom_navigation_link`'
         );
         $result = (is_numeric($position)) ? $position : -1;
         return $result + 1;
@@ -109,7 +109,7 @@ class WkCustomNavigationLink extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$result = Db::getInstance()->executeS(
-            'SELECT htb.`id_navigation_link`, htb.`position` FROM `'._DB_PREFIX_.'htl_custom_navigation_link` htb
+            'SELECT htb.`id_navigation_link`, htb.`position` FROM htl_custom_navigation_link` htb
             WHERE htb.`id_navigation_link` = '.(int) $this->id.' ORDER BY `position` ASC'
         )
         ) {
@@ -127,12 +127,12 @@ class WkCustomNavigationLink extends ObjectModel
             return false;
         }
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_custom_navigation_link` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_custom_navigation_link` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int)$movedBlock['position'].' AND `position` <= '.(int)$position : '< '
             .(int)$movedBlock['position'].' AND `position` >= '.(int)$position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_custom_navigation_link`
+            'UPDATE htl_custom_navigation_link`
             SET `position` = '.(int)$position.'
             WHERE `id_navigation_link`='.(int)$movedBlock['id_navigation_link']
         ));
@@ -146,7 +146,7 @@ class WkCustomNavigationLink extends ObjectModel
     public function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_custom_navigation_link` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_custom_navigation_link` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool) Db::getInstance()->execute($sql);
     }
 
@@ -265,7 +265,7 @@ class WkCustomNavigationLink extends ObjectModel
     public function getNavigationLinksByIdCMS($idCMS)
     {
         return Db::getInstance()->executeS('
-            SELECT * FROM `'._DB_PREFIX_.'htl_custom_navigation_link`
+            SELECT * FROM htl_custom_navigation_link`
             WHERE `id_cms`='.(int) $idCMS
         );
     }

@@ -1070,7 +1070,7 @@ class AdminThemesControllerCore extends AdminController
 
                 $table = Db::getInstance()->executeS('
 			SELECT name, width, height, products, categories, manufacturers, suppliers, scenes
-			FROM `'._DB_PREFIX_.'image_type`');
+			FROM image_type`');
 
                 $this->image_list = array();
                 foreach ($table as $row) {
@@ -1082,23 +1082,23 @@ class AdminThemesControllerCore extends AdminController
                         ($row['scenes'] == 1 ? 'true' : 'false');
                 }
 
-                $id_shop = Db::getInstance()->getValue('SELECT `id_shop` FROM `'._DB_PREFIX_.'shop` WHERE `id_theme` = '.(int)Tools::getValue('id_theme_export'));
+                $id_shop = Db::getInstance()->getValue('SELECT `id_shop` FROM shop` WHERE `id_theme` = '.(int)Tools::getValue('id_theme_export'));
 
                 // Select the list of module for this shop
                 $this->module_list = Db::getInstance()->executeS('
 				SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
-				FROM `'._DB_PREFIX_.'module` m
-				LEFT JOIN `'._DB_PREFIX_.'module_shop` ms On (m.`id_module` = ms.`id_module`)
+				FROM module` m
+				LEFT JOIN module_shop` ms On (m.`id_module` = ms.`id_module`)
 				WHERE ms.`id_shop` = '.(int)$id_shop.'
 			');
 
                 // Select the list of hook for this shop
                 $this->hook_list = Db::getInstance()->executeS('
 				SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
-				FROM `'._DB_PREFIX_.'hook` h
-				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_hook` = h.`id_hook`
-				LEFT JOIN `'._DB_PREFIX_.'module` m ON hm.`id_module` = m.`id_module`
-				LEFT OUTER JOIN `'._DB_PREFIX_.'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
+				FROM hook` h
+				LEFT JOIN hook_module` hm ON hm.`id_hook` = h.`id_hook`
+				LEFT JOIN module` m ON hm.`id_module` = m.`id_module`
+				LEFT OUTER JOIN hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
 				WHERE hm.`id_shop` = '.(int)$id_shop.'
 				GROUP BY `id_module`, `id_hook`
 				ORDER BY `name_module`
@@ -1188,18 +1188,18 @@ class AdminThemesControllerCore extends AdminController
 
         $module_list = Db::getInstance()->executeS('
 			SELECT m.`id_module`, m.`name`, m.`active`, ms.`id_shop`
-			FROM `'._DB_PREFIX_.'module` m
-			LEFT JOIN `'._DB_PREFIX_.'module_shop` ms On (m.`id_module` = ms.`id_module`)
+			FROM module` m
+			LEFT JOIN module_shop` ms On (m.`id_module` = ms.`id_module`)
 			WHERE ms.`id_shop` = '.(int)$this->context->shop->id.'
 		');
 
         // Select the list of hook for this shop
         $hook_list = Db::getInstance()->executeS('
 			SELECT h.`id_hook`, h.`name` as name_hook, hm.`position`, hm.`id_module`, m.`name` as name_module, GROUP_CONCAT(hme.`file_name`, ",") as exceptions
-			FROM `'._DB_PREFIX_.'hook` h
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_hook` = h.`id_hook`
-			LEFT JOIN `'._DB_PREFIX_.'module` m ON hm.`id_module` = m.`id_module`
-			LEFT OUTER JOIN `'._DB_PREFIX_.'hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
+			FROM hook` h
+			LEFT JOIN hook_module` hm ON hm.`id_hook` = h.`id_hook`
+			LEFT JOIN module` m ON hm.`id_module` = m.`id_module`
+			LEFT OUTER JOIN hook_module_exceptions` hme ON (hme.`id_module` = hm.`id_module` AND hme.`id_hook` = h.`id_hook`)
 			WHERE hm.`id_shop` = '.(int)$this->context->shop->id.'
 			GROUP BY `id_module`, `id_hook`
 			ORDER BY `name_module`
@@ -2432,7 +2432,7 @@ class AdminThemesControllerCore extends AdminController
             foreach ($xml->images->image as $row) {
                 Db::getInstance()->delete('image_type', '`name` = \''.pSQL($row['name']).'\'');
                 Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
+					INSERT INTO image_type` (`name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`)
 					VALUES (\''.pSQL($row['name']).'\',
 						'.(int)$row['width'].',
 						'.(int)$row['height'].',
@@ -2457,7 +2457,7 @@ class AdminThemesControllerCore extends AdminController
     {
         Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$id_module.', '.(int)$shop.')');
 
-        Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$id_module.' AND id_shop = '.(int)$shop);
+        Db::getInstance()->execute($sql = 'DELETE FROM hook_module` WHERE `id_module` = '.(int)$id_module.' AND id_shop = '.(int)$shop);
 
         foreach ($module_hooks as $hooks) {
             foreach ($hooks as $hook) {
@@ -2472,12 +2472,12 @@ class AdminThemesControllerCore extends AdminController
                     $new_hook->add();
                     $id_hook = (int) $new_hook->id;
                 }
-                $sql_hook_module = 'INSERT INTO `'._DB_PREFIX_.'hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
+                $sql_hook_module = 'INSERT INTO hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 									VALUES ('.(int)$id_module.', '.(int)$shop.', '.(int)$id_hook.', '.(int)$hook['position'].')';
 
                 if (count($hook['exceptions']) > 0) {
                     foreach ($hook['exceptions'] as $exception) {
-                        $sql_hook_module_except = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`) VALUES ('.(int)$id_module.', '.(int)Hook::getIdByName($hook['hook']).', "'.pSQL($exception).'")';
+                        $sql_hook_module_except = 'INSERT INTO hook_module_exceptions` (`id_module`, `id_hook`, `file_name`) VALUES ('.(int)$id_module.', '.(int)Hook::getIdByName($hook['hook']).', "'.pSQL($exception).'")';
                         Db::getInstance()->execute($sql_hook_module_except);
                     }
                 }

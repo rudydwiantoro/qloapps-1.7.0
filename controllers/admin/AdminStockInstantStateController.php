@@ -150,20 +150,20 @@ class AdminStockInstantStateControllerCore extends AdminController
 			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 			w.id_currency';
 
-        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
-        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = a.id_warehouse)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+        $this->_join = 'INNER JOIN product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+        $this->_join .= 'LEFT JOIN warehouse` w ON (w.id_warehouse = a.id_warehouse)';
+        $this->_join .= ' LEFT JOIN product_lang` pl ON (
 			a.id_product = pl.id_product
 			AND pl.id_lang = '.(int)$this->context->language->id.'
 		)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+        $this->_join .= ' LEFT JOIN product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+        $this->_join .= ' LEFT JOIN product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
+        $this->_join .= ' LEFT JOIN attribute` atr ON (atr.id_attribute = pac.id_attribute)';
+        $this->_join .= ' LEFT JOIN attribute_lang` al ON (
 			al.id_attribute = pac.id_attribute
 			AND al.id_lang = '.(int)$this->context->language->id.'
 		)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+        $this->_join .= ' LEFT JOIN attribute_group_lang` agl ON (
 			agl.id_attribute_group = atr.id_attribute_group
 			AND agl.id_lang = '.(int)$this->context->language->id.'
 		)';
@@ -238,20 +238,20 @@ class AdminStockInstantStateControllerCore extends AdminController
                 IFNULL(pa.reference, p.reference) as reference,
                 IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
 				w.id_currency, a.price_te';
-            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+            $this->_join = 'INNER JOIN product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+            $this->_join .= ' LEFT JOIN warehouse` AS w ON w.id_warehouse = a.id_warehouse';
+            $this->_join .= ' LEFT JOIN product_lang` pl ON (
 				a.id_product = pl.id_product
 				AND pl.id_lang = '.(int)$this->context->language->id.'
 			)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+            $this->_join .= ' LEFT JOIN product_attribute_combination` pac ON (pac.id_product_attribute = a.id_product_attribute)';
+            $this->_join .= ' LEFT JOIN product_attribute` pa ON (pa.id_product_attribute = a.id_product_attribute)';
+            $this->_join .= ' LEFT JOIN attribute` atr ON (atr.id_attribute = pac.id_attribute)';
+            $this->_join .= ' LEFT JOIN attribute_lang` al ON (
 				al.id_attribute = pac.id_attribute
 				AND al.id_lang = '.(int)$this->context->language->id.'
 			)';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+            $this->_join .= ' LEFT JOIN attribute_group_lang` agl ON (
 				agl.id_attribute_group = atr.id_attribute_group
 				AND agl.id_lang = '.(int)$this->context->language->id.'
 			)';

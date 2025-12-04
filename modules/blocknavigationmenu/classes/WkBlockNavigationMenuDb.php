@@ -66,8 +66,8 @@ class WkBlockNavigationMenuDb
     {
         return Db::getInstance()->execute(
             'DROP TABLE IF EXISTS
-            `'._DB_PREFIX_.'htl_custom_navigation_link`,
-            `'._DB_PREFIX_.'htl_custom_navigation_link_lang`'
+            htl_custom_navigation_link`,
+            htl_custom_navigation_link_lang`'
         );
     }
 }

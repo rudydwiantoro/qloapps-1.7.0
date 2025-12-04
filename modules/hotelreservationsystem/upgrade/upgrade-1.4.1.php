@@ -46,8 +46,8 @@ function createDataForNewTables141($module)
 function populateBookingDetail()
 {
     $htlBookings = Db::getInstance()->executes(
-        'SELECT hbd.*, o.`id_lang` FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-        INNER JOIN `'._DB_PREFIX_.'orders` o ON(hbd.`id_order` = o.`id_order`)'
+        'SELECT hbd.*, o.`id_lang` FROM htl_booking_detail` hbd
+        INNER JOIN orders` o ON(hbd.`id_order` = o.`id_order`)'
     );
     if($htlBookings) {
         foreach($htlBookings as $htlBooking) {
@@ -78,7 +78,7 @@ function populateBookingDetail()
 function updateRefundRules()
 {
     $refundRules = Db::getInstance()->executes(
-        'SELECT * FROM `'._DB_PREFIX_.'htl_order_refund_rules`'
+        'SELECT * FROM htl_order_refund_rules`'
     );
     foreach($refundRules as $rule) {
         $objRefundRule = new HotelOrderRefundRules($rule['id_refund_rule']);
@@ -94,7 +94,7 @@ function updateRefundRules()
 function populateRefundData()
 {
     $odrRefunds = Db::getInstance()->executes(
-        'SELECT *, SUM(`refunded_amount`) as `total_refund_amount` FROM `'._DB_PREFIX_.'htl_order_refund_info` hor
+        'SELECT *, SUM(`refunded_amount`) as `total_refund_amount` FROM htl_order_refund_info` hor
         GROUP BY `id_order`'
     );
     foreach($odrRefunds as $odrRefund) {
@@ -117,9 +117,9 @@ function populateRefundData()
     }
 
     $odrRefunds = Db::getInstance()->executes(
-        'SELECT hor.*, odr.`id_order_return`, hbd.`id` as `id_htl_booking`, hbd.`id_order_detail` FROM `'._DB_PREFIX_.'htl_order_refund_info` hor
-        INNER JOIN `'._DB_PREFIX_.'order_return` odr ON (odr.`id_order` = hor.`id_order`)
-        INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON
+        'SELECT hor.*, odr.`id_order_return`, hbd.`id` as `id_htl_booking`, hbd.`id_order_detail` FROM htl_order_refund_info` hor
+        INNER JOIN order_return` odr ON (odr.`id_order` = hor.`id_order`)
+        INNER JOIN htl_booking_detail` hbd ON
         (hbd.`id_order` = hor.`id_order`
         AND hbd.`id_product` = hor.`id_product`
         AND hbd.`date_from` = hor.`date_from`

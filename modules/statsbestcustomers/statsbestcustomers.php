@@ -154,35 +154,35 @@ class StatsBestCustomers extends ModuleGrid
 			COUNT(co.`id_connections`) as totalVisits,
             IFNULL((
 				SELECT ROUND(SUM(IFNULL(op.`amount`, 0) / o.`conversion_rate`), 2)
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'order_payment_detail` op ON o.id_order = op.id_order
+				FROM orders` o
+				LEFT JOIN order_payment_detail` op ON o.id_order = op.id_order
 				WHERE o.id_customer = c.id_customer
 				AND o.`invoice_date` BETWEEN '.$this->getDate().'
 				AND o.valid
 			), 0) as totalMoneySpent,
 			IFNULL((
                 SELECT COUNT(DISTINCT o.`id_order`) as orders
-                FROM `'._DB_PREFIX_.'orders` o
+                FROM orders` o
                 WHERE `invoice_date` BETWEEN '.$this->getDate().' AND o.`valid` = 1 AND o.`id_customer` = c.`id_customer`
                 '.Shop::addSqlRestriction(false, 'o').'
                 AND (
                     EXISTS (
                         SELECT 1
-                        FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                        FROM htl_booking_detail` hbd
                         WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
                     ) OR EXISTS (
                         SELECT 1
-                        FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                        FROM service_product_order_detail` spod
                         WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
                     ) OR EXISTS (
                         SELECT 1
-                        FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                        FROM service_product_order_detail` spod
                         WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
                     )
             )), 0) as totalValidOrders
-            FROM `'._DB_PREFIX_.'customer` c
-            LEFT JOIN `'._DB_PREFIX_.'guest` g ON c.`id_customer` = g.`id_customer`
-            LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.`id_guest` = co.`id_guest`
+            FROM customer` c
+            LEFT JOIN guest` g ON c.`id_customer` = g.`id_customer`
+            LEFT JOIN connections` co ON g.`id_guest` = co.`id_guest`
             WHERE co.date_add BETWEEN '.$this->getDate()
             .Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c').
             'GROUP BY c.`id_customer`, c.`lastname`, c.`firstname`, c.`email`';

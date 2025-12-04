@@ -3282,15 +3282,15 @@ class AdminImportControllerCore extends AdminController
                 $exclCategories = implode(',', $core_categories);
 
                 Db::getInstance()->execute('
-                    DELETE FROM `'._DB_PREFIX_.'category`
+                    DELETE FROM category`
                     WHERE id_category NOT IN ('.$exclCategories.')');
                 Db::getInstance()->execute('
-                    DELETE FROM `'._DB_PREFIX_.'category_lang`
+                    DELETE FROM category_lang`
                     WHERE id_category NOT IN ('.$exclCategories.')');
                 Db::getInstance()->execute('
-                    DELETE FROM `'._DB_PREFIX_.'category_shop`
+                    DELETE FROM category_shop`
                     WHERE `id_category` NOT IN ('.$exclCategories.')');
-                Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = '.(count($core_categories) + 1));
+                Db::getInstance()->execute('ALTER TABLE category` AUTO_INCREMENT = '.(count($core_categories) + 1));
                 foreach (scandir(_PS_CAT_IMG_DIR_) as $d) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d)) {
                         unlink(_PS_CAT_IMG_DIR_.$d);
@@ -3298,28 +3298,28 @@ class AdminImportControllerCore extends AdminController
                 }
                 break;
             case $this->entities[$this->l('Hotels')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_branch_info_lang`');
-                Db::getInstance()->execute('DELETE c, cl FROM `'._DB_PREFIX_.'category` c
-                    LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.id_category = cl.id_category
-                    INNER JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON hbi.id_category = c.id_category');
-                Db::getInstance()->execute('DELETE a FROM `'._DB_PREFIX_.'address` a
-                    LEFT JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON hbi.id = a.id_hotel');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_image`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_access`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_booking_detail`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_branch_features`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_cart_booking_data`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_branch_refund_rules`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_order_restrict_date`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_branch_info`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_branch_info_lang`');
+                Db::getInstance()->execute('DELETE c, cl FROM category` c
+                    LEFT JOIN category_lang` cl ON c.id_category = cl.id_category
+                    INNER JOIN htl_branch_info` hbi ON hbi.id_category = c.id_category');
+                Db::getInstance()->execute('DELETE a FROM address` a
+                    LEFT JOIN htl_branch_info` hbi ON hbi.id = a.id_hotel');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_image`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_access`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_booking_detail`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_branch_features`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_cart_booking_data`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_branch_refund_rules`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_order_restrict_date`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_branch_info`');
                 $objHotelReservation = Module::getInstanceByName('hotelreservationsystem');
                 $hotelImages = $objHotelReservation->getLocalPath().'views/img/hotel_img/';
                 Tools::deleteDirectory($hotelImages, false);
                 $prodImages = $objHotelReservation->getLocalPath().'views/img/prod_imgs/';
                 Tools::deleteDirectory($prodImages, false);
             case $this->entities[$this->l('Room Types')]:
-                $images = Db::getInstance()->executeS('SELECT id_image FROM `'._DB_PREFIX_.'image` img
-                    LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = img.id_product
+                $images = Db::getInstance()->executeS('SELECT id_image FROM image` img
+                    LEFT JOIN product` p ON p.id_product = img.id_product
                     WHERE p.booking_product=1');
                 if ($images && count($images)) {
                     $image_types = ImageType::getImagesTypes();
@@ -3341,46 +3341,46 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
 
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_feature_pricing`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_feature_pricing_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_feature_pricing_group`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_global_demand`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_global_demand_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option_lang`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_demand_price`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_demand`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_service_product_price`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'service_product_cart_detail`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_restriction_date_range`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'feature_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_feature_pricing`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_feature_pricing_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_feature_pricing_group`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_global_demand`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_global_demand_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_global_demand_advance_option`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_global_demand_advance_option_lang`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_demand_price`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_demand`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_service_product_price`');
+                Db::getInstance()->execute('TRUNCATE TABLE service_product_cart_detail`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_restriction_date_range`');
+                Db::getInstance()->execute('TRUNCATE TABLE feature_product`');
 
                 Db::getInstance()->execute('DELETE pl, cp, ps, img, sp, spp, crtp, st, sta, sod
-                    FROM `'._DB_PREFIX_.'product_lang` pl
-                    LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = pl.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.id_product = cp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON p.id_product = ps.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'image` img ON p.id_product = img.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'specific_price` sp ON p.id_product = sp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'specific_price_priority` spp ON p.id_product = spp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'cart_product` crtp ON p.id_product = cp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'stock` st ON p.id_product = st.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'stock_available` sta ON p.id_product = sta.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'supply_order_detail` sod ON p.id_product = sod.id_product
+                    FROM product_lang` pl
+                    LEFT JOIN product` p ON p.id_product = pl.id_product
+                    LEFT JOIN category_product` cp ON p.id_product = cp.id_product
+                    LEFT JOIN product_shop` ps ON p.id_product = ps.id_product
+                    LEFT JOIN image` img ON p.id_product = img.id_product
+                    LEFT JOIN specific_price` sp ON p.id_product = sp.id_product
+                    LEFT JOIN specific_price_priority` spp ON p.id_product = spp.id_product
+                    LEFT JOIN cart_product` crtp ON p.id_product = cp.id_product
+                    LEFT JOIN stock` st ON p.id_product = st.id_product
+                    LEFT JOIN stock_available` sta ON p.id_product = sta.id_product
+                    LEFT JOIN supply_order_detail` sod ON p.id_product = sod.id_product
                     WHERE p.booking_product=1');
 
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product` WHERE booking_product=1');
+                Db::getInstance()->execute('DELETE FROM product` WHERE booking_product=1');
                 if (!file_exists(_PS_PROD_IMG_DIR_)) {
                     mkdir(_PS_PROD_IMG_DIR_);
                 }
             case $this->entities[$this->l('Rooms')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_information`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_disable_dates`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_information`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_disable_dates`');
             break;
             case $this->entities[$this->l('Service Products')]:
-                $images = Db::getInstance()->executeS('SELECT id_image FROM `'._DB_PREFIX_.'image` img
-                    LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = img.id_product
+                $images = Db::getInstance()->executeS('SELECT id_image FROM image` img
+                    LEFT JOIN product` p ON p.id_product = img.id_product
                     WHERE p.booking_product=0');
                 if ($images && count($images)) {
                     $image_types = ImageType::getImagesTypes();
@@ -3403,30 +3403,30 @@ class AdminImportControllerCore extends AdminController
                 }
 
                 Db::getInstance()->execute('DELETE pl, cp, ps, img, sp, spp, crtp, st, sta, sod
-                    FROM `'._DB_PREFIX_.'product_lang` pl
-                    LEFT JOIN `'._DB_PREFIX_.'product` p ON p.id_product = pl.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.id_product = cp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON p.id_product = ps.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'image` img ON p.id_product = img.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'specific_price` sp ON p.id_product = sp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'specific_price_priority` spp ON p.id_product = spp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'cart_product` crtp ON p.id_product = cp.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'stock` st ON p.id_product = st.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'stock_available` sta ON p.id_product = sta.id_product
-                    LEFT JOIN `'._DB_PREFIX_.'supply_order_detail` sod ON p.id_product = sod.id_product
+                    FROM product_lang` pl
+                    LEFT JOIN product` p ON p.id_product = pl.id_product
+                    LEFT JOIN category_product` cp ON p.id_product = cp.id_product
+                    LEFT JOIN product_shop` ps ON p.id_product = ps.id_product
+                    LEFT JOIN image` img ON p.id_product = img.id_product
+                    LEFT JOIN specific_price` sp ON p.id_product = sp.id_product
+                    LEFT JOIN specific_price_priority` spp ON p.id_product = spp.id_product
+                    LEFT JOIN cart_product` crtp ON p.id_product = cp.id_product
+                    LEFT JOIN stock` st ON p.id_product = st.id_product
+                    LEFT JOIN stock_available` sta ON p.id_product = sta.id_product
+                    LEFT JOIN supply_order_detail` sod ON p.id_product = sod.id_product
                     WHERE p.booking_product=0');
 
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_service_product`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'htl_room_type_service_product_price`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'service_product_cart_detail`');
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product` WHERE booking_product=0');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_service_product`');
+                Db::getInstance()->execute('TRUNCATE TABLE htl_room_type_service_product_price`');
+                Db::getInstance()->execute('TRUNCATE TABLE service_product_cart_detail`');
+                Db::getInstance()->execute('DELETE FROM product` WHERE booking_product=0');
             break;
             case $this->entities[$this->l('Customers')]:
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_group`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_message`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_message_sync_imap`');
-                Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'customer_thread`');
+                Db::getInstance()->execute('TRUNCATE TABLE customer`');
+                Db::getInstance()->execute('TRUNCATE TABLE customer_group`');
+                Db::getInstance()->execute('TRUNCATE TABLE customer_message`');
+                Db::getInstance()->execute('TRUNCATE TABLE customer_message_sync_imap`');
+                Db::getInstance()->execute('TRUNCATE TABLE customer_thread`');
             break;
             case $this->entities[$this->l('Bookings')]:
                 $orderRelatedTables = array(
@@ -3595,7 +3595,7 @@ class AdminImportControllerCore extends AdminController
     {
         if ($this->tabAccess['edit'] === 1) {
             $match = implode('|', Tools::getValue('type_value'));
-            Db::getInstance()->execute('INSERT IGNORE INTO  `'._DB_PREFIX_.'import_match` (
+            Db::getInstance()->execute('INSERT IGNORE INTO  import_match` (
                                         `id_import_match` ,
                                         `name` ,
                                         `match`,
@@ -3615,7 +3615,7 @@ class AdminImportControllerCore extends AdminController
     public function ajaxProcessLoadImportMatchs()
     {
         if ($this->tabAccess['edit'] === 1) {
-            $return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
+            $return = Db::getInstance()->executeS('SELECT * FROM import_match` WHERE `id_import_match` = '
                 .(int)Tools::getValue('idImportMatchs'), true, false);
             die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
                 .$return[0]['skip'].'"}');
@@ -3625,7 +3625,7 @@ class AdminImportControllerCore extends AdminController
     public function ajaxProcessDeleteImportMatchs()
     {
         if ($this->tabAccess['edit'] === 1) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
+            Db::getInstance()->execute('DELETE FROM import_match` WHERE `id_import_match` = '
                 .(int)Tools::getValue('idImportMatchs'), false);
             die;
         }

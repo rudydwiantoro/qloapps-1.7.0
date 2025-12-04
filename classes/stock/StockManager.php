@@ -365,8 +365,8 @@ class StockManagerCore implements StockManagerInterface
                         $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
 							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
 								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
-							FROM `'._DB_PREFIX_.'stock_mvt` sm
-							LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
+							FROM stock_mvt` sm
+							LEFT JOIN stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
 							WHERE sm.`sign` = 1
 							AND sm.`id_stock` = '.(int)$stock->id.'
 							GROUP BY sm.`id_stock_mvt`
@@ -863,11 +863,11 @@ class StockManagerCore implements StockManagerInterface
 			SELECT SUM(view.quantity) as quantity_out
 			FROM
 			(	SELECT sm.`physical_quantity` as quantity
-				FROM `'._DB_PREFIX_.'stock_mvt` sm
-				LEFT JOIN `'._DB_PREFIX_.'stock` s ON (sm.`id_stock` = s.`id_stock`)
-				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = s.`id_product`)
+				FROM stock_mvt` sm
+				LEFT JOIN stock` s ON (sm.`id_stock` = s.`id_stock`)
+				LEFT JOIN product` p ON (p.`id_product` = s.`id_product`)
 				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (p.`id_product` = pa.`id_product`)
+				LEFT JOIN product_attribute` pa ON (p.`id_product` = pa.`id_product`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				WHERE sm.`sign` = -1
 				AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'

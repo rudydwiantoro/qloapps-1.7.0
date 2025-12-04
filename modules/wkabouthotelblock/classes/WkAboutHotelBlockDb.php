@@ -57,7 +57,7 @@ class WkAboutHotelBlockDb
     {
         return DB::getInstance()->execute('
             DROP TABLE IF EXISTS
-            `'._DB_PREFIX_.'htl_interior_image`;
+            htl_interior_image`;
         ');
     }
 }

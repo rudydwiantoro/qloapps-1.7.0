@@ -38,7 +38,7 @@ class AdminOrderRefundRulesController extends ModuleAdminController
 
         parent::__construct();
 
-        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'htl_order_refund_rules_lang` orrl
+        $this->_join .= 'LEFT JOIN htl_order_refund_rules_lang` orrl
         ON (a.id_refund_rule = orrl.id_refund_rule AND orrl.`id_lang` = '.(int) $this->context->language->id.')';
 
         $CMSs = array ();

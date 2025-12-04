@@ -30,7 +30,7 @@ class QhrHotelReviewHelper
         }
 
         return (bool) !Db::getInstance()->getValue(
-            'SELECT COUNT(*) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+            'SELECT COUNT(*) FROM htl_booking_detail` hbd
             WHERE hbd.`id_status` != '.(int) HotelBookingDetail::STATUS_CHECKED_OUT.'
             AND hbd.`is_refunded` != 1
             AND hbd.`is_cancelled` != 1
@@ -72,7 +72,7 @@ class QhrHotelReviewHelper
         }
 
         $maxDate = Db::getInstance()->getValue(
-            'SELECT MAX(DATE(hbd.`date_to`)) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+            'SELECT MAX(DATE(hbd.`date_to`)) FROM htl_booking_detail` hbd
             WHERE hbd.`id_order` = '.(int) $idOrder
         );
         return date('Y-m-d') >= $maxDate;
@@ -125,7 +125,7 @@ class QhrHotelReviewHelper
     public static function getHotelByOrder($idOrder)
     {
         return Db::getInstance()->getRow(
-            'SELECT `id_hotel`, `hotel_name` FROM `'._DB_PREFIX_.'htl_booking_detail`
+            'SELECT `id_hotel`, `hotel_name` FROM htl_booking_detail`
             WHERE `id_order` = '.(int) $idOrder
         );
     }

@@ -34,7 +34,7 @@ class AdminQloappsChannelManagerConnectorController extends ModuleAdminControlle
 
         parent::__construct();
 
-        $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'orders` ord ON (a.id_order = ord.`id_order`)';
+        $this->_join .= ' INNER JOIN orders` ord ON (a.id_order = ord.`id_order`)';
 
         $this->_select .= ' ord.`source`, ord.`total_paid`, ord.`total_paid_real`, IF(a.id_order, 1, 0) badge_success';
 

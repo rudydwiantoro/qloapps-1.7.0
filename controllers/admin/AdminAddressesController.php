@@ -79,8 +79,8 @@ class AdminAddressesControllerCore extends AdminController
 
         $this->_select = 'cl.`name` as country';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
+			LEFT JOIN country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
+			LEFT JOIN customer` c ON a.id_customer = c.id_customer
 		';
         $this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
         $this->_use_found_rows = false;

@@ -58,7 +58,7 @@ class PagesNotFound extends Module
         }
 
         return Db::getInstance()->execute(
-            'CREATE TABLE `'._DB_PREFIX_.'pagenotfound` (
+            'CREATE TABLE pagenotfound` (
 			id_pagenotfound INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -73,13 +73,13 @@ class PagesNotFound extends Module
 
     public function uninstall()
     {
-        return (parent::uninstall() && Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'pagenotfound`'));
+        return (parent::uninstall() && Db::getInstance()->execute('DROP TABLE pagenotfound`'));
     }
 
     private function getPages()
     {
         $sql = 'SELECT http_referer, request_uri, COUNT(*) as nb
-				FROM `'._DB_PREFIX_.'pagenotfound`
+				FROM pagenotfound`
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween()
             .Shop::addSqlRestriction().
             'GROUP BY http_referer, request_uri';
@@ -105,11 +105,11 @@ class PagesNotFound extends Module
     public function hookAdminStatsModules()
     {
         if (Tools::isSubmit('submitTruncatePNF')) {
-            Db::getInstance()->execute('TRUNCATE `'._DB_PREFIX_.'pagenotfound`');
+            Db::getInstance()->execute('TRUNCATE pagenotfound`');
             $this->html .= '<div class="alert alert-warning"> '.$this->l('The "pages not found" cache has been emptied.').'</div>';
         } elseif (Tools::isSubmit('submitDeletePNF')) {
             Db::getInstance()->execute(
-                'DELETE FROM `'._DB_PREFIX_.'pagenotfound`
+                'DELETE FROM pagenotfound`
 				WHERE date_add BETWEEN '.ModuleGraph::getDateBetween()
             );
             $this->html .= '<div class="alert alert-warning"> '.$this->l('The "pages not found" cache has been deleted.').'</div>';
@@ -197,7 +197,7 @@ class PagesNotFound extends Module
             if (empty($http_referer) || Validate::isAbsoluteUrl($http_referer)) {
                 Db::getInstance()->execute(
                     '
-										INSERT INTO `'._DB_PREFIX_.'pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_shop_group`)
+										INSERT INTO pagenotfound` (`request_uri`, `http_referer`, `date_add`, `id_shop`, `id_shop_group`)
 					VALUES (\''.pSQL($request_uri).'\', \''.pSQL($http_referer).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.')
 				'
                 );

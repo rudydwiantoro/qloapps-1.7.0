@@ -52,7 +52,7 @@ class ServiceProductCartDetail extends ObjectModel
         $idServiceProductCartDetail = false
     ) {
 
-        $sql = 'SELECT `id_service_product_cart_detail` FROM `'._DB_PREFIX_.'service_product_cart_detail`
+        $sql = 'SELECT `id_service_product_cart_detail` FROM service_product_cart_detail`
             WHERE `id_cart` = '.(int)$idCart;
 
         if ($idProduct) {
@@ -173,13 +173,13 @@ class ServiceProductCartDetail extends ObjectModel
         if (!$getTotalPrice) {
             $sql .= ', hbil.`hotel_name`, p.`auto_add_to_cart`, p.`price_addition_type` ';
         }
-        $sql .= ' FROM `'._DB_PREFIX_.'service_product_cart_detail` spc';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = spc.`id_product`)';
+        $sql .= ' FROM service_product_cart_detail` spc';
+        $sql .= ' LEFT JOIN product` p ON (p.`id_product` = spc.`id_product`)';
 
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_cart_booking_data` hcbd ON (hcbd.`id` = spc.`htl_cart_booking_id`)';
+        $sql .= ' LEFT JOIN htl_cart_booking_data` hcbd ON (hcbd.`id` = spc.`htl_cart_booking_id`)';
 
         if (!$getTotalPrice) {
-            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil ON (hbil.`id` = spc.`id_hotel` AND hbil.`id_lang` = '. $language->id.')';
+            $sql .= ' LEFT JOIN htl_branch_info_lang` hbil ON (hbil.`id` = spc.`id_hotel` AND hbil.`id_lang` = '. $language->id.')';
         }
 
         $sql .= ' WHERE spc.`id_product`!=0 ';

@@ -60,8 +60,8 @@ class StatsEquipment extends ModuleGraph
     private function getEquipment()
     {
         $sql = 'SELECT DISTINCT g.*
-				FROM `'._DB_PREFIX_.'connections` c
-				LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_guest` = c.`id_guest`
+				FROM connections` c
+				LEFT JOIN guest` g ON g.`id_guest` = c.`id_guest`
 				WHERE c.`date_add` BETWEEN '.ModuleGraph::getDateBetween().'
 					'.Shop::addSqlRestriction(false, 'c');
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($sql);
@@ -184,9 +184,9 @@ class StatsEquipment extends ModuleGraph
                     $this->_titles['main'][] = '';
                 }
                 $this->query = 'SELECT wb.`name`, COUNT(g.`id_web_browser`) AS total
-						FROM `'._DB_PREFIX_.'web_browser` wb
-						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_web_browser` = wb.`id_web_browser`
-						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
+						FROM web_browser` wb
+						LEFT JOIN guest` g ON g.`id_web_browser` = wb.`id_web_browser`
+						LEFT JOIN connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.Shop::addSqlRestriction(false, 'c').'
 							AND c.`date_add` BETWEEN ';
@@ -199,9 +199,9 @@ class StatsEquipment extends ModuleGraph
                     $this->_titles['main'][] = '';
                 }
                 $this->query = 'SELECT os.`name`, COUNT(g.`id_operating_system`) AS total
-						FROM `'._DB_PREFIX_.'operating_system` os
-						LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.`id_operating_system` = os.`id_operating_system`
-						LEFT JOIN `'._DB_PREFIX_.'connections` c ON g.`id_guest` = c.`id_guest`
+						FROM operating_system` os
+						LEFT JOIN guest` g ON g.`id_operating_system` = os.`id_operating_system`
+						LEFT JOIN connections` c ON g.`id_guest` = c.`id_guest`
 						WHERE 1
 							'.Shop::addSqlRestriction(false, 'c').'
 							AND c.`date_add` BETWEEN ';

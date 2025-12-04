@@ -152,12 +152,12 @@ class ProductAttributeCore extends ObjectModel
 
         return Db::getInstance()->executeS('
 			SELECT DISTINCT ag.*, agl.*, a.`id_attribute`, al.`name`, agl.`name` AS `attribute_group`
-			FROM `'._DB_PREFIX_.'attribute_group` ag
-			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+			FROM attribute_group` ag
+			LEFT JOIN attribute_group_lang` agl
 				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+			LEFT JOIN attribute` a
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+			LEFT JOIN attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			'.Shop::addSqlAssociation('attribute', 'a').'
@@ -174,12 +174,12 @@ class ProductAttributeCore extends ObjectModel
 
         $result = Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'attribute_group` ag
-			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+			FROM attribute_group` ag
+			LEFT JOIN attribute_group_lang` agl
 				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
-			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+			LEFT JOIN attribute` a
 				ON a.`id_attribute_group` = ag.`id_attribute_group`
-			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+			LEFT JOIN attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			'.Shop::addSqlAssociation('attribute', 'a').'
@@ -251,10 +251,10 @@ class ProductAttributeCore extends ObjectModel
     {
         if (!Db::getInstance()->getRow('
 			SELECT `group_type`
-			FROM `'._DB_PREFIX_.'attribute_group`
+			FROM attribute_group`
 			WHERE `id_attribute_group` = (
 				SELECT `id_attribute_group`
-				FROM `'._DB_PREFIX_.'attribute`
+				FROM attribute`
 				WHERE `id_attribute` = '.(int)$this->id.')
 			AND group_type = \'color\'')) {
             return false;
@@ -274,7 +274,7 @@ class ProductAttributeCore extends ObjectModel
     {
         $minimal_quantity = Db::getInstance()->getValue('
 			SELECT `minimal_quantity`
-			FROM `'._DB_PREFIX_.'product_attribute_shop` pas
+			FROM product_attribute_shop` pas
 			WHERE `id_shop` = '.(int)Context::getContext()->shop->id.'
 			AND `id_product_attribute` = '.(int)$id_product_attribute
         );
@@ -300,7 +300,7 @@ class ProductAttributeCore extends ObjectModel
 
         $sql = '
 			SELECT a.`id_attribute`, a.`position`, a.`id_attribute_group`
-			FROM `'._DB_PREFIX_.'attribute` a
+			FROM attribute` a
 			WHERE a.`id_attribute_group` = '.(int)$id_attribute_group.'
 			ORDER BY a.`position` ASC';
 
@@ -322,7 +322,7 @@ class ProductAttributeCore extends ObjectModel
         // since BETWEEN is treated differently according to databases
 
         $res1 = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'attribute`
+			UPDATE attribute`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
@@ -332,7 +332,7 @@ class ProductAttributeCore extends ObjectModel
         );
 
         $res2 = Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'attribute`
+			UPDATE attribute`
 			SET `position` = '.(int)$position.'
 			WHERE `id_attribute` = '.(int)$moved_attribute['id_attribute'].'
 			AND `id_attribute_group`='.(int)$moved_attribute['id_attribute_group']
@@ -352,7 +352,7 @@ class ProductAttributeCore extends ObjectModel
     public function cleanPositions($id_attribute_group, $use_last_attribute = true)
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
+        $sql = 'UPDATE attribute` SET `position` = @i:=@i+1 WHERE';
 
         if ($use_last_attribute) {
             $sql .= ' `id_attribute` != '.(int)$this->id.' AND';
@@ -374,7 +374,7 @@ class ProductAttributeCore extends ObjectModel
     public static function getHigherPosition($id_attribute_group)
     {
         $sql = 'SELECT MAX(`position`)
-				FROM `'._DB_PREFIX_.'attribute`
+				FROM attribute`
 				WHERE id_attribute_group = '.(int)$id_attribute_group;
 
         $position = DB::getInstance()->getValue($sql);

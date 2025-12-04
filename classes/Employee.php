@@ -257,7 +257,7 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT `id_employee`, `firstname`, `lastname`
-			FROM `'._DB_PREFIX_.'employee`
+			FROM employee`
 			'.($active_only ? ' WHERE `active` = 1' : '').'
 			ORDER BY `lastname` ASC
 		');
@@ -279,7 +279,7 @@ class EmployeeCore extends ObjectModel
 
         $result = Db::getInstance()->getRow('
 		SELECT *
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.($active_only ? ' AND `active` = 1' : '')
         .($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
@@ -304,7 +304,7 @@ class EmployeeCore extends ObjectModel
 
         return (bool)Db::getInstance()->getValue('
 		SELECT `id_employee`
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `email` = \''.pSQL($email).'\'');
     }
 
@@ -322,7 +322,7 @@ class EmployeeCore extends ObjectModel
 
         return Db::getInstance()->getValue('
 		SELECT `id_employee`
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `id_employee` = '.(int)$id_employee.'
 		AND `passwd` = \''.pSQL($passwd).'\'
 		AND `active` = 1');
@@ -332,7 +332,7 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `id_profile` = '.(int)$id_profile.'
 		'.($active_only ? ' AND `active` = 1' : ''));
     }
@@ -418,7 +418,7 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT `module`
-			FROM `'._DB_PREFIX_.'module_preference`
+			FROM module_preference`
 			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
         );
     }
@@ -474,7 +474,7 @@ class EmployeeCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `id_profile` = '.(int)$id_profile.'
 		'.($active_only ? ' AND `active` = 1' : ''));
     }
@@ -512,7 +512,7 @@ class EmployeeCore extends ObjectModel
     public static function setLastConnectionDate($id_employee)
     {
         return Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'employee`
+			UPDATE employee`
 			SET `last_connection_date` = CURRENT_DATE()
 			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
 		');

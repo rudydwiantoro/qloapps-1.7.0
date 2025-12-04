@@ -75,7 +75,7 @@ class AdminCmsControllerCore extends AdminController
         $this->tpl_list_vars['title'] = sprintf($this->l('Pages in category "%s"'),
             $this->_category->name[Context::getContext()->employee->id_lang]);
         $this->_join = '
-		LEFT JOIN `'._DB_PREFIX_.'cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
+		LEFT JOIN cms_category` c ON (c.`id_cms_category` = a.`id_cms_category`)';
         $this->_select = 'a.position ';
         $this->_where = ' AND c.id_cms_category = '.(int)$this->_category->id;
 

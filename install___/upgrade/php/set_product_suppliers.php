@@ -27,19 +27,19 @@
 function set_product_suppliers()
 {
     $ps_currency_default = Db::getInstance()->getValue('SELECT value
-	FROM `'._DB_PREFIX_.'configuration` WHERE name="PS_CURRENCY_DEFAULT"');
+	FROM configuration` WHERE name="PS_CURRENCY_DEFAULT"');
 
     //Get all products with positive quantity
     $resource = Db::getInstance()->query('
 		SELECT id_supplier, id_product, supplier_reference, wholesale_price
-		FROM `'._DB_PREFIX_.'product`
+		FROM product`
 		WHERE `id_supplier` > 0
 	');
 
     while ($row = Db::getInstance()->nextRow($resource)) {
         //Set default supplier for product
         Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'product_supplier`
+			INSERT INTO product_supplier`
 			(`id_product`, `id_product_attribute`, `id_supplier`,
 				`product_supplier_reference`, `product_supplier_price_te`,
 				`id_currency`)
@@ -52,7 +52,7 @@ function set_product_suppliers()
         //Try to get product attribues
         $attributes = Db::getInstance()->executeS('
 			SELECT id_product_attribute, supplier_reference, wholesale_price
-			FROM `'._DB_PREFIX_.'product_attribute`
+			FROM product_attribute`
 			WHERE `id_product` = '.(int)$row['id_product']
         );
 
@@ -60,7 +60,7 @@ function set_product_suppliers()
         foreach ($attributes as $attribute) {
             // set supplier for attribute
             Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'product_supplier`
+				INSERT INTO product_supplier`
 				(`id_product`, `id_product_attribute`,
 				`id_supplier`, `product_supplier_reference`,
 				`product_supplier_price_te`, `id_currency`)

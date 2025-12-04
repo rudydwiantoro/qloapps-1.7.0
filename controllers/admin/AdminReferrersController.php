@@ -191,7 +191,7 @@ class AdminReferrersControllerCore extends AdminController
 							IF(sa.cache_orders > 0, ROUND(sa.cache_sales/sa.cache_orders, 2), 0) as cart, (sa.cache_visits*click_fee) as fee0,
 							(sa.cache_orders*base_fee) as fee1, (sa.cache_sales*percent_fee/100) as fee2';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'referrer_shop` sa
+			LEFT JOIN referrer_shop` sa
 				ON (sa.'.$this->identifier.' = a.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).'))';
 
         $this->_group = 'GROUP BY sa.id_referrer';

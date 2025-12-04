@@ -57,7 +57,7 @@ class WkHotelInteriorImage extends ObjectModel
     public function getHotelInteriorImg($active = 2)
     {
         $sql = 'SELECT `id_interior_image`, `name`, `display_name`, `position`
-                FROM `'._DB_PREFIX_.'htl_interior_image` WHERE 1';
+                FROM htl_interior_image` WHERE 1';
 
         if ($active != 2) {
             $sql .= ' AND `active` = '.(int) $active;
@@ -89,7 +89,7 @@ class WkHotelInteriorImage extends ObjectModel
     public function getHigherPosition()
     {
         $position = DB::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_interior_image`'
+            'SELECT MAX(`position`) FROM htl_interior_image`'
         );
         $result = (is_numeric($position)) ? $position : -1;
         return $result + 1;
@@ -98,7 +98,7 @@ class WkHotelInteriorImage extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$result = Db::getInstance()->executeS(
-            'SELECT hib.`id_interior_image`, hib.`position` FROM `'._DB_PREFIX_.'htl_interior_image` hib
+            'SELECT hib.`id_interior_image`, hib.`position` FROM htl_interior_image` hib
             WHERE hib.`id_interior_image` = '.(int) $this->id.' ORDER BY `position` ASC'
         )
         ) {
@@ -116,12 +116,12 @@ class WkHotelInteriorImage extends ObjectModel
             return false;
         }
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_interior_image` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_interior_image` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int)$movedBlock['position'].' AND `position` <= '.(int)$position : '< '
             .(int)$movedBlock['position'].' AND `position` >= '.(int)$position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_interior_image`
+            'UPDATE htl_interior_image`
             SET `position` = '.(int)$position.'
             WHERE `id_interior_image`='.(int)$movedBlock['id_interior_image']
         ));
@@ -135,7 +135,7 @@ class WkHotelInteriorImage extends ObjectModel
     public function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_interior_image` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_interior_image` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool) Db::getInstance()->execute($sql);
     }
 

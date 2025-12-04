@@ -108,7 +108,7 @@ class HotelImage extends ObjectModel
         }
 
         $sql = 'SELECT *
-        FROM `'._DB_PREFIX_.'htl_image`
+        FROM htl_image`
         WHERE `id_hotel` = '.(int) $id_hotel.
         ($n ? ' LIMIT '.(int) (($p - 1) * $n).', '.(int) ($n) : '');
 
@@ -135,7 +135,7 @@ class HotelImage extends ObjectModel
     public static function getCover($idHotel)
     {
         return Db::getInstance()->getRow(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_image` WHERE `id_hotel` = '.(int)$idHotel.' AND `cover`=1'
+            'SELECT * FROM htl_image` WHERE `id_hotel` = '.(int)$idHotel.' AND `cover`=1'
         );
     }
 
@@ -169,7 +169,7 @@ class HotelImage extends ObjectModel
     {
         return Db::getInstance()->getValue('
             SELECT `id_hotel`
-            FROM `'._DB_PREFIX_.'htl_image`
+            FROM htl_image`
             WHERE  `id` = '. (int)$id
         );
     }
@@ -310,6 +310,6 @@ class HotelImage extends ObjectModel
 
     public function getAllImages()
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_image`');
+        return Db::getInstance()->executeS('SELECT * FROM htl_image`');
     }
 }

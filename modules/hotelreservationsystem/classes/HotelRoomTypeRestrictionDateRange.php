@@ -68,7 +68,7 @@ class HotelRoomTypeRestrictionDateRange extends ObjectModel
 
     public function getRoomTypeLengthOfStayRestriction($idRoomType)
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'htl_room_type_restriction_date_range` WHERE `id_product` = '.(int)$idRoomType;
+        $sql = 'SELECT * FROM htl_room_type_restriction_date_range` WHERE `id_product` = '.(int)$idRoomType;
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
@@ -81,7 +81,7 @@ class HotelRoomTypeRestrictionDateRange extends ObjectModel
             $date = date('Y-m-d', strtotime($date));
 
             $sql = 'SELECT `min_los`, `max_los` 
-                    FROM `'._DB_PREFIX_.'htl_room_type_restriction_date_range` 
+                    FROM htl_room_type_restriction_date_range` 
                     WHERE `id_product` = '.(int) $idRoomType.' AND `date_from` <= \''.pSQL($date).'\' AND `date_to` > \''.pSQL($date).'\'';
 
             $losRestriction = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -90,7 +90,7 @@ class HotelRoomTypeRestrictionDateRange extends ObjectModel
         // if no LOS for date range the find it for room type
         if (!$losRestriction) {
             $sql = 'SELECT `min_los`, `max_los` 
-                    FROM `'._DB_PREFIX_.'htl_room_type` 
+                    FROM htl_room_type` 
                     WHERE `id_product` = '.(int) $idRoomType;
 
             $losRestriction = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);

@@ -155,7 +155,7 @@ class StatsForecast extends Module
             '.$date_from_ginvoice.' AS fix_date,
             '.($this->context->cookie->stats_granularity == 42 ? $date_to_ginvoice : '').'
             COUNT(DISTINCT(o.`id_order`)) AS countOrders,
-            SUM((SELECT IFNULL(SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)), 0) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd WHERE o.`id_order` = hbd.`id_order`)) AS totalRoomsBooked,
+            SUM((SELECT IFNULL(SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)), 0) FROM htl_booking_detail` hbd WHERE o.`id_order` = hbd.`id_order`)) AS totalRoomsBooked,
 			SUM(o.`total_paid_tax_excl` / o.`conversion_rate`) AS totalSales,
             SUM((
                 SELECT SUM(ROUND(IFNULL(DATEDIFF(hbd.`date_to`, hbd.`date_from`), 1) * (
@@ -165,10 +165,10 @@ class StatsForecast extends Module
                         ELSE 0
                     END
                 ), 2))
-                FROM `'._DB_PREFIX_.'order_detail` od
-                LEFT JOIN `'._DB_PREFIX_.'product` p
+                FROM order_detail` od
+                LEFT JOIN product` p
                 ON (p.`id_product` = od.`product_id`)
-				LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd
+				LEFT JOIN htl_booking_detail` hbd
                 ON (hbd.`id_product` = od.`product_id` AND hbd.`id_order` = od.`id_order`)
                 WHERE od.`id_order` = o.`id_order`
             )) AS totalOperatingCost
@@ -178,15 +178,15 @@ class StatsForecast extends Module
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
                 )
             )
@@ -352,15 +352,15 @@ class StatsForecast extends Module
         AND (
             EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'htl_cart_booking_data` hcbd
+                FROM htl_cart_booking_data` hcbd
                 WHERE hcbd.`id_cart` = c.`id_cart`' . HotelBranchInformation::addHotelRestriction(false, 'hcbd').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_cart_detail` spcd
+                FROM service_product_cart_detail` spcd
                 WHERE spcd.`id_cart` = c.`id_cart`' . HotelBranchInformation::addHotelRestriction(false, 'spcd').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_cart_detail` spcd
+                FROM service_product_cart_detail` spcd
                 WHERE spcd.`id_cart` = c.`id_cart` AND spcd.`id_hotel` = 0 AND spcd.`htl_cart_booking_id` = 0
             )
         )
@@ -369,20 +369,20 @@ class StatsForecast extends Module
 
         $sql = 'SELECT COUNT(DISTINCT c.`id_cart`)
         FROM '._DB_PREFIX_.'cart c
-		INNER JOIN `'._DB_PREFIX_.'htl_cart_booking_data` hcbd ON (hcbd.`id_cart` = c.`id_cart`)
+		INNER JOIN htl_cart_booking_data` hcbd ON (hcbd.`id_cart` = c.`id_cart`)
         WHERE c.`id_customer` = 0
 		AND (
             EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'htl_cart_booking_data` hcbd
+                FROM htl_cart_booking_data` hcbd
                 WHERE hcbd.`id_cart` = c.`id_cart`' . HotelBranchInformation::addHotelRestriction(false, 'hcbd').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_cart_detail` spcd
+                FROM service_product_cart_detail` spcd
                 WHERE spcd.`id_cart` = c.`id_cart`' . HotelBranchInformation::addHotelRestriction(false, 'spcd').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_cart_detail` spcd
+                FROM service_product_cart_detail` spcd
                 WHERE spcd.`id_cart` = c.`id_cart` AND spcd.`id_hotel` = 0 AND spcd.`htl_cart_booking_id` = 0
             )
         )
@@ -395,15 +395,15 @@ class StatsForecast extends Module
 		AND (
             EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                FROM htl_booking_detail` hbd
                 WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
             )
         )
@@ -417,15 +417,15 @@ class StatsForecast extends Module
 		AND (
             EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                FROM htl_booking_detail` hbd
                 WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
             )
         )
@@ -439,15 +439,15 @@ class StatsForecast extends Module
 		AND (
             EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                FROM htl_booking_detail` hbd
                 WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
             ) OR EXISTS (
                 SELECT 1
-                FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                FROM service_product_order_detail` spod
                 WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
             )
         )
@@ -678,26 +678,26 @@ class StatsForecast extends Module
 
         $where = $join = '';
         if ((int)$this->context->cookie->stats_id_zone) {
-            $join = ' LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address LEFT JOIN `'._DB_PREFIX_.'country` co ON co.id_country = a.id_country';
+            $join = ' LEFT JOIN address` a ON o.id_address_invoice = a.id_address LEFT JOIN country` co ON co.id_country = a.id_country';
             $where = ' AND co.id_zone = '.(int)$this->context->cookie->stats_id_zone.' ';
         }
 
 		if (!$idOrders = Db::getInstance()->getValue('
 			SELECT GROUP_CONCAT(DISTINCT o.`id_order`)
-			FROM `'._DB_PREFIX_.'orders` o
+			FROM orders` o
 			WHERE  o.valid = 1 AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
                 )
             )
@@ -708,7 +708,7 @@ class StatsForecast extends Module
 
         $lang_values = '';
         $sql = 'SELECT l.id_lang, l.iso_code
-				FROM `'._DB_PREFIX_.'lang` l
+				FROM lang` l
 				'.Shop::addSqlAssociation('lang', 'l').'
 				WHERE l.active = 1';
         $languages = Db::getInstance()->executeS($sql);
@@ -719,7 +719,7 @@ class StatsForecast extends Module
 
         if ($lang_values) {
             $sql = 'SELECT '.$lang_values.'
-					FROM `'._DB_PREFIX_.'orders` o
+					FROM orders` o
 					WHERE o.`id_order` IN ('.pSQL($idOrders).')';
             $ca['lang'] = Db::getInstance()->getRow($sql);
             arsort($ca['lang']);
@@ -728,7 +728,7 @@ class StatsForecast extends Module
         }
 
         $sql = 'SELECT id_order
-					FROM `'._DB_PREFIX_.'orders` o
+					FROM orders` o
 					'.$join.'
 					WHERE o.`id_order` IN ('.pSQL($idOrders).')
 					'.$where;
@@ -739,8 +739,8 @@ class StatsForecast extends Module
                 $orderIdPayment[] = $r['id_order'];
             }
             $sql = 'SELECT op.`payment_method`, SUM(opd.`amount` / op.`conversion_rate`) as total, COUNT(DISTINCT opd.`id_order`) as nb
-					FROM `'._DB_PREFIX_.'order_payment` op
-					INNER JOIN `'._DB_PREFIX_.'order_payment_detail` opd ON (op.`id_order_payment` = opd.`id_order_payment`)
+					FROM order_payment` op
+					INNER JOIN order_payment_detail` opd ON (op.`id_order_payment` = opd.`id_order_payment`)
 					WHERE opd.`id_order` IN ('.implode(',', $orderIdPayment).')
 					GROUP BY op.payment_method
 					ORDER BY total DESC';
@@ -750,10 +750,10 @@ class StatsForecast extends Module
         }
 
         $sql = 'SELECT z.name, SUM(o.`total_paid_tax_excl` / o.`conversion_rate`) as total, COUNT(*) as nb
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_invoice = a.id_address
-				LEFT JOIN `'._DB_PREFIX_.'country` c ON c.id_country = a.id_country
-				LEFT JOIN `'._DB_PREFIX_.'zone` z ON z.id_zone = c.id_zone
+				FROM orders` o
+				LEFT JOIN address` a ON o.id_address_invoice = a.id_address
+				LEFT JOIN country` c ON c.id_country = a.id_country
+				LEFT JOIN zone` z ON z.id_zone = c.id_zone
 				WHERE o.valid = 1
 					'.(isset($idOrders) ? ' AND o.`id_order` IN ('.pSQL($idOrders).')':'').'
 					AND o.`invoice_date` BETWEEN '.ModuleGraph::getDateBetween().'
@@ -763,8 +763,8 @@ class StatsForecast extends Module
         $ca['zones'] = Db::getInstance()->executeS($sql);
 
         $sql = 'SELECT cu.name, SUM(o.`total_paid_tax_excl` / o.`conversion_rate`) as total, COUNT(*) as nb
-				FROM `'._DB_PREFIX_.'orders` o
-				LEFT JOIN `'._DB_PREFIX_.'currency` cu ON o.id_currency = cu.id_currency
+				FROM orders` o
+				LEFT JOIN currency` cu ON o.id_currency = cu.id_currency
 				'.$join.'
 				WHERE o.`id_order` IN ('.pSQL($idOrders).')
 				'.$where.'
@@ -774,7 +774,7 @@ class StatsForecast extends Module
 
         $sql = 'SELECT SUM(total_paid_tax_excl / o.`conversion_rate`) as total,
 			SUM(total_paid_tax_incl / o.`conversion_rate`) as total_incl, COUNT(*) AS nb
-				FROM `'._DB_PREFIX_.'orders` o
+				FROM orders` o
 				WHERE o.`id_order` IN ('.pSQL($idOrders).')';
         $ca['ventil'] = Db::getInstance()->getRow($sql);
 

@@ -6,7 +6,7 @@ function update_stock_mvt_reason()
     //Remove standard movements to keep only custom movement
     $mvts = Db::getInstance()->executeS('
 		SELECT smr.*
-		FROM `'._DB_PREFIX_.'stock_mvt_reason`
+		FROM stock_mvt_reason`
 		WHERE `id` > 5
 	');
 
@@ -14,17 +14,17 @@ function update_stock_mvt_reason()
     //Remove standard movements to keep only custom movement
     $mvts_lang = Db::getInstance()->executeS('
 		SELECT smrl.*
-		FROM `'._DB_PREFIX_.'stock_movement_reason_lang`
+		FROM stock_movement_reason_lang`
 		WHERE `id_stock_mvt_reason` > 5
 	');
 
     //Clean table
-    Db::getInstance()->query('TRUNCATE TABLE `'._DB_PREFIX_.'stock_movement_reason`');
-    Db::getInstance()->query('TRUNCATE TABLE `'._DB_PREFIX_.'stock_movement_reason_lang`');
+    Db::getInstance()->query('TRUNCATE TABLE stock_movement_reason`');
+    Db::getInstance()->query('TRUNCATE TABLE stock_movement_reason_lang`');
 
     //Recreate new standards movements
     Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`)
+		INSERT INTO stock_mvt_reason` (`id_stock_mvt_reason`, `sign`, `date_add`, `date_upd`)
 		VALUES
 			(1, 1, NOW(), NOW()),
 			(2, -1, NOW(), NOW()),
@@ -85,7 +85,7 @@ function update_stock_mvt_reason()
     if (is_array($mvts)) {
         foreach ($mvts as $mvt) {
             Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
+				INSERT INTO stock_mvt_reason` (`sign`, `date_add`, `date_upd`)
 				VALUES ("'.(int)$mvt['sign'].'", "'.pSQL($mvt['date_add']).'", "'.pSQL($mvt['date_upd']).'")
 			');
 
@@ -97,7 +97,7 @@ function update_stock_mvt_reason()
                 }
 
                 Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
+					INSERT INTO stock_mvt_reason_lang` (`id_stock_mvt_reason`, `id_lang`, `name`)
 					VALUES ("'.(int)$row_id.'", "'.(int)$mvt_lang['id_lang'].'", "'.pSQL($mvt_lang['name']).'")
 				');
             }

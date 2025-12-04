@@ -34,13 +34,13 @@ function update_order_messages()
         $nb_loop = ceil($count_messages / $step);
     }
     for ($i = 0; $i < $nb_loop; $i++) {
-        $sql = 'SELECT id_message, message FROM `'._DB_PREFIX_.'message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
+        $sql = 'SELECT id_message, message FROM message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
         $start = intval(($i+1) * $step);
         if ($messages = Db::getInstance()->query($sql)) {
             while ($message = Db::getInstance()->nextRow($messages)) {
                 if (is_array($message)) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'message`
+					UPDATE message`
 					SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(br2nl($message['message'])))).'\'
 					WHERE id_message = '.(int)$message['id_message']);
                 }
@@ -52,13 +52,13 @@ function update_order_messages()
         $nb_loop = ceil($count_messages / $step);
     }
     for ($i = 0; $i < $nb_loop; $i++) {
-        $sql = 'SELECT id_customer_message, message FROM `'._DB_PREFIX_.'customer_message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
+        $sql = 'SELECT id_customer_message, message FROM customer_message` WHERE message REGEXP \''.pSQL($pattern, true).'\' LIMIT '.(int)$start.', '.(int)$step;
         $start = intval(($i+1) * $step);
         if ($messages = Db::getInstance()->query($sql)) {
             while ($message = Db::getInstance()->nextRow($messages)) {
                 if (is_array($message)) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'customer_message`
+					UPDATE customer_message`
 					SET message = \''.pSQL(preg_replace('/'.$pattern.'/', '', Tools::htmlentitiesDecodeUTF8(str_replace('&amp;', '&', $message['message'])))).'\'
 					WHERE id_customer_message = '.(int)$message['id_customer_message']);
                 }

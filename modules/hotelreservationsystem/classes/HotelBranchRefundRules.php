@@ -51,12 +51,12 @@ class HotelBranchRefundRules extends ObjectModel
         if ($detailed) {
             $sql .= ', orr.*, orrl.*';
         }
-        $sql .= ' FROM `'._DB_PREFIX_.'htl_branch_refund_rules` hrr';
+        $sql .= ' FROM htl_branch_refund_rules` hrr';
 
         if ($detailed) {
-            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_order_refund_rules` orr
+            $sql .= ' LEFT JOIN htl_order_refund_rules` orr
             ON (orr.`id_refund_rule` = hrr.`id_refund_rule`)';
-            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_order_refund_rules_lang` orrl
+            $sql .= ' LEFT JOIN htl_order_refund_rules_lang` orrl
             ON (orrl.`id_refund_rule` = orr.`id_refund_rule` AND orrl.`id_lang` = '.(int)$idLang.')';
         }
 

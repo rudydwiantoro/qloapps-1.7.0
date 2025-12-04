@@ -34,13 +34,13 @@ function ps16012_update_alias()
         $nb_loop = ceil($count_alias / $step);
     }
     for ($i = 0; $i < $nb_loop; $i++) {
-        $sql = 'SELECT id_alias, alias, search FROM `'._DB_PREFIX_.'alias`';
+        $sql = 'SELECT id_alias, alias, search FROM alias`';
         $start = intval(($i+1) * $step);
         if ($aliass = Db::getInstance()->query($sql)) {
             while ($alias = Db::getInstance()->nextRow($aliass)) {
                 if (is_array($alias)) {
                     Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'alias`
+					UPDATE alias`
 					SET alias = \''.pSQL(Tools::replaceAccentedChars($alias['alias'])).'\',
 					search = \''.pSQL(Tools::replaceAccentedChars($alias['search'])).'\'
 					WHERE id_alias = '.(int)$alias['id_alias']);

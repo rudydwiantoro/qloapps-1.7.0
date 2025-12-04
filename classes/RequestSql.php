@@ -80,7 +80,7 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSql()
     {
-        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'request_sql` ORDER BY `id_request_sql`')) {
+        if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM request_sql` ORDER BY `id_request_sql`')) {
             return false;
         }
 
@@ -100,7 +100,7 @@ class RequestSqlCore extends ObjectModel
      */
     public static function getRequestSqlById($id)
     {
-        return Db::getInstance()->executeS('SELECT `sql` FROM `'._DB_PREFIX_.'request_sql` WHERE `id_request_sql` = '.(int)$id);
+        return Db::getInstance()->executeS('SELECT `sql` FROM request_sql` WHERE `id_request_sql` = '.(int)$id);
     }
 
     /**

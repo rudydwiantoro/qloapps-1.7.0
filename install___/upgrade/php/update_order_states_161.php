@@ -39,7 +39,7 @@ function update_order_states_161()
     );
     Db::getInstance()->insert('order_state', $data);
     if ($last_id = Db::getInstance()->Insert_ID()) {
-        if ($languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`')) {
+        if ($languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM lang`')) {
             $row = array();
             foreach ($languages as $lang) {
                 $row[] = array(

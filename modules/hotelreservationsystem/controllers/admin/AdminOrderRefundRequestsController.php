@@ -32,8 +32,8 @@ class AdminOrderRefundRequestsController extends ModuleAdminController
         $this->context = Context::getContext();
 
         $this->_select = ' ord.`id_currency`, CONCAT(firstname, " ", lastname) AS cust_name';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'orders` ord ON (a.`id_order` = ord.`id_order`)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'customer` cust ON (cust.`id_customer` = ord.`id_customer`)';
+        $this->_join .= ' LEFT JOIN orders` ord ON (a.`id_order` = ord.`id_order`)';
+        $this->_join .= ' LEFT JOIN customer` cust ON (cust.`id_customer` = ord.`id_customer`)';
 
         $this->_orderWay = 'DESC';
         $this->allow_export = true;
@@ -42,7 +42,7 @@ class AdminOrderRefundRequestsController extends ModuleAdminController
             $this->_select .= ', orsl.`name` as `status_name`, ors.`color`, SUM(IF((ordrd.id_htl_booking != 0) , 1, 0)) as num_rooms, SUM(IF((ordrd.id_service_product_order_detail != 0) , 1, 0)) as num_products';
             $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
             $this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'order_return_detail` ordrd ON (a.`id_order_return` = ordrd.`id_order_return`)';
+            $this->_join .= ' LEFT JOIN order_return_detail` ordrd ON (a.`id_order_return` = ordrd.`id_order_return`)';
             $this->_where = ' AND a.`id_order`='. (int)$idOrder;
             $this->_group = 'GROUP BY a.`id_order_return`';
         } else {
@@ -228,8 +228,8 @@ class AdminOrderRefundRequestsController extends ModuleAdminController
                 ord.`id_order_return`, hbd.`hotel_name`, hbd.`id_order`,
                 GROUP_CONCAT(hbd.`date_from`) AS date_from,
                 GROUP_CONCAT(hbd.`date_to`) AS date_to
-                FROM `'._DB_PREFIX_.'order_return_detail` ord
-                LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON ord.`id_htl_booking` = hbd.`id`
+                FROM order_return_detail` ord
+                LEFT JOIN htl_booking_detail` hbd ON ord.`id_htl_booking` = hbd.`id`
                 GROUP BY ord.`id_order_return`
             ) AS ordtl ON (ordtl.`id_order_return` = a.`id_order_return`)';
             $this->fields_list = array_merge($this->fields_list, array(

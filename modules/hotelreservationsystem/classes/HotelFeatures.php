@@ -74,8 +74,8 @@ class HotelFeatures extends ObjectModel
         }
         return Db::getInstance()->getRow(
             'SELECT hf.`id` , hfl.`name`
-            FROM `'._DB_PREFIX_.'htl_features` hf
-            LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+            FROM htl_features` hf
+            LEFT JOIN htl_features_lang` hfl
             ON (hfl.`id` = hf.`id` AND hfl.`id_lang` = '.(int)$idLang.')
             WHERE hf.`id`='.(int) $id
         );
@@ -94,8 +94,8 @@ class HotelFeatures extends ObjectModel
         $result = array();
         if ($parentFeatures = Db::getInstance()->executeS(
             'SELECT hf.`id`, hf.`position`, hfl.`name`
-            FROM `'._DB_PREFIX_.'htl_features` hf
-            LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+            FROM htl_features` hf
+            LEFT JOIN htl_features_lang` hfl
             ON (hfl.`id` = hf.`id` AND hfl.`id_lang` = '.(int)$idLang.')
             WHERE hf.`parent_feature_id`=0  order by position'
         )) {
@@ -105,8 +105,8 @@ class HotelFeatures extends ObjectModel
                 $result[$value['id']]['position'] = $value['position'];
                 if ($childFeatures = Db::getInstance()->executeS(
                     'SELECT hf.`id`, hfl.`name`
-                    FROM `'._DB_PREFIX_.'htl_features` hf
-                    LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+                    FROM htl_features` hf
+                    LEFT JOIN htl_features_lang` hfl
                     ON (hfl.`id` = hf.`id` AND hfl.`id_lang` = '.(int)$idLang.')
                     WHERE hf.`parent_feature_id`='.(int) $value['id']
                 )) {
@@ -130,7 +130,7 @@ class HotelFeatures extends ObjectModel
      */
     public function deleteHotelFeatures($deleteId, $deleteOnlyChilds = 0)
     {
-        $sql = 'SELECT `id` FROM `'._DB_PREFIX_.'htl_features` WHERE `parent_feature_id`='.(int) $deleteId;
+        $sql = 'SELECT `id` FROM htl_features` WHERE `parent_feature_id`='.(int) $deleteId;
 
         if (!$deleteOnlyChilds) {
             $sql .= ' OR `id`='.(int) $deleteId;
@@ -159,8 +159,8 @@ class HotelFeatures extends ObjectModel
         $result = array();
         if ($parentFeatures = Db::getInstance()->executeS(
             'SELECT hf.`id`, hfl.`name`
-            FROM `'._DB_PREFIX_.'htl_features` hf
-            LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+            FROM htl_features` hf
+            LEFT JOIN htl_features_lang` hfl
             ON (hfl.`id` = hf.`id` AND hfl.`id_lang` = '.(int)$idLang.')
             WHERE hf.`parent_feature_id`=0'
         )) {
@@ -168,8 +168,8 @@ class HotelFeatures extends ObjectModel
                 $result[$value['id']]['name'] = $value['name'];
                 if ($childFeatures = Db::getInstance()->executeS(
                     'SELECT hf.`id`, hfl.`name`
-                    FROM `'._DB_PREFIX_.'htl_features` hf
-                    LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+                    FROM htl_features` hf
+                    LEFT JOIN htl_features_lang` hfl
                     ON (hfl.`id` = hf.`id` AND hfl.`id_lang` = '.(int)$idLang.')
                     WHERE hf.`parent_feature_id`='.(int) $value['id']
                 )) {
@@ -202,7 +202,7 @@ class HotelFeatures extends ObjectModel
     public function getChildFeaturesByParentFeatureId($parent_feature_id)
     {
         return Db::getInstance()->executeS(
-            'SELECT `id` FROM `'._DB_PREFIX_.'htl_features` WHERE `parent_feature_id`='.(int)$parent_feature_id
+            'SELECT `id` FROM htl_features` WHERE `parent_feature_id`='.(int)$parent_feature_id
         );
     }
 
@@ -218,8 +218,8 @@ class HotelFeatures extends ObjectModel
         }
 
         return Db::getInstance()->executeS(
-            'SELECT hf.*, hfl.* FROM `'._DB_PREFIX_.'htl_features` hf
-            LEFT JOIN `'._DB_PREFIX_.'htl_features_lang` hfl
+            'SELECT hf.*, hfl.* FROM htl_features` hf
+            LEFT JOIN htl_features_lang` hfl
             ON hfl.`id` = hf.`id`
             WHERE hfl.`name` LIKE \'%'.pSQL($query).'%\'
             AND hfl.`id_lang`='.(int) $idLang

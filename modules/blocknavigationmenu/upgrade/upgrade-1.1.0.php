@@ -126,11 +126,11 @@ class upgradeBlockNavigationMenu110
 	public function getOldExploreLinks()
 	{
 		$links =  Db::getInstance()->executeS(
-			'SELECT * FROM `'._DB_PREFIX_.'htl_custom_explore_link`'
+			'SELECT * FROM htl_custom_explore_link`'
 		);
 		foreach ($links as &$link) {
             $link_lang = Db::getInstance()->executeS(
-                'SELECT * FROM `'._DB_PREFIX_.'htl_custom_explore_link_lang`
+                'SELECT * FROM htl_custom_explore_link_lang`
 				WHERE `id_explore_link` = '.$link['id_explore_link']
 			);
 			// set default name

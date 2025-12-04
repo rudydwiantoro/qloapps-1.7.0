@@ -98,8 +98,8 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
         if (!Cache::isStored($cache_id)) {
             $rows = Db::getInstance()->executeS('
 				SELECT tr.*
-				FROM `'._DB_PREFIX_.'tax_rule` tr
-				JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
+				FROM tax_rule` tr
+				JOIN tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
 				WHERE trg.`active` = 1
 				AND tr.`id_country` = '.(int)$this->address->id_country.'
 				AND tr.`id_tax_rules_group` = '.(int)$this->type.'

@@ -87,8 +87,8 @@ class GroupCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT DISTINCT g.`id_group`, g.`reduction`, g.`price_display_method`, gl.`name`
-		FROM `'._DB_PREFIX_.'group` g
-		LEFT JOIN `'._DB_PREFIX_.'group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)$id_lang.')
+		FROM group` g
+		LEFT JOIN group_lang` AS gl ON (g.`id_group` = gl.`id_group` AND gl.`id_lang` = '.(int)$id_lang.')
 		'.$shop_criteria.'
 		ORDER BY g.`id_group` ASC');
     }
@@ -98,16 +98,16 @@ class GroupCore extends ObjectModel
         if ($count) {
             return Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'customer_group` cg
-			LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
+			FROM customer_group` cg
+			LEFT JOIN customer` c ON (cg.`id_customer` = c.`id_customer`)
 			WHERE cg.`id_group` = '.(int)$this->id.'
 			'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
 			AND c.`deleted` != 1');
         }
         return Db::getInstance()->executeS('
 		SELECT cg.`id_customer`, c.*
-		FROM `'._DB_PREFIX_.'customer_group` cg
-		LEFT JOIN `'._DB_PREFIX_.'customer` c ON (cg.`id_customer` = c.`id_customer`)
+		FROM customer_group` cg
+		LEFT JOIN customer` c ON (cg.`id_customer` = c.`id_customer`)
 		WHERE cg.`id_group` = '.(int)$this->id.'
 		AND c.`deleted` != 1
 		'.($shop_filtering ? Shop::addSqlRestriction(Shop::SHARE_CUSTOMER) : '').'
@@ -129,7 +129,7 @@ class GroupCore extends ObjectModel
         if (!isset(self::$cache_reduction['group'][$id_group])) {
             self::$cache_reduction['group'][$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `reduction`
-			FROM `'._DB_PREFIX_.'group`
+			FROM group`
 			WHERE `id_group` = '.(int)$id_group);
         }
         return self::$cache_reduction['group'][$id_group];
@@ -140,7 +140,7 @@ class GroupCore extends ObjectModel
         if (!isset(Group::$group_price_display_method[$id_group])) {
             self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
-			FROM `'._DB_PREFIX_.'group`
+			FROM group`
 			WHERE `id_group` = '.(int)$id_group);
         }
         return self::$group_price_display_method[$id_group];
@@ -184,26 +184,26 @@ class GroupCore extends ObjectModel
             return false;
         }
         if (parent::delete()) {
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cart_rule_group` WHERE `id_group` = '.(int)$this->id);
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_group` = '.(int)$this->id);
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_group` = '.(int)$this->id);
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'group_reduction` WHERE `id_group` = '.(int)$this->id);
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
+            Db::getInstance()->execute('DELETE FROM cart_rule_group` WHERE `id_group` = '.(int)$this->id);
+            Db::getInstance()->execute('DELETE FROM customer_group` WHERE `id_group` = '.(int)$this->id);
+            Db::getInstance()->execute('DELETE FROM category_group` WHERE `id_group` = '.(int)$this->id);
+            Db::getInstance()->execute('DELETE FROM group_reduction` WHERE `id_group` = '.(int)$this->id);
+            Db::getInstance()->execute('DELETE FROM product_group_reduction_cache` WHERE `id_group` = '.(int)$this->id);
             self::truncateModulesRestrictions($this->id);
 
             // Add default group (id 3) to customers without groups
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_group` (
-				SELECT c.id_customer, '.(int)Configuration::get('PS_CUSTOMER_GROUP').' FROM `'._DB_PREFIX_.'customer` c
-				LEFT JOIN `'._DB_PREFIX_.'customer_group` cg
+            Db::getInstance()->execute('INSERT INTO customer_group` (
+				SELECT c.id_customer, '.(int)Configuration::get('PS_CUSTOMER_GROUP').' FROM customer` c
+				LEFT JOIN customer_group` cg
 				ON cg.id_customer = c.id_customer
 				WHERE cg.id_customer IS NULL)');
 
             // Set to the customer the default group
             // Select the minimal id from customer_group
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer` cg
+            Db::getInstance()->execute('UPDATE customer` cg
 				SET id_default_group =
 					IFNULL((
-						SELECT min(id_group) FROM `'._DB_PREFIX_.'customer_group`
+						SELECT min(id_group) FROM customer_group`
 						WHERE id_customer = cg.id_customer),
 						'.(int)Configuration::get('PS_CUSTOMER_GROUP').')
 				WHERE `id_default_group` = '.(int)$this->id);
@@ -236,7 +236,7 @@ class GroupCore extends ObjectModel
      */
     public static function isCurrentlyUsed($table = null, $has_active_column = false)
     {
-        return (bool)(Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'group`') > 3);
+        return (bool)(Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT COUNT(*) FROM group`') > 3);
     }
 
     /**
@@ -248,7 +248,7 @@ class GroupCore extends ObjectModel
     public static function truncateModulesRestrictions($id_group)
     {
         return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'module_group`
+		DELETE FROM module_group`
 		WHERE `id_group` = '.(int)$id_group);
     }
 
@@ -261,7 +261,7 @@ class GroupCore extends ObjectModel
     public static function truncateRestrictionsByModule($id_module)
     {
         return Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'module_group`
+		DELETE FROM module_group`
 		WHERE `id_module` = '.(int)$id_module);
     }
 
@@ -279,9 +279,9 @@ class GroupCore extends ObjectModel
         }
 
         // Delete all record for this group
-        Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
+        Db::getInstance()->execute('DELETE FROM module_group` WHERE `id_group` = '.(int)$id_group);
 
-        $sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
+        $sql = 'INSERT INTO module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
         foreach ($modules as $module) {
             foreach ($shops as $shop) {
                 $sql .= '("'.(int)$module.'", "'.(int)$shop.'", "'.(int)$id_group.'"),';
@@ -309,8 +309,8 @@ class GroupCore extends ObjectModel
         $res = true;
         foreach ($shops as $shop) {
             $res &= Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`)
-			(SELECT '.(int)$id_module.', '.(int)$shop.', id_group FROM `'._DB_PREFIX_.'group`)');
+			INSERT INTO module_group` (`id_module`, `id_shop`, `id_group`)
+			(SELECT '.(int)$id_module.', '.(int)$shop.', id_group FROM group`)');
         }
         return $res;
     }
@@ -366,8 +366,8 @@ class GroupCore extends ObjectModel
     {
         return Db::getInstance()->getRow('
 			SELECT g.*, gl.*
-			FROM `'._DB_PREFIX_.'group` g
-			LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
+			FROM group` g
+			LEFT JOIN group_lang` gl
 				ON (g.`id_group` = gl.`id_group`)
 			WHERE `name` = \''.pSQL($query).'\'
 		');
@@ -377,8 +377,8 @@ class GroupCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT g.*, gl.*
-			FROM `'._DB_PREFIX_.'group` g
-			LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
+			FROM group` g
+			LEFT JOIN group_lang` gl
 				ON (g.`id_group` = gl.`id_group`)
 			WHERE `name` LIKE \'%'.pSQL($query).'%\'
 		');

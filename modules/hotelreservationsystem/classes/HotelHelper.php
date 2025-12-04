@@ -1371,9 +1371,9 @@ class HotelHelper
     public static function getPsProducts($id_lang, $start = 0, $limit = 0, $booking_product = null)
     {
         $sql = 'SELECT p.`id_product`, pl.`name`, p.`booking_product`
-            FROM `'._DB_PREFIX_.'product` p
+            FROM product` p
             '.Shop::addSqlAssociation('product', 'p').'
-            LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` '.
+            LEFT JOIN product_lang` pl ON (p.`id_product` = pl.`id_product` '.
             Shop::addSqlRestrictionOnLang('pl').')
             WHERE pl.`id_lang` = '.(int)$id_lang.
             (isset($booking_product) ? ' AND p.`booking_product` = '.(int) $booking_product : '').'
@@ -2543,7 +2543,7 @@ class HotelHelper
         $languages = Language::getLanguages(true);
         if ($is_hotel && $id_hotel) {
             $cat_id_hotel = Db::getInstance()->getValue(
-                'SELECT `id_category` FROM `'._DB_PREFIX_.'htl_branch_info` WHERE id='.(int) $id_hotel
+                'SELECT `id_category` FROM htl_branch_info` WHERE id='.(int) $id_hotel
             );
             if ($cat_id_hotel) {
                 $obj_cat = new Category($cat_id_hotel);
@@ -2682,7 +2682,7 @@ class HotelHelper
      */
     public static function getSupperAdmin()
     {
-        if ($data = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'employee` ORDER BY `id_employee`')) {
+        if ($data = Db::getInstance()->executeS('SELECT * FROM employee` ORDER BY `id_employee`')) {
             foreach ($data as $emp) {
                 $employee = new Employee($emp['id_employee']);
                 if ($employee->isSuperAdmin()) {
@@ -3041,8 +3041,8 @@ class HotelHelper
     {
         $locationCategory = new Category(Configuration::get('PS_LOCATIONS_CATEGORY'));
         $sql = 'SELECT c.`id_category` as `value` , cl.`name`, "'.pSQL($input_name).'_box" as `input_name`, c.`id_parent`
-        FROM `'._DB_PREFIX_.'category` AS c
-        INNER JOIN `'._DB_PREFIX_.'category_lang` AS cl
+        FROM category` AS c
+        INNER JOIN category_lang` AS cl
         ON (c.`id_category` = cl.`id_category` AND cl.`id_lang`='.(int)Context::getContext()->language->id.')
         WHERE c.`nleft` > '.(int)$locationCategory->nleft.' AND c.`nright` < '.(int)$locationCategory->nright.'
         AND c.`level_depth` = '.(int)$levelDepth;
@@ -3064,10 +3064,10 @@ class HotelHelper
     {
 
         $sql = 'SELECT hbi.`id` as `value` , hbil.`hotel_name` as `name`, "'.$prefix.'hotel_box" as `input_name`, c.`id_parent`
-        FROM `'._DB_PREFIX_.'htl_branch_info` AS hbi
-        INNER JOIN `'._DB_PREFIX_.'htl_branch_info_lang` AS hbil
+        FROM htl_branch_info` AS hbi
+        INNER JOIN htl_branch_info_lang` AS hbil
         ON (hbi.`id` = hbil.`id` AND hbil.`id_lang`='.(int)Context::getContext()->language->id.')
-        INNER JOIN `'._DB_PREFIX_.'category` AS c ON (hbi.`id_category` = c.`id_category`)
+        INNER JOIN category` AS c ON (hbi.`id_category` = c.`id_category`)
         WHERE 1';
 
         if ($cities) {
@@ -3085,10 +3085,10 @@ class HotelHelper
     protected static function getRoomTypesByHotelsId($hotels, $rootNodeId, $prefix = '')
     {
         $sql = 'SELECT p.`id_product` AS `value`, pl.`name`, "'.$prefix.'room_type_box" as `input_name`, rt.`id_hotel`
-			FROM `'._DB_PREFIX_.'htl_room_type` AS rt';
+			FROM htl_room_type` AS rt';
 
-        $sql .= ' INNER JOIN `'._DB_PREFIX_.'product` AS p ON (rt.`id_product` = p.`id_product`)
-            INNER JOIN `'._DB_PREFIX_.'product_lang` AS pl
+        $sql .= ' INNER JOIN product` AS p ON (rt.`id_product` = p.`id_product`)
+            INNER JOIN product_lang` AS pl
             ON (p.`id_product` = pl.`id_product` AND pl.`id_lang`='.(int)Context::getContext()->language->id.')
             WHERE 1';
 
@@ -3108,7 +3108,7 @@ class HotelHelper
     protected static function getRoomsByRoomTypeId($roomTypes, $rootNodeId, $prefix = '')
     {
         $sql = 'SELECT `id` as `value`, `room_num` as `name`, "'.$prefix.'room_box" as `input_name`, `id_product`
-        FROM `'._DB_PREFIX_.'htl_room_information`
+        FROM htl_room_information`
         WHERE 1';
         if ($roomTypes) {
             $sql .= ' AND `id_product` IN ('.implode(', ', $roomTypes).')';

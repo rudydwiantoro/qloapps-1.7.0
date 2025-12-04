@@ -56,7 +56,7 @@ class WkFooterPaymentBlockDb
     {
         return DB::getInstance()->execute('
             DROP TABLE IF EXISTS
-            `'._DB_PREFIX_.'htl_footer_payment_block_info`;
+            htl_footer_payment_block_info`;
         ');
     }
 }

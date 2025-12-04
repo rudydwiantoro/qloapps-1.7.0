@@ -46,7 +46,7 @@ class HotelRoomTypeDemandPrice extends ObjectModel
     public function getRoomTypeDemandPrice($idProduct, $idGlobalDemand, $idOption = 0)
     {
         return Db::getInstance()->getValue(
-            'SELECT `price` FROM `'._DB_PREFIX_.'htl_room_type_demand_price` rdp
+            'SELECT `price` FROM htl_room_type_demand_price` rdp
             WHERE `id_product`='.(int)$idProduct.
             ' AND `id_global_demand`='.(int)$idGlobalDemand.
             ' AND `id_option`='.(int)$idOption

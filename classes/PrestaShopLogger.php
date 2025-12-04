@@ -170,7 +170,7 @@ class    PrestaShopLoggerCore extends ObjectModel
     {
         if (!isset(self::$is_present[md5($this->message)])) {
             self::$is_present[$this->getHash()] = Db::getInstance()->getValue('SELECT COUNT(*)
-				FROM `'._DB_PREFIX_.'log`
+				FROM log`
 				WHERE
 					`message` = \''.$this->message.'\'
 					AND `severity` = \''.$this->severity.'\'

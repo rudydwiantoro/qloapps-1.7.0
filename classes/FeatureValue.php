@@ -69,7 +69,7 @@ class FeatureValueCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'feature_value`
+			FROM feature_value`
 			WHERE `id_feature` = '.(int)$id_feature
         );
     }
@@ -85,8 +85,8 @@ class FeatureValueCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'feature_value` v
-			LEFT JOIN `'._DB_PREFIX_.'feature_value_lang` vl
+			FROM feature_value` v
+			LEFT JOIN feature_value_lang` vl
 				ON (v.`id_feature_value` = vl.`id_feature_value` AND vl.`id_lang` = '.(int)$id_lang.')
 			WHERE v.`id_feature` = '.(int)$id_feature.'
 				'.(!$custom ? 'AND (v.`custom` IS NULL OR v.`custom` = 0)' : '').'
@@ -104,7 +104,7 @@ class FeatureValueCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'feature_value_lang`
+			FROM feature_value_lang`
 			WHERE `id_feature_value` = '.(int)$id_feature_value.'
 			ORDER BY `id_lang`
 		');
@@ -186,7 +186,7 @@ class FeatureValueCore extends ObjectModel
     {
         /* Also delete related products */
         Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_product`
+			DELETE FROM feature_product`
 			WHERE `id_feature_value` = '.(int)$this->id
         );
         $return = parent::delete();

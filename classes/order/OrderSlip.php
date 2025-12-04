@@ -149,7 +149,7 @@ class OrderSlipCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'order_slip`
+		FROM order_slip`
 		WHERE `id_customer` = '.(int)($customer_id).
         ($order_id ? ' AND `id_order` = '.(int)($order_id) : '').'
 		ORDER BY `date_add` DESC');
@@ -159,7 +159,7 @@ class OrderSlipCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
         ($id_order_detail ? 'SELECT SUM(`product_quantity`) AS `total`' : 'SELECT *').
-        'FROM `'._DB_PREFIX_.'order_slip_detail`'
+        'FROM order_slip_detail`'
         .($id_order_slip ? ' WHERE `id_order_slip` = '.(int)($id_order_slip) : '')
         .($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
     }
@@ -234,7 +234,7 @@ class OrderSlipCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT SUM(product_quantity) product_quantity, SUM(amount_tax_excl) amount_tax_excl, SUM(amount_tax_incl) amount_tax_incl
-			FROM `'._DB_PREFIX_.'order_slip_detail`
+			FROM order_slip_detail`
 			WHERE `id_order_detail` = '.(int)$id_order_detail);
     }
 
@@ -247,8 +247,8 @@ class OrderSlipCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT product_quantity, amount_tax_excl, amount_tax_incl, date_add
-			FROM `'._DB_PREFIX_.'order_slip_detail` osd
-			LEFT JOIN `'._DB_PREFIX_.'order_slip` os
+			FROM order_slip_detail` osd
+			LEFT JOIN order_slip` os
 			ON os.id_order_slip = osd.id_order_slip
 			WHERE osd.`id_order_detail` = '.(int)$id_order_detail);
     }
@@ -257,8 +257,8 @@ class OrderSlipCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *, osd.product_quantity
-		FROM `'._DB_PREFIX_.'order_slip_detail` osd
-		INNER JOIN `'._DB_PREFIX_.'order_detail` od ON osd.id_order_detail = od.id_order_detail
+		FROM order_slip_detail` osd
+		INNER JOIN order_detail` od ON osd.id_order_detail = od.id_order_detail
 		WHERE osd.`id_order_slip` = '.(int)$this->id);
 
         $order = new Order($this->id_order);
@@ -274,8 +274,8 @@ class OrderSlipCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id_order_slip`
-		FROM `'._DB_PREFIX_.'order_slip` os
-		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = os.`id_order`)
+		FROM order_slip` os
+		LEFT JOIN orders` o ON (o.`id_order` = os.`id_order`)
 		WHERE os.`date_add` BETWEEN \''.pSQL($dateFrom).' 00:00:00\' AND \''.pSQL($dateTo).' 23:59:59\'
 		'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 		ORDER BY os.`date_add` ASC');
@@ -517,14 +517,14 @@ class OrderSlipCore extends ObjectModel
 
             $id_tax = (int)Db::getInstance()->getValue('
 				SELECT `id_tax`
-				FROM `'._DB_PREFIX_.'order_detail_tax`
+				FROM order_detail_tax`
 				WHERE `id_order_detail` = '.(int)$id_order_detail
             );
 
             if ($id_tax > 0) {
                 $rate = (float)Db::getInstance()->getValue('
 					SELECT `rate`
-					FROM `'._DB_PREFIX_.'tax`
+					FROM tax`
 					WHERE `id_tax` = '.(int)$id_tax
                 );
 
@@ -557,7 +557,7 @@ class OrderSlipCore extends ObjectModel
         foreach (OrderSlip::getOrdersSlipDetail((int)$this->id) as $order_slip_details) {
             $row = Db::getInstance()->getRow('
 					SELECT `ecotax_tax_rate` as `rate`, `ecotax` as `ecotax_tax_excl`, `ecotax` as `ecotax_tax_incl`, `product_quantity`
-					FROM `'._DB_PREFIX_.'order_detail`
+					FROM order_detail`
 					WHERE `id_order_detail` = '.(int)$order_slip_details['id_order_detail']
                 );
 
@@ -664,7 +664,7 @@ class OrderSlipCore extends ObjectModel
     public function getWsOrderSlipDetails()
     {
         $query = 'SELECT id_order_slip as id, id_order_detail, product_quantity, amount_tax_excl, amount_tax_incl
-		FROM `'._DB_PREFIX_.'order_slip_detail`
+		FROM order_slip_detail`
 		WHERE id_order_slip = '.(int)$this->id;
         $result = Db::getInstance()->executeS($query);
         return $result;
@@ -672,8 +672,8 @@ class OrderSlipCore extends ObjectModel
 
     public function setWsOrderSlipDetails($values)
     {
-        if (Db::getInstance()->execute('DELETE from `'._DB_PREFIX_.'order_slip_detail` where id_order_slip = '.(int)$this->id)) {
-            $query = 'INSERT INTO `'._DB_PREFIX_.'order_slip_detail`(`id_order_slip`, `id_order_detail`, `product_quantity`, `amount_tax_excl`, `amount_tax_incl`) VALUES ';
+        if (Db::getInstance()->execute('DELETE from order_slip_detail` where id_order_slip = '.(int)$this->id)) {
+            $query = 'INSERT INTO order_slip_detail`(`id_order_slip`, `id_order_detail`, `product_quantity`, `amount_tax_excl`, `amount_tax_incl`) VALUES ';
 
             foreach ($values as $value) {
                 $query .= '('.(int)$this->id.', '.(int)$value['id_order_detail'].', '.(int)$value['product_quantity'].', '.

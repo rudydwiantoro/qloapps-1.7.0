@@ -86,7 +86,7 @@ class TranslatedConfigurationCore extends Configuration
 
         $last_insert = Db::getInstance()->getRow('
 			SELECT `id_configuration` AS id
-			FROM `'._DB_PREFIX_.'configuration`
+			FROM configuration`
 			WHERE `name` = \''.pSQL($this->name).'\'');
         if ($last_insert) {
             $this->id = $last_insert['id'];

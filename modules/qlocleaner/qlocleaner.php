@@ -133,9 +133,9 @@ class QloCleaner extends Module
         unset($filtered_configuration);
 
         // Remove inexisting or monolanguage configuration value from configuration_lang
-        $query = 'DELETE FROM `'._DB_PREFIX_.'configuration_lang`
-        WHERE `id_configuration` NOT IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration`)
-        OR `id_configuration` IN (SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE name IS NULL OR name = "")';
+        $query = 'DELETE FROM configuration_lang`
+        WHERE `id_configuration` NOT IN (SELECT `id_configuration` FROM configuration`)
+        OR `id_configuration` IN (SELECT `id_configuration` FROM configuration` WHERE name IS NULL OR name = "")';
         if ($db->Execute($query)) {
             if ($affected_rows = $db->Affected_Rows()) {
                 $logs[$query] = $affected_rows;
@@ -174,7 +174,7 @@ class QloCleaner extends Module
                 }
             }
 
-            $query = 'DELETE FROM `'.bqSQL($table_lang).'` WHERE `id_lang` NOT IN (SELECT `id_lang` FROM `'._DB_PREFIX_.'lang`)';
+            $query = 'DELETE FROM `'.bqSQL($table_lang).'` WHERE `id_lang` NOT IN (SELECT `id_lang` FROM lang`)';
             if ($db->Execute($query)) {
                 if ($affected_rows = $db->Affected_Rows()) {
                     $logs[$query] = $affected_rows;
@@ -200,7 +200,7 @@ class QloCleaner extends Module
                 }
             }
 
-            $query = 'DELETE FROM `'.bqSQL($table_shop).'` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM `'._DB_PREFIX_.'shop`)';
+            $query = 'DELETE FROM `'.bqSQL($table_shop).'` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM shop`)';
             if ($db->Execute($query)) {
                 if ($affected_rows = $db->Affected_Rows()) {
                     $logs[$query] = $affected_rows;
@@ -209,7 +209,7 @@ class QloCleaner extends Module
         }
 
         // stock_available
-        $query = 'DELETE FROM `'._DB_PREFIX_.'stock_available` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM `'._DB_PREFIX_.'shop`) AND `id_shop_group` NOT IN (SELECT `id_shop_group` FROM `'._DB_PREFIX_.'shop_group`)';
+        $query = 'DELETE FROM stock_available` WHERE `id_shop` NOT IN (SELECT `id_shop` FROM shop`) AND `id_shop_group` NOT IN (SELECT `id_shop_group` FROM shop_group`)';
         if ($db->Execute($query)) {
             if ($affected_rows = $db->Affected_Rows()) {
                 $logs[$query] = $affected_rows;
@@ -242,9 +242,9 @@ class QloCleaner extends Module
                 implode(',', array_map('intval', $id_locations)).','.
                 implode(',', array_map('intval', $id_services));
 
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'category` WHERE id_category NOT IN ('.$not_in.')');
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'category_lang` WHERE id_category NOT IN ('.$not_in.')');
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'category_shop` WHERE id_category NOT IN ('.$not_in.')');
+                $db->execute('DELETE FROM category` WHERE id_category NOT IN ('.$not_in.')');
+                $db->execute('DELETE FROM category_lang` WHERE id_category NOT IN ('.$not_in.')');
+                $db->execute('DELETE FROM category_shop` WHERE id_category NOT IN ('.$not_in.')');
                 foreach (scandir(_PS_CAT_IMG_DIR_) as $dir) {
                     if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $dir)) {
                         unlink(_PS_CAT_IMG_DIR_.$dir);
@@ -254,7 +254,7 @@ class QloCleaner extends Module
                 foreach ($tables as $table) {
                     $db->execute('TRUNCATE TABLE `'._DB_PREFIX_.bqSQL($table).'`');
                 }
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_manufacturer > 0 OR id_supplier > 0 OR id_warehouse > 0');
+                $db->execute('DELETE FROM address` WHERE id_manufacturer > 0 OR id_supplier > 0 OR id_warehouse > 0');
 
                 Image::deleteAllImages(_PS_PROD_IMG_DIR_);
                 if (!file_exists(_PS_PROD_IMG_DIR_)) {
@@ -321,9 +321,9 @@ class QloCleaner extends Module
                         }
                     }
                 }
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'address` WHERE id_customer > 0');
-                $db->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE id_cart > 0');
-                $db->execute('UPDATE `'._DB_PREFIX_.'employee` SET `id_last_order` = 0,`id_last_customer_message` = 0,`id_last_customer` = 0');
+                $db->execute('DELETE FROM address` WHERE id_customer > 0');
+                $db->execute('DELETE FROM specific_price` WHERE id_cart > 0');
+                $db->execute('UPDATE employee` SET `id_last_order` = 0,`id_last_customer_message` = 0,`id_last_customer` = 0');
 
                 break;
         }
@@ -336,8 +336,8 @@ class QloCleaner extends Module
         $logs = array();
 
         $query = '
-        DELETE FROM `'._DB_PREFIX_.'cart`
-        WHERE id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+        DELETE FROM cart`
+        WHERE id_cart NOT IN (SELECT id_cart FROM orders`)
         AND date_add < "'.pSQL(date('Y-m-d', strtotime('-1 month'))).'"';
         if (Db::getInstance()->Execute($query)) {
             if ($affected_rows = Db::getInstance()->Affected_Rows()) {
@@ -346,7 +346,7 @@ class QloCleaner extends Module
         }
 
         $query = '
-        DELETE FROM `'._DB_PREFIX_.'cart_rule`
+        DELETE FROM cart_rule`
         WHERE (
             active = 0
             OR quantity = 0

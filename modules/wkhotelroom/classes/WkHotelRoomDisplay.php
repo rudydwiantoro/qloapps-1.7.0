@@ -43,16 +43,16 @@ class WkHotelRoomDisplay extends ObjectModel
     public function gerRoomByIdProduct($id_product)
     {
         return DB::getInstance()->getRow(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_room_block_data` WHERE `id_product` = '.(int)$id_product
+            'SELECT * FROM htl_room_block_data` WHERE `id_product` = '.(int)$id_product
         );
     }
 
     public function getHotelRoomDisplayData($active = true, $checkShowAtFront = true)
     {
-        $sql = 'SELECT hrbd.* FROM `'._DB_PREFIX_.'htl_room_block_data` hrbd';
+        $sql = 'SELECT hrbd.* FROM htl_room_block_data` hrbd';
 
         if ($checkShowAtFront) {
-            $sql .= ' INNER JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = hrbd.`id_product`)';
+            $sql .= ' INNER JOIN product` p ON (p.`id_product` = hrbd.`id_product`)';
         }
 
         $sql .= ' WHERE 1';
@@ -76,7 +76,7 @@ class WkHotelRoomDisplay extends ObjectModel
 
     public function checkRoomTypeAlreadySelected($id_product, $idRoomDisplayBlock)
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'htl_room_block_data` WHERE `id_product` = '.(int)$id_product;
+        $sql = 'SELECT * FROM htl_room_block_data` WHERE `id_product` = '.(int)$id_product;
         if ($idRoomDisplayBlock) {
             $sql .= ' AND `id_room_block` != '.(int)$idRoomDisplayBlock;
         }
@@ -103,7 +103,7 @@ class WkHotelRoomDisplay extends ObjectModel
     public function getHigherPosition()
     {
         $position = DB::getInstance()->getValue(
-            'SELECT MAX(`position`) FROM `'._DB_PREFIX_.'htl_room_block_data`'
+            'SELECT MAX(`position`) FROM htl_room_block_data`'
         );
         $result = (is_numeric($position)) ? $position : -1;
         return $result + 1;
@@ -112,7 +112,7 @@ class WkHotelRoomDisplay extends ObjectModel
     public function updatePosition($way, $position)
     {
         if (!$result = Db::getInstance()->executeS(
-            'SELECT htb.`id_room_block`, htb.`position` FROM `'._DB_PREFIX_.'htl_room_block_data` htb
+            'SELECT htb.`id_room_block`, htb.`position` FROM htl_room_block_data` htb
             WHERE htb.`id_room_block` = '.(int) $this->id.' ORDER BY `position` ASC'
         )
         ) {
@@ -130,12 +130,12 @@ class WkHotelRoomDisplay extends ObjectModel
             return false;
         }
         return (Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_room_block_data` SET `position`= `position` '.($way ? '- 1' : '+ 1').
+            'UPDATE htl_room_block_data` SET `position`= `position` '.($way ? '- 1' : '+ 1').
             ' WHERE `position`'.($way ? '> '.
             (int)$movedBlock['position'].' AND `position` <= '.(int)$position : '< '
             .(int)$movedBlock['position'].' AND `position` >= '.(int)$position)
         ) && Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'htl_room_block_data`
+            'UPDATE htl_room_block_data`
             SET `position` = '.(int)$position.'
             WHERE `id_room_block`='.(int)$movedBlock['id_room_block']
         ));
@@ -149,7 +149,7 @@ class WkHotelRoomDisplay extends ObjectModel
     public function cleanPositions()
     {
         Db::getInstance()->execute('SET @i = -1', false);
-        $sql = 'UPDATE `'._DB_PREFIX_.'htl_room_block_data` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+        $sql = 'UPDATE htl_room_block_data` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
         return (bool) Db::getInstance()->execute($sql);
     }
 

@@ -261,7 +261,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // 0 - 18 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 18
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL';
@@ -273,7 +273,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // 18 - 24 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 18
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 25
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
@@ -286,7 +286,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // 25 - 34 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 25
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 35
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
@@ -299,7 +299,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // 35 - 49 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 35
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 50
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
@@ -312,7 +312,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // 50 - 59 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 50
 							AND (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) < 60
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
@@ -325,7 +325,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // More than 60 years
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE (YEAR(CURDATE()) - YEAR(`birthday`)) - (RIGHT(CURDATE(), 5) < RIGHT(`birthday`, 5)) >= 60
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 							AND `birthday` IS NOT NULL AND `birthday` != "0000-00-00"';
@@ -337,7 +337,7 @@ class StatsPersonalInfos extends ModuleGraph
 
                 // Total unknown
                 $sql = 'SELECT COUNT(`id_customer`) as total
-						FROM `'._DB_PREFIX_.'customer`
+						FROM customer`
 						WHERE `birthday` = "0000-00-00"
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -355,10 +355,10 @@ class StatsPersonalInfos extends ModuleGraph
                     $this->_titles['main'] = $this->l('Country distribution');
                 }
                 $sql = 'SELECT cl.`name`, COUNT(c.`id_country`) AS total
-						FROM `'._DB_PREFIX_.'address` a
-						LEFT JOIN `'._DB_PREFIX_.'customer` cu ON cu.id_customer = a.id_customer
-						LEFT JOIN `'._DB_PREFIX_.'country` c ON a.`id_country` = c.`id_country`
-						LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
+						FROM address` a
+						LEFT JOIN customer` cu ON cu.id_customer = a.id_customer
+						LEFT JOIN country` c ON a.`id_country` = c.`id_country`
+						LEFT JOIN country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$this->context->language->id.')
 						WHERE a.id_customer != 0
 							'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'cu').'
 						GROUP BY c.`id_country`';
@@ -377,8 +377,8 @@ class StatsPersonalInfos extends ModuleGraph
                     $this->_titles['main'] = $this->l('Currency distribution');
                 }
                 $sql = 'SELECT c.`name`, COUNT(c.`id_currency`) AS total
-						FROM `'._DB_PREFIX_.'orders` o
-						LEFT JOIN `'._DB_PREFIX_.'currency` c ON o.`id_currency` = c.`id_currency`
+						FROM orders` o
+						LEFT JOIN currency` c ON o.`id_currency` = c.`id_currency`
 						WHERE 1
 							'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_currency`';
@@ -397,8 +397,8 @@ class StatsPersonalInfos extends ModuleGraph
                     $this->_titles['main'] = $this->l('Language distribution');
                 }
                 $sql = 'SELECT c.`name`, COUNT(c.`id_lang`) AS total
-						FROM `'._DB_PREFIX_.'orders` o
-						LEFT JOIN `'._DB_PREFIX_.'lang` c ON o.`id_lang` = c.`id_lang`
+						FROM orders` o
+						LEFT JOIN lang` c ON o.`id_lang` = c.`id_lang`
 						WHERE 1
 							'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 						GROUP BY c.`id_lang`';

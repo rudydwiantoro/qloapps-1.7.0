@@ -121,7 +121,7 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_web_browser`
-				FROM `'._DB_PREFIX_.'web_browser` wb
+				FROM web_browser` wb
 				WHERE wb.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_web_browser'];
@@ -146,7 +146,7 @@ class GuestCore extends ObjectModel
             if (strstr($userAgent, $value)) {
                 $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT `id_operating_system`
-				FROM `'._DB_PREFIX_.'operating_system` os
+				FROM operating_system` os
 				WHERE os.`name` = \''.pSQL($k).'\'');
 
                 return $result['id_operating_system'];
@@ -162,7 +162,7 @@ class GuestCore extends ObjectModel
         }
 
         if ($result = Db::getInstance()->getRow(
-            'SELECT `id_guest` FROM `'._DB_PREFIX_.'guest` WHERE `id_customer` = '.(int)($id_customer)
+            'SELECT `id_guest` FROM guest` WHERE `id_customer` = '.(int)($id_customer)
         )) {
             return $result['id_guest'];
         }
@@ -175,7 +175,7 @@ class GuestCore extends ObjectModel
         // Since the guests are merged, the guest id in the connections table must be changed too
         // If guest entry is already there in the connection within 30 mins then delete the visitor entry else update it with guest id of the customer
 
-        $sql = 'SELECT SQL_NO_CACHE `id_guest` FROM `'._DB_PREFIX_.'connections`
+        $sql = 'SELECT SQL_NO_CACHE `id_guest` FROM connections`
                 WHERE `id_guest` = '.(int)$idGuest.' AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\''.
                 Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' ORDER BY `date_add` DESC';
         if (Db::getInstance()->getRow($sql, false)) {

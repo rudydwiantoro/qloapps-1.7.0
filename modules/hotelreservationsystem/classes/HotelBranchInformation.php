@@ -186,7 +186,7 @@ class HotelBranchInformation extends ObjectModel
         }
 
         /* Query definition */
-        $query = 'REPLACE INTO `'._DB_PREFIX_.'htl_access` (`id_profile`, `id_hotel`, `access`)';
+        $query = 'REPLACE INTO htl_access` (`id_profile`, `id_hotel`, `access`)';
         $query .= ' VALUES '.'('.(int) _PS_ADMIN_PROFILE_.', '.(int)$idHotel.', 1)';
         /* Profile selection */
         $profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile WHERE `id_profile` != '.(int) _PS_ADMIN_PROFILE_);
@@ -216,7 +216,7 @@ class HotelBranchInformation extends ObjectModel
     public function deleteProfileHotelsAccess($idProfile)
     {
         return Db::getInstance()->execute(
-            'DELETE FROM `'._DB_PREFIX_.'htl_access` WHERE `id_profile` = '.(int)$idProfile
+            'DELETE FROM htl_access` WHERE `id_profile` = '.(int)$idProfile
         );
     }
 
@@ -236,10 +236,10 @@ class HotelBranchInformation extends ObjectModel
         if (!$onlyhotelIds) {
             $sql .= ', hbl.`hotel_name`, hbi.`id_category`, hbi.`active`';
         }
-        $sql .= ' FROM `'._DB_PREFIX_.'htl_access` ha';
+        $sql .= ' FROM htl_access` ha';
         if (!$onlyhotelIds) {
-            $sql .= ' INNER JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON (hbi.`id` = ha.`id_hotel`)';
-            $sql .= ' INNER JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+            $sql .= ' INNER JOIN htl_branch_info` hbi ON (hbi.`id` = ha.`id_hotel`)';
+            $sql .= ' INNER JOIN htl_branch_info_lang` hbl
                 ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')';
         }
         $sql .= ' WHERE `id_profile` = '.(int)$idProfile;
@@ -263,7 +263,7 @@ class HotelBranchInformation extends ObjectModel
     public function getHotelAccess($idHotel)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'htl_access` WHERE `id_hotel` = '.(int)$idHotel
+            'SELECT * FROM htl_access` WHERE `id_hotel` = '.(int)$idHotel
         );
     }
 
@@ -284,7 +284,7 @@ class HotelBranchInformation extends ObjectModel
         $addAccessKey = 0
     ) {
         if ($hotelAccessInfo =  Db::getInstance()->executeS(
-            'SELECT `id_hotel` FROM `'._DB_PREFIX_.'htl_access` WHERE  access = 1 AND `id_profile` = '.(int)$idProfile
+            'SELECT `id_hotel` FROM htl_access` WHERE  access = 1 AND `id_profile` = '.(int)$idProfile
         )) {
             $hotels = array();
             foreach ($hotelAccessInfo as $hotel) {
@@ -374,13 +374,13 @@ class HotelBranchInformation extends ObjectModel
                 $sql .= ', hi.id as id_cover_img, a.`address1` as address, a.`postcode`, a.`phone`,  a.`city`,
                     s.`name` as `state_name`, cl.`name` as country_name';
             }
-            $sql .= ' FROM `'._DB_PREFIX_.'htl_branch_info` hbi';
-            $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+            $sql .= ' FROM htl_branch_info` hbi';
+            $sql .= ' LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')';
             if ($detailedInfo) {
-                $sql .= ' LEFT JOIN `'._DB_PREFIX_.'htl_image` hi ON (hi.`id_hotel` = hbi.`id` AND hi.`cover` = 1)';
-                $sql .= ' LEFT JOIN `'._DB_PREFIX_.'address` a ON (a.`id_hotel` = hbi.`id`)';
-                $sql .= ' LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)';
+                $sql .= ' LEFT JOIN htl_image` hi ON (hi.`id_hotel` = hbi.`id` AND hi.`cover` = 1)';
+                $sql .= ' LEFT JOIN address` a ON (a.`id_hotel` = hbi.`id`)';
+                $sql .= ' LEFT JOIN state` s ON (s.`id_state` = a.`id_state`)';
                 $sql .= ' LEFT JOIN `'._DB_PREFIX_.
                 'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$idLang.')';
             }
@@ -408,8 +408,8 @@ class HotelBranchInformation extends ObjectModel
     {
         $idLang = Context::getContext()->language->id;
         $sql = 'SELECT hbi.*, hbl.`policies`, hbl.`hotel_name`, hbl.`description`, hbl.`short_description`
-            FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+            FROM htl_branch_info` hbi
+            LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')  WHERE hbi.`active` = 1';
 
         return Db::getInstance()->executeS($sql);
@@ -423,7 +423,7 @@ class HotelBranchInformation extends ObjectModel
     public function getHotelIdAddress()
     {
         return Db::getInstance()->getValue(
-            'SELECT `id_address` from `'._DB_PREFIX_.'address` WHERE `id_hotel` = '.(int)$this->id.' AND `deleted` = 0
+            'SELECT `id_address` from address` WHERE `id_hotel` = '.(int)$this->id.' AND `deleted` = 0
         ');
     }
 
@@ -446,10 +446,10 @@ class HotelBranchInformation extends ObjectModel
         $cache_id = 'hotelBranch::getAddress'.(int)$id_hotel.'-'.(int)$id_lang;
         if (!Cache::isStored($cache_id)) {
             $sql = 'SELECT a.*, cl.`name` AS country, s.`name` AS state, s.`iso_code` AS state_iso
-					FROM `'._DB_PREFIX_.'address` a
-					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
-					LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
-					LEFT JOIN `'._DB_PREFIX_.'state` s
+					FROM address` a
+					LEFT JOIN country` c ON (a.`id_country` = c.`id_country`)
+					LEFT JOIN country_lang` cl ON (c.`id_country` = cl.`id_country`)
+					LEFT JOIN state` s
                     ON (s.`id_state` = a.`id_state` AND`id_lang` = '.(int)$id_lang.')
 					WHERE `id_hotel` = '.(int)$id_hotel.' AND a.`deleted` = 0';
 
@@ -472,8 +472,8 @@ class HotelBranchInformation extends ObjectModel
     {
         $idLang = Context::getContext()->language->id;
         $sql = 'SELECT hbi.*, hbl.`policies`, hbl.`hotel_name`, hbl.`description`, hbl.`short_description`
-            FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+            FROM htl_branch_info` hbi
+            LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')  WHERE hbi.`id` = '.(int)$id;
 
         return Db::getInstance()->getRow($sql);
@@ -488,8 +488,8 @@ class HotelBranchInformation extends ObjectModel
     public function hotelsNameAndId()
     {
         $idLang = Context::getContext()->language->id;
-        $sql = 'SELECT hbi.`id`, hbl.`hotel_name` FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+        $sql = 'SELECT hbi.`id`, hbl.`hotel_name` FROM htl_branch_info` hbi
+            LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')';
 
         return Db::getInstance()->executeS($sql);
@@ -503,10 +503,10 @@ class HotelBranchInformation extends ObjectModel
     public function getUnassignedFeaturesHotelIds()
     {
         $idLang = Context::getContext()->language->id;
-        $sql = 'SELECT hbi.`id`, hbl.`hotel_name` FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+        $sql = 'SELECT hbi.`id`, hbl.`hotel_name` FROM htl_branch_info` hbi
+            LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')
-            WHERE hbi.`id` NOT IN (SELECT DISTINCT id_hotel FROM `'._DB_PREFIX_.'htl_branch_features`)';
+            WHERE hbi.`id` NOT IN (SELECT DISTINCT id_hotel FROM htl_branch_features`)';
 
         return Db::getInstance()->executeS($sql);
     }
@@ -521,7 +521,7 @@ class HotelBranchInformation extends ObjectModel
     public function getFeaturesOfHotelByHotelId($id_hotel)
     {
         return Db::getInstance()->executeS(
-            'SELECT feature_id FROM `'._DB_PREFIX_.'htl_branch_features` WHERE id_hotel='.(int)$id_hotel
+            'SELECT feature_id FROM htl_branch_features` WHERE id_hotel='.(int)$id_hotel
         );
     }
 
@@ -537,7 +537,7 @@ class HotelBranchInformation extends ObjectModel
         $cache_key = 'HotelBranchInformation::getHotelIdByIdCategory'.(int)$id_category;
         if (!Cache::isStored($cache_key)) {
             $res = Db::getInstance()->getValue(
-                'SELECT `id` FROM `'._DB_PREFIX_.'htl_branch_info` WHERE id_category = '.(int)$id_category
+                'SELECT `id` FROM htl_branch_info` WHERE id_category = '.(int)$id_category
             );
             Cache::store($cache_key, $res);
         } else {
@@ -557,7 +557,7 @@ class HotelBranchInformation extends ObjectModel
     public function getCategoryDataByIdCategory($id_category)
     {
         return Db::getInstance()->getRow(
-            'SELECT * FROM `'._DB_PREFIX_.'category_lang` WHERE id_category = '.(int)$id_category
+            'SELECT * FROM category_lang` WHERE id_category = '.(int)$id_category
         );
     }
 
@@ -569,8 +569,8 @@ class HotelBranchInformation extends ObjectModel
     public function hotelBranchInfoByCategoryId($cat_id)
     {
         $idLang = Context::getContext()->language->id;
-        $sql = 'SELECT hbi.`id`, hbi.`id_category`, hbl.`hotel_name` FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+        $sql = 'SELECT hbi.`id`, hbi.`id_category`, hbl.`hotel_name` FROM htl_branch_info` hbi
+            LEFT JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')
             WHERE hbi.`id_category` = '.(int)$cat_id.' AND `active` = 1';
 
@@ -590,8 +590,8 @@ class HotelBranchInformation extends ObjectModel
 
         return Db::getInstance()->executeS(
             'SELECT cl.`id_category` , cl.`name`
-            FROM `'._DB_PREFIX_.'category_lang` AS cl
-            INNER JOIN `'._DB_PREFIX_.'category` AS c ON (cl.`id_category` = c.`id_category`)
+            FROM category_lang` AS cl
+            INNER JOIN category` AS c ON (cl.`id_category` = c.`id_category`)
             WHERE cl.`name` LIKE \'%'.pSQL($searchData).'%\'
             AND c.`level_depth` NOT IN (0, 1, 6) and cl.`id_lang`='.(int)$context->language->id.'
             AND c.`nleft` > '.(int)$locationCategory->nleft.' AND c.`nright` < '.(int)$locationCategory->nright.'
@@ -612,11 +612,11 @@ class HotelBranchInformation extends ObjectModel
 
         $sql = 'SELECT hbl.`hotel_name`, a.`phone`, hbi.`email`, a.`city`, cl.`name` AS country, a.`postcode`,
             a.`address1` as `address`, hbi.`latitude`, hbi.`longitude`, hbi.`map_formated_address`, hbi.`map_input_text`
-            FROM `'._DB_PREFIX_.'htl_branch_info` AS hbi
-            INNER JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+            FROM htl_branch_info` AS hbi
+            INNER JOIN htl_branch_info_lang` hbl
             ON (hbl.`id` = hbi.`id` AND hbl.`id_lang` = '.(int)$idLang.')
-            LEFT JOIN `'._DB_PREFIX_.'address` a ON (a.`id_hotel` = hbi.`id`)
-            INNER JOIN `'._DB_PREFIX_.'country_lang` AS cl
+            LEFT JOIN address` a ON (a.`id_hotel` = hbi.`id`)
+            INNER JOIN country_lang` AS cl
             ON (cl.`id_country` = a.`id_country` AND cl.`id_lang` = '.(int)$idLang.")
             WHERE hbi.`latitude` != 0 AND hbi.`longitude` != 0";
 
@@ -630,7 +630,7 @@ class HotelBranchInformation extends ObjectModel
     }
     public function getAllHotels()
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_branch_info`');
+        return Db::getInstance()->executeS('SELECT * FROM htl_branch_info`');
     }
 
     //Overrided ObjectModet::update() to update all the dependencies of the hotel
@@ -846,7 +846,7 @@ class HotelBranchInformation extends ObjectModel
     public function getAllHotelCategories($excludeIdHotels = array(), $idHotel = false)
     {
         $hotelrelatedCategs = array();
-        $sql = 'SELECT `id_category` FROM `'._DB_PREFIX_.'htl_branch_info` WHERE 1';
+        $sql = 'SELECT `id_category` FROM htl_branch_info` WHERE 1';
         if ($excludeIdHotels && count($excludeIdHotels)) {
             $sql .= ' AND `id` NOT IN ('.implode(',', $excludeIdHotels).')';
         }
@@ -974,11 +974,11 @@ class HotelBranchInformation extends ObjectModel
     {
         if ($id_image) {
             // first unset the cover
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'htl_image` SET `cover` = NULL
+            Db::getInstance()->execute('UPDATE htl_image` SET `cover` = NULL
                 WHERE `id_hotel` = '.(int)$this->id);
 
             // set the sent id of the image to the cover of the hotel
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'htl_image` SET `cover` = 1 WHERE `id` = '.(int)$id_image.' AND `id_hotel` = '.(int)$this->id);
+            Db::getInstance()->execute('UPDATE htl_image` SET `cover` = 1 WHERE `id` = '.(int)$id_image.' AND `id_hotel` = '.(int)$this->id);
         }
 
         return true;
@@ -988,7 +988,7 @@ class HotelBranchInformation extends ObjectModel
     public function getWsImages()
     {
         $ids = array();
-        if ($hotelImages =  Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'htl_image` WHERE `id_hotel` = '.(int)$this->id)) {
+        if ($hotelImages =  Db::getInstance()->executeS('SELECT * FROM htl_image` WHERE `id_hotel` = '.(int)$this->id)) {
             foreach ($hotelImages as $key => $image) {
                 // we are sending id_hotel/id_image as per the url set for the hotel images
                 $ids[$key]['id'] = $image['id'];
@@ -1001,7 +1001,7 @@ class HotelBranchInformation extends ObjectModel
     public function getWsHotelFeatures()
     {
         return Db::getInstance()->executeS(
-            'SELECT `feature_id` as `id` FROM `'._DB_PREFIX_.'htl_branch_features` WHERE `id_hotel` = '.(int)$this->id.
+            'SELECT `feature_id` as `id` FROM htl_branch_features` WHERE `id_hotel` = '.(int)$this->id.
             ' ORDER BY `feature_id` ASC'
         );
     }
@@ -1010,12 +1010,12 @@ class HotelBranchInformation extends ObjectModel
     public function setWsHotelFeatures($branchFeatures)
     {
         Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'htl_branch_features`
+			DELETE FROM htl_branch_features`
 			WHERE `id_hotel` = '.(int)$this->id
         );
 
         foreach ($branchFeatures as $feature) {
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'htl_branch_features` (`id_hotel`, `feature_id`, `date_add`, `date_upd`) VALUES ('.(int)$this->id.', '.(int)$feature['id'].', NOW(), NOW())');
+            Db::getInstance()->execute('INSERT INTO htl_branch_features` (`id_hotel`, `feature_id`, `date_add`, `date_upd`) VALUES ('.(int)$this->id.', '.(int)$feature['id'].', NOW(), NOW())');
         }
 
         return true;
@@ -1025,7 +1025,7 @@ class HotelBranchInformation extends ObjectModel
     public function getWsHotelRefundRules()
     {
         return Db::getInstance()->executeS(
-            'SELECT `id_refund_rule` as `id` FROM `'._DB_PREFIX_.'htl_branch_refund_rules` WHERE `id_hotel` = '.(int)$this->id.' ORDER BY `id_refund_rule` ASC'
+            'SELECT `id_refund_rule` as `id` FROM htl_branch_refund_rules` WHERE `id_hotel` = '.(int)$this->id.' ORDER BY `id_refund_rule` ASC'
         );
     }
 
@@ -1033,12 +1033,12 @@ class HotelBranchInformation extends ObjectModel
     public function setWsHotelRefundRules($refundRules)
     {
         Db::getInstance()->execute('
-            DELETE FROM `'._DB_PREFIX_.'htl_branch_refund_rules`
+            DELETE FROM htl_branch_refund_rules`
             WHERE `id_hotel` = '.(int)$this->id
         );
 
         foreach ($refundRules as $rule) {
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'htl_branch_refund_rules` (`id_hotel`, `id_refund_rule`, `date_add`, `date_upd`) VALUES ('.(int)$this->id.', '.(int)$rule['id'].', NOW(), NOW())');
+            Db::getInstance()->execute('INSERT INTO htl_branch_refund_rules` (`id_hotel`, `id_refund_rule`, `date_add`, `date_upd`) VALUES ('.(int)$this->id.', '.(int)$rule['id'].', NOW(), NOW())');
         }
 
         return true;
@@ -1048,7 +1048,7 @@ class HotelBranchInformation extends ObjectModel
     public function getWsRoomTypes()
     {
         return Db::getInstance()->executeS(
-            'SELECT `id_product` as `id` FROM `'._DB_PREFIX_.'htl_room_type` WHERE `id_hotel` = '.(int)$this->id.' ORDER BY `id` ASC'
+            'SELECT `id_product` as `id` FROM htl_room_type` WHERE `id_hotel` = '.(int)$this->id.' ORDER BY `id` ASC'
         );
     }
 
@@ -1388,12 +1388,12 @@ class HotelBranchInformation extends ObjectModel
         }
 
         $sql = 'SELECT a.`id`, a.`active`, hbl.`hotel_name`, aa.`city`, s.`name` AS `state_name`, cl.`name` AS `country_name`
-            FROM `'._DB_PREFIX_.'htl_branch_info` a
-            LEFT JOIN  `'._DB_PREFIX_.'htl_branch_info_lang` hbl ON hbl.`id` = a.`id` AND hbl.`id_lang` = '.(int)$idLang.'
-            LEFT JOIN  `'._DB_PREFIX_.'address` aa ON aa.`id_hotel` = a.`id`
-            LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = aa.`id_state`
-            LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON cl.`id_country` = aa.`id_country` AND cl.`id_lang` = hbl.`id_lang`
-            LEFT JOIN `'._DB_PREFIX_.'htl_access` ha ON a.`id` = ha.`id_hotel`
+            FROM htl_branch_info` a
+            LEFT JOIN  htl_branch_info_lang` hbl ON hbl.`id` = a.`id` AND hbl.`id_lang` = '.(int)$idLang.'
+            LEFT JOIN  address` aa ON aa.`id_hotel` = a.`id`
+            LEFT JOIN state` s ON s.`id_state` = aa.`id_state`
+            LEFT JOIN country_lang` cl ON cl.`id_country` = aa.`id_country` AND cl.`id_lang` = hbl.`id_lang`
+            LEFT JOIN htl_access` ha ON a.`id` = ha.`id_hotel`
             WHERE hbl.`hotel_name` LIKE \'%'.pSQL($query).'%\'
             AND ha.`access`= 1 AND ha.`id_profile` = '.(int) $idEmployeeProfile;
 

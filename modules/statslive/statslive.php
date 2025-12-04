@@ -65,12 +65,12 @@ class StatsLive extends Module
 
         if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
             $sql = 'SELECT u.id_customer, u.firstname, u.lastname, pt.name as page
-					FROM `'._DB_PREFIX_.'connections` c
-					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
-					LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
-					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
-					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					FROM connections` c
+					LEFT JOIN connections_page` cp ON c.id_connections = cp.id_connections
+					LEFT JOIN page` p ON p.id_page = cp.id_page
+					LEFT JOIN page_type` pt ON p.id_page_type = pt.id_page_type
+					INNER JOIN guest` g ON c.id_guest = g.id_guest
+					INNER JOIN customer` u ON u.id_customer = g.id_customer
 					WHERE cp.`time_end` IS NULL
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', cp.`time_start`)) < 900
@@ -79,9 +79,9 @@ class StatsLive extends Module
 					ORDER BY u.firstname, u.lastname';
         } else {
             $sql = 'SELECT u.id_customer, u.firstname, u.lastname, "-" as page
-					FROM `'._DB_PREFIX_.'connections` c
-					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
-					INNER JOIN `'._DB_PREFIX_.'customer` u ON u.id_customer = g.id_customer
+					FROM connections` c
+					INNER JOIN guest` g ON c.id_guest = g.id_guest
+					INNER JOIN customer` u ON u.id_customer = g.id_customer
 					WHERE TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', c.`date_add`)) < 900
 						'.Shop::addSqlRestriction(false, 'c').'
 					'.($maintenance_ips ? 'AND c.ip_address NOT IN ('.preg_replace('/[^,0-9]/', '', $maintenance_ips).')' : '').'
@@ -107,11 +107,11 @@ class StatsLive extends Module
 
         if (Configuration::get('PS_STATSDATA_CUSTOMER_PAGESVIEWS')) {
             $sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, pt.name as page
-					FROM `'._DB_PREFIX_.'connections` c
-					LEFT JOIN `'._DB_PREFIX_.'connections_page` cp ON c.id_connections = cp.id_connections
-					LEFT JOIN `'._DB_PREFIX_.'page` p ON p.id_page = cp.id_page
-					LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON p.id_page_type = pt.id_page_type
-					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					FROM connections` c
+					LEFT JOIN connections_page` cp ON c.id_connections = cp.id_connections
+					LEFT JOIN page` p ON p.id_page = cp.id_page
+					LEFT JOIN page_type` pt ON p.id_page_type = pt.id_page_type
+					INNER JOIN guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND cp.`time_end` IS NULL
@@ -121,8 +121,8 @@ class StatsLive extends Module
 					ORDER BY c.date_add DESC';
         } else {
             $sql = 'SELECT c.id_guest, c.ip_address, c.date_add, c.http_referer, "-" as page
-					FROM `'._DB_PREFIX_.'connections` c
-					INNER JOIN `'._DB_PREFIX_.'guest` g ON c.id_guest = g.id_guest
+					FROM connections` c
+					INNER JOIN guest` g ON c.id_guest = g.id_guest
 					WHERE (g.id_customer IS NULL OR g.id_customer = 0)
 						'.Shop::addSqlRestriction(false, 'c').'
 						AND TIME_TO_SEC(TIMEDIFF(\''.pSQL(date('Y-m-d H:i:00', time())).'\', c.`date_add`)) < 900

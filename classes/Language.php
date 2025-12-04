@@ -478,7 +478,7 @@ class LanguageCore extends ObjectModel
                     }
                 }
                 $sql = rtrim($sql, ', ');
-                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'`)';
+                $sql .= ' FROM lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'`)';
                 $return &= Db::getInstance()->execute($sql);
             }
         }
@@ -685,7 +685,7 @@ class LanguageCore extends ObjectModel
 
         $key = 'Language::getIdByIso_'.$iso_code;
         if ($no_cache || !Cache::isStored($key)) {
-            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+            $id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 
             Cache::store($key, $id_lang);
             return $id_lang;
@@ -699,7 +699,7 @@ class LanguageCore extends ObjectModel
             die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
         }
 
-        return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+        return Db::getInstance()->getValue('SELECT `language_code` FROM lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
     }
 
     public static function getLanguageByIETFCode($code)
@@ -721,7 +721,7 @@ class LanguageCore extends ObjectModel
         // or a close match.
         $id_lang = Db::getInstance()->getValue(
             'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
-			FROM `'._DB_PREFIX_.'lang`
+			FROM lang`
 			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
 			ORDER BY found ASC'
         );
@@ -742,7 +742,7 @@ class LanguageCore extends ObjectModel
      */
     public static function getIsoIds($active = true)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM lang` '.($active ? 'WHERE active = 1' : ''));
     }
 
     public static function copyLanguageData($from, $to)
@@ -779,8 +779,8 @@ class LanguageCore extends ObjectModel
         self::$_LANGUAGES = array();
 
         $sql = 'SELECT l.*, ls.`id_shop`
-				FROM `'._DB_PREFIX_.'lang` l
-				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
+				FROM lang` l
+				LEFT JOIN lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
@@ -879,7 +879,7 @@ class LanguageCore extends ObjectModel
     {
         if (self::$_cache_language_installation === null) {
             self::$_cache_language_installation = array();
-            $result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang`');
+            $result = Db::getInstance()->executeS('SELECT `id_lang`, `iso_code` FROM lang`');
             foreach ($result as $row) {
                 self::$_cache_language_installation[$row['iso_code']] = $row['id_lang'];
             }
@@ -895,7 +895,7 @@ class LanguageCore extends ObjectModel
 
         if (!isset(self::$countActiveLanguages[$id_shop])) {
             self::$countActiveLanguages[$id_shop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT l.id_lang) FROM `'._DB_PREFIX_.'lang` l
+				SELECT COUNT(DISTINCT l.id_lang) FROM lang` l
 				JOIN '._DB_PREFIX_.'lang_shop lang_shop ON (lang_shop.id_lang = l.id_lang AND lang_shop.id_shop = '.(int)$id_shop.')
 				WHERE l.`active` = 1
 			');

@@ -58,7 +58,7 @@ class ZoneCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT *
-				FROM `'._DB_PREFIX_.'zone`
+				FROM zone`
 				'.($active ? 'WHERE active = 1' : '').'
 				ORDER BY `name` ASC
 			');
@@ -78,7 +78,7 @@ class ZoneCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`
-			FROM `'._DB_PREFIX_.'zone`
+			FROM zone`
 			WHERE `name` = \''.pSQL($name).'\'
 		');
     }

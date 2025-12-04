@@ -45,7 +45,7 @@ class SEKeywords extends ModuleGraph
         parent::__construct();
 
         $this->query = 'SELECT `keyword`, COUNT(TRIM(`keyword`)) as occurences
-				FROM `'._DB_PREFIX_.'sekeyword`
+				FROM sekeyword`
 				WHERE '.(Configuration::get('SEK_FILTER_KW') == '' ? '1' : '`keyword` REGEXP \''.pSQL(Configuration::get('SEK_FILTER_KW')).'\'')
             .Shop::addSqlRestriction().
             ' AND `date_add` BETWEEN ';
@@ -68,7 +68,7 @@ class SEKeywords extends ModuleGraph
         Configuration::updateValue('SEK_FILTER_KW', '');
 
         return Db::getInstance()->execute('
-		CREATE TABLE `'._DB_PREFIX_.'sekeyword` (
+		CREATE TABLE sekeyword` (
 			id_sekeyword INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 			id_shop INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
 			id_shop_group INTEGER UNSIGNED NOT NULL DEFAULT \'1\',
@@ -84,7 +84,7 @@ class SEKeywords extends ModuleGraph
             return false;
         }
 
-        return (Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'sekeyword`'));
+        return (Db::getInstance()->execute('DROP TABLE sekeyword`'));
     }
 
     public function hookTop($params)
@@ -94,7 +94,7 @@ class SEKeywords extends ModuleGraph
         }
 
         if ($keywords = $this->getKeywords($_SERVER['HTTP_REFERER'])) {
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'sekeyword` (`keyword`, `date_add`, `id_shop`, `id_shop_group`)
+            Db::getInstance()->execute('INSERT INTO sekeyword` (`keyword`, `date_add`, `id_shop`, `id_shop_group`)
 										VALUES (\''.pSQL(Tools::strtolower(trim($keywords))).'\', NOW(), '.(int)$this->context->shop->id.', '.(int)$this->context->shop->id_shop_group.')');
         }
     }
@@ -197,7 +197,7 @@ class SEKeywords extends ModuleGraph
             return false;
         }
 
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM `'._DB_PREFIX_.'search_engine`');
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `server`, `getvar` FROM search_engine`');
         foreach ($result as $row) {
             $host =& $row['server'];
             $varname =& $row['getvar'];

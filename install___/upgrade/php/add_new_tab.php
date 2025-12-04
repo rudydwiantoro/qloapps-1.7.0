@@ -27,7 +27,7 @@
 function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTab = null, $module = '')
 {
     if (!is_null($parentTab) && !empty($parentTab) && strtolower(trim($parentTab)) !== 'null') {
-        $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
+        $id_parent = (int)Db::getInstance()->getValue('SELECT `id_tab` FROM tab` WHERE `class_name` = \''.pSQL($parentTab).'\'');
     }
 
     $array = array();
@@ -36,33 +36,33 @@ function add_new_tab($className, $name, $id_parent, $returnId = false, $parentTa
         $array[$temp[0]] = $temp[1];
     }
 
-    if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
-        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
-									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM `'._DB_PREFIX_.'tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
+    if (!(int)Db::getInstance()->getValue('SELECT count(id_tab) FROM tab` WHERE `class_name` = \''.pSQL($className).'\' ')) {
+        Db::getInstance()->execute('INSERT INTO tab` (`id_parent`, `class_name`, `module`, `position`) VALUES ('.(int)$id_parent.', \''.pSQL($className).'\', \''.pSQL($module).'\',
+									(SELECT IFNULL(MAX(t.position),0)+ 1 FROM tab` t WHERE t.id_parent = '.(int)$id_parent.'))');
     }
 
-    $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
+    $languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM lang`');
     foreach ($languages as $lang) {
         Db::getInstance()->execute('
-		INSERT IGNORE INTO `'._DB_PREFIX_.'tab_lang` (`id_lang`, `id_tab`, `name`)
+		INSERT IGNORE INTO tab_lang` (`id_lang`, `id_tab`, `name`)
 		VALUES ('.(int)$lang['id_lang'].', (
 				SELECT `id_tab`
-				FROM `'._DB_PREFIX_.'tab`
+				FROM tab`
 				WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
 			), \''.pSQL(isset($array[$lang['iso_code']]) ? $array[$lang['iso_code']] : $array['en']).'\')
 		');
     }
 
-    Db::getInstance()->execute('INSERT IGNORE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
+    Db::getInstance()->execute('INSERT IGNORE INTO access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`)
 								(SELECT `id_profile`, (
 								SELECT `id_tab`
-								FROM `'._DB_PREFIX_.'tab`
+								FROM tab`
 								WHERE `class_name` = \''.pSQL($className).'\' LIMIT 0,1
-								), 1, 1, 1, 1 FROM `'._DB_PREFIX_.'profile` )');
+								), 1, 1, 1, 1 FROM profile` )');
 
     if ($returnId && strtolower(trim($returnId)) !== 'false') {
         return (int)Db::getInstance()->getValue('SELECT `id_tab`
-								FROM `'._DB_PREFIX_.'tab`
+								FROM tab`
 								WHERE `class_name` = \''.pSQL($className).'\'');
     }
 }

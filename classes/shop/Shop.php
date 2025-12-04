@@ -292,7 +292,7 @@ class ShopCore extends ObjectModel
         $has_dependency = false;
         $nbr_customer = (int)Db::getInstance()->getValue('
 			SELECT count(*)
-			FROM `'._DB_PREFIX_.'customer`
+			FROM customer`
 			WHERE `id_shop`='.(int)$id_shop
         );
         if ($nbr_customer) {
@@ -300,7 +300,7 @@ class ShopCore extends ObjectModel
         } else {
             $nbr_order = (int)Db::getInstance()->getValue('
 				SELECT count(*)
-				FROM `'._DB_PREFIX_.'orders`
+				FROM orders`
 				WHERE `id_shop`='.(int)$id_shop
             );
             if ($nbr_order) {
@@ -1067,7 +1067,7 @@ class ShopCore extends ObjectModel
         static $feature_active = null;
 
         if ($feature_active === null) {
-            $feature_active = (bool)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+            $feature_active = (bool)Db::getInstance()->getValue('SELECT value FROM configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'shop') > 1);
         }
 

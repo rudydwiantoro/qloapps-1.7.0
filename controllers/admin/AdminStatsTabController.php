@@ -181,9 +181,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
     protected function getModules()
     {
         $sql = 'SELECT h.`name` AS hook, m.`name`
-				FROM `'._DB_PREFIX_.'module` m
-				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+				FROM module` m
+				LEFT JOIN hook_module` hm ON hm.`id_module` = m.`id_module`
+				LEFT JOIN hook` h ON hm.`id_hook` = h.`id_hook`
 				WHERE h.`name` = \'displayAdminStatsModules\'
 					AND m.`active` = 1
 				GROUP BY hm.id_module

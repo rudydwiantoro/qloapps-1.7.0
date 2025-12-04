@@ -205,30 +205,30 @@ class AdminNormalProductsControllerCore extends AdminController
         );
 
         $this->_join .= '
-		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
+		LEFT JOIN stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
 
         $alias = 'sa';
         $alias_image = 'image_shop';
 
         $id_shop = Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP? (int)$this->context->shop->id : 'a.id_shop_default';
-        $this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_product` = a.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = image_shop.`id_image`)
-                LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product` AND pd.`active` = 1)
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_type_service_product` rsp ON (rsp.`id_product` = a.`id_product`)
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (rsp.`id_element` = hrt.`id_product` AND rsp.`element_type` = '.(int)RoomTypeServiceProduct::WK_ELEMENT_TYPE_ROOM_TYPE.')
+        $this->_join .= ' JOIN product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
+				LEFT JOIN category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
+				LEFT JOIN shop` shop ON (shop.id_shop = '.$id_shop.')
+				LEFT JOIN image_shop` image_shop ON (image_shop.`id_product` = a.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
+				LEFT JOIN image` i ON (i.`id_image` = image_shop.`id_image`)
+                LEFT JOIN product_download` pd ON (pd.`id_product` = a.`id_product` AND pd.`active` = 1)
+                LEFT JOIN htl_room_type_service_product` rsp ON (rsp.`id_product` = a.`id_product`)
+                LEFT JOIN htl_room_type` hrt ON (rsp.`id_element` = hrt.`id_product` AND rsp.`element_type` = '.(int)RoomTypeServiceProduct::WK_ELEMENT_TYPE_ROOM_TYPE.')
                 '.HotelBranchInformation::addHotelRestriction(false, 'hrt');
 
-        $this->_select .= ' IF(a.`auto_add_to_cart`, "'.$this->l('Yes').'", "'.$this->l('No').'") as auto_added, IF(a.`auto_add_to_cart`, 1, 0) as badge_success, IF(a.`show_at_front`, "'.$this->l('Yes').'", "'.$this->l('No').'") as show_at_front_txt, IF(a.`price_calculation_method` = '.(int)Product::PRICE_CALCULATION_METHOD_PER_DAY.', "'.$this->l('Per Day').'", "'.$this->l('Per Booking').'") as price_calculation_method_txt, (SELECT COUNT(hri.`id`) FROM `'._DB_PREFIX_.'htl_room_information` hri WHERE hri.`id_product` = a.`id_product`) as num_rooms, ';
+        $this->_select .= ' IF(a.`auto_add_to_cart`, "'.$this->l('Yes').'", "'.$this->l('No').'") as auto_added, IF(a.`auto_add_to_cart`, 1, 0) as badge_success, IF(a.`show_at_front`, "'.$this->l('Yes').'", "'.$this->l('No').'") as show_at_front_txt, IF(a.`price_calculation_method` = '.(int)Product::PRICE_CALCULATION_METHOD_PER_DAY.', "'.$this->l('Per Day').'", "'.$this->l('Per Booking').'") as price_calculation_method_txt, (SELECT COUNT(hri.`id`) FROM htl_room_information` hri WHERE hri.`id_product` = a.`id_product`) as num_rooms, ';
         $this->_select .= ' COUNT(hrt.`id_product`) as products_associated, ';
         $this->_select .= 'shop.`name` AS `shopname`, a.`id_shop_default`, ';
         $this->_select .= $alias_image.'.`id_image` AS `id_image`, cl.`name` AS `name_category`, '.$alias.'.`price`, 0 AS `price_final`, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` AS `sav_quantity`, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) AS `badge_danger`';
 
         if ($join_category) {
-            $this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
+            $this->_join .= ' INNER JOIN category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
             $this->_select .= ' , cp.`position`, ';
         }
 
@@ -1730,7 +1730,7 @@ class AdminNormalProductsControllerCore extends AdminController
         // if deleted image was the cover, change it to the first one
         if (!Image::getCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image_shop` image_shop
+			UPDATE image_shop` image_shop
 			SET image_shop.`cover` = 1
 			WHERE image_shop.`id_product` = '.(int)$image->id_product.'
 			AND id_shop='.(int)$this->context->shop->id.' LIMIT 1');
@@ -1738,7 +1738,7 @@ class AdminNormalProductsControllerCore extends AdminController
 
         if (!Image::getGlobalCover($image->id_product)) {
             $res &= Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'image` i
+			UPDATE image` i
 			SET i.`cover` = 1
 			WHERE i.`id_product` = '.(int)$image->id_product.' LIMIT 1');
         }
@@ -4458,7 +4458,7 @@ class AdminNormalProductsControllerCore extends AdminController
      */
     public function initFormModules($obj)
     {
-        $id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
+        $id_module = Db::getInstance()->getValue('SELECT `id_module` FROM module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
         $this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminServiceProductsExtra', array(), (int)$id_module);
     }
 
@@ -4496,9 +4496,9 @@ class AdminNormalProductsControllerCore extends AdminController
             } else {
                 $result = Db::getInstance()->executeS('
 					SELECT DISTINCT pl.`name`, p.`id_product`, pl.`id_shop`
-					FROM `'._DB_PREFIX_.'product` p
-					LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop ='.(int)Context::getContext()->shop->id.')
-					LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+					FROM product` p
+					LEFT JOIN product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop ='.(int)Context::getContext()->shop->id.')
+					LEFT JOIN product_lang` pl
 						ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int)$id_lang.')
 					WHERE pl.`name` LIKE "%'.pSQL($search).'%" AND ps.id_product IS NULL
 					GROUP BY pl.`id_product`

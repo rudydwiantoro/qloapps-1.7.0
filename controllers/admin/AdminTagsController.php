@@ -89,9 +89,9 @@ class AdminTagsControllerCore extends AdminController
 
         $this->_select = 'l.name as lang, COUNT(pt.id_product) as products';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN product_tag` pt
 				ON (a.`id_tag` = pt.`id_tag`)
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN lang` l
 				ON (l.`id_lang` = a.`id_lang`)';
         $this->_group = 'GROUP BY a.name, a.id_lang';
 

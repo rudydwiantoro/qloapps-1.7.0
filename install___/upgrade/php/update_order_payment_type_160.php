@@ -24,9 +24,9 @@
 function update_order_payment_type_160()
 {
     if ($orders = Db::getInstance()->executeS(
-        'SELECT `id_order`, `module` FROM `'._DB_PREFIX_.'orders`'
+        'SELECT `id_order`, `module` FROM orders`'
     )) {
-        $sql = 'UPDATE `'._DB_PREFIX_.'orders`
+        $sql = 'UPDATE orders`
         SET payment_type = CASE';
         $modulePaymentType = array();
         foreach ($orders as &$order) {
@@ -44,8 +44,8 @@ function update_order_payment_type_160()
         Db::getInstance()->execute($sql);
     }
     Db::getInstance()->execute(
-        'UPDATE `'._DB_PREFIX_.'order_payment` op
-        INNER JOIN `'._DB_PREFIX_.'orders` o ON (op.`order_reference` = o.`reference`)
+        'UPDATE order_payment` op
+        INNER JOIN orders` o ON (op.`order_reference` = o.`reference`)
         SET op.`payment_type` = o.`payment_type`'
     );
 }

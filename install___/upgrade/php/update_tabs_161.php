@@ -43,7 +43,7 @@ function update_tabs_161()
 
     // remove id parent of stats tab
     $idAdminStats = get_tab_id('AdminStats');
-    $position = Db::getInstance()->getValue('SELECT MAX(`position`) FROM `'._DB_PREFIX_.'tab` WHERE `id_parent` = 0');
+    $position = Db::getInstance()->getValue('SELECT MAX(`position`) FROM tab` WHERE `id_parent` = 0');
     Db::getInstance()->update('tab', array('id_parent' => 0, 'position' => ($position + 1)), '`id_tab` = '.$idAdminStats);
 }
 

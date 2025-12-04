@@ -32,7 +32,7 @@ function upgrade_module_1_1_5($module)
 function updateTableData()
 {
     $interiorImages = $htlBookings = Db::getInstance()->executes(
-        'SELECT `id_interior_image` FROM `'._DB_PREFIX_.'htl_interior_image`'
+        'SELECT `id_interior_image` FROM htl_interior_image`'
     );
 
     foreach ($interiorImages as $img) {

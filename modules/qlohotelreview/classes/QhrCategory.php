@@ -51,8 +51,8 @@ class QhrCategory extends ObjectModel
     {
         $id_lang = Context::getContext()->language->id;
         return Db::getInstance()->executeS(
-            'SELECT * FROM `'._DB_PREFIX_.'qhr_category` qc
-            LEFT JOIN `'._DB_PREFIX_.'qhr_category_lang` qcl
+            'SELECT * FROM qhr_category` qc
+            LEFT JOIN qhr_category_lang` qcl
             ON qcl.`id_category` = qc.`id_category` AND qcl.`id_lang` = '.(int) $id_lang.'
             '.($active ? 'WHERE qc.`active` = 1' : '')
         );

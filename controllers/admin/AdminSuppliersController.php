@@ -53,7 +53,7 @@ class AdminSuppliersControllerCore extends AdminController
         );
 
         $this->_select = 'COUNT(DISTINCT ps.`id_product`) AS products';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
+        $this->_join = 'LEFT JOIN product_supplier` ps ON (a.`id_supplier` = ps.`id_supplier`)';
         $this->_group = 'GROUP BY a.`id_supplier`';
 
         $this->fieldImageSettings = array('name' => 'logo', 'dir' => 'su');
@@ -496,7 +496,7 @@ class AdminSuppliersControllerCore extends AdminController
                 $this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
             } else {
                 //delete all product_supplier linked to this supplier
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id);
+                Db::getInstance()->execute('DELETE FROM product_supplier` WHERE `id_supplier`='.(int)$obj->id);
 
                 $id_address = Address::getAddressIdBySupplierId($obj->id);
                 $address = new Address($id_address);

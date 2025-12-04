@@ -137,7 +137,7 @@ class TabCore extends ObjectModel
         }
 
         /* Query definition */
-        $query = 'REPLACE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
+        $query = 'REPLACE INTO access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
         $query .= '(1, '.(int)$id_tab.', 1, 1, 1, 1),';
 
         foreach ($profiles as $profile) {
@@ -185,7 +185,7 @@ class TabCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_parent`
-			FROM `'._DB_PREFIX_.'tab`
+			FROM tab`
 			WHERE LOWER(class_name) = \''.pSQL(Tools::strtolower(Tools::getValue('controller'))).'\'');
             if (!$value) {
                 $value = -1;
@@ -208,8 +208,8 @@ class TabCore extends ObjectModel
             /* Tabs selection */
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT *
-				FROM `'._DB_PREFIX_.'tab` t
-				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+				FROM tab` t
+				LEFT JOIN tab_lang` tl
 					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 				WHERE t.`id_tab` = '.(int)$id_tab.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
             );
@@ -230,7 +230,7 @@ class TabCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.`class_name`, t.`module`
-			FROM `'._DB_PREFIX_.'tab` t
+			FROM tab` t
 			WHERE t.`module` IS NOT NULL AND t.`module` != ""');
 
         if (is_array($result)) {
@@ -254,8 +254,8 @@ class TabCore extends ObjectModel
             // Keep t.*, tl.name instead of only * because if translations are missing, the join on tab_lang will overwrite the id_tab in the results
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT t.*, tl.name
-				FROM `'._DB_PREFIX_.'tab` t
-				LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
+				FROM tab` t
+				LEFT JOIN tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 				WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 				ORDER BY t.`position` ASC'
             );
@@ -292,7 +292,7 @@ class TabCore extends ObjectModel
             $class_name = strtolower($class_name);
             if (self::$_getIdFromClassName === null) {
                 self::$_getIdFromClassName = array();
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`', true, false);
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM tab`', true, false);
 
                 if (is_array($result)) {
                     foreach ($result as $row) {
@@ -381,7 +381,7 @@ class TabCore extends ObjectModel
     {
         return (int)Db::getInstance()->getValue('
 			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'tab` t
+			FROM tab` t
 			'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : '')
         );
     }
@@ -396,7 +396,7 @@ class TabCore extends ObjectModel
     {
         return (Db::getInstance()->getValue('
 			SELECT IFNULL(MAX(position),0)+1
-			FROM `'._DB_PREFIX_.'tab`
+			FROM tab`
 			WHERE `id_parent` = '.(int)$id_parent
         ));
     }
@@ -419,7 +419,7 @@ class TabCore extends ObjectModel
 
         $new_position = ($direction == 'l') ? $this->position - 1 : $this->position + 1;
         Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'tab` t
+			UPDATE tab` t
 			SET position = '.(int)$this->position.'
 			WHERE id_parent = '.(int)$this->id_parent.'
 				AND position = '.(int)$new_position
@@ -432,14 +432,14 @@ class TabCore extends ObjectModel
     {
         $result = Db::getInstance()->executeS('
 			SELECT `id_tab`
-			FROM `'._DB_PREFIX_.'tab`
+			FROM tab`
 			WHERE `id_parent` = '.(int)$id_parent.'
 			ORDER BY `position`
 		');
         $sizeof = count($result);
         for ($i = 0; $i < $sizeof; ++$i) {
             Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'tab`
+				UPDATE tab`
 				SET `position` = '.($i + 1).'
 				WHERE `id_tab` = '.(int)$result[$i]['id_tab']
             );
@@ -451,7 +451,7 @@ class TabCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS('
 			SELECT t.`id_tab`, t.`position`, t.`id_parent`
-			FROM `'._DB_PREFIX_.'tab` t
+			FROM tab` t
 			WHERE t.`id_parent` = '.(int)$this->id_parent.'
 			ORDER BY t.`position` ASC'
         )) {
@@ -470,7 +470,7 @@ class TabCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         $result = (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'tab`
+			UPDATE tab`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
@@ -478,7 +478,7 @@ class TabCore extends ObjectModel
                 : '< '.(int)$moved_tab['position'].' AND `position` >= '.(int)$position).'
 			AND `id_parent`='.(int)$moved_tab['id_parent'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'tab`
+			UPDATE tab`
 			SET `position` = '.(int)$position.'
 			WHERE `id_parent` = '.(int)$moved_tab['id_parent'].'
 			AND `id_tab`='.(int)$moved_tab['id_tab']));
@@ -536,10 +536,10 @@ class TabCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 			SELECT t.`id_tab`, t.`id_parent`, tl.`name`, a.`id_profile`
-			FROM `'._DB_PREFIX_.'tab` t
-			LEFT JOIN `'._DB_PREFIX_.'access` a
+			FROM tab` t
+			LEFT JOIN access` a
 				ON (a.`id_tab` = t.`id_tab`)
-			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl
+			LEFT JOIN tab_lang` tl
 				ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE a.`id_profile` = '.(int)$id_profile.'
 			AND t.`id_parent` = '.(int)$id_parent.'

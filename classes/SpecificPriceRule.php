@@ -243,7 +243,7 @@ class SpecificPriceRuleCore extends ObjectModel
 							SELECT
 								`ps'.(int)$id_condition.'`.`id_product`
 							FROM
-								`'._DB_PREFIX_.'product_supplier` `ps'.(int)$id_condition.'`
+								product_supplier` `ps'.(int)$id_condition.'`
 							WHERE
 								`p`.`id_product` = `ps'.(int)$id_condition.'`.`id_product`
 								AND `ps'.(int)$id_condition.'`.`id_supplier` = '.(int)$condition['value'].'

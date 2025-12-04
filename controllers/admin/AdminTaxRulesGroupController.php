@@ -144,11 +144,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			t.rate';
 
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` c
+			LEFT JOIN country_lang` c
 				ON (a.`id_country` = c.`id_country` AND id_lang = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` s
+			LEFT JOIN state` s
 				ON (a.`id_state` = s.`id_state`)
-			LEFT JOIN `'._DB_PREFIX_.'tax` t
+			LEFT JOIN tax` t
 				ON (a.`id_tax` = t.`id_tax`)';
         $this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
         $this->_use_found_rows = false;

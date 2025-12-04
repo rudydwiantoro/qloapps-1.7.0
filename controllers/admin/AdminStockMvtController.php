@@ -155,17 +155,17 @@ class AdminStockMvtControllerCore extends AdminController
 
         // overrides join
         $this->_join = 'INNER JOIN '._DB_PREFIX_.'stock stock ON a.id_stock = stock.id_stock
-							LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+							LEFT JOIN product_lang` pl ON (
 								stock.id_product = pl.id_product
 								AND pl.id_lang = '.(int)$this->context->language->id.Shop::addSqlRestrictionOnLang('pl').'
 							)
-							LEFT JOIN `'._DB_PREFIX_.'stock_mvt_reason_lang` mrl ON (
+							LEFT JOIN stock_mvt_reason_lang` mrl ON (
 								a.id_stock_mvt_reason = mrl.id_stock_mvt_reason
 								AND mrl.id_lang = '.(int)$this->context->language->id.'
 							)
-							LEFT JOIN `'._DB_PREFIX_.'warehouse` w ON (w.id_warehouse = stock.id_warehouse)
-							LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
-							LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (
+							LEFT JOIN warehouse` w ON (w.id_warehouse = stock.id_warehouse)
+							LEFT JOIN product_attribute_combination` pac ON (pac.id_product_attribute = stock.id_product_attribute)
+							LEFT JOIN attribute_lang` al ON (
 								al.id_attribute = pac.id_attribute
 								AND pac.id_product_attribute <> 0
 								AND al.id_lang = '.(int)$this->context->language->id.'

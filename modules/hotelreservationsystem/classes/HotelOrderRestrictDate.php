@@ -55,7 +55,7 @@ class HotelOrderRestrictDate extends ObjectModel
         $cache_key = 'HotelOrderRestrictDate::getDataByHotelId'.(int)$idHotel;
         if (!Cache::isStored($cache_key)) {
             $res = Db::getInstance()->getRow(
-                'SELECT * FROM `'._DB_PREFIX_.'htl_order_restrict_date` ord WHERE ord.`id_hotel` = '.(int) $idHotel
+                'SELECT * FROM htl_order_restrict_date` ord WHERE ord.`id_hotel` = '.(int) $idHotel
             );
             Cache::store($cache_key, $res);
         } else {

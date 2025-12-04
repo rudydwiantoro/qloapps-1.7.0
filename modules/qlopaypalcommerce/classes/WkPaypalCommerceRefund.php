@@ -87,8 +87,8 @@ class WkPaypalCommerceRefund extends ObjectModel
     {
         $refunds = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
             'SELECT pcr.*, pco.`id_currency`
-            FROM `'._DB_PREFIX_.'wk_paypal_commerce_refund` pcr
-            LEFT JOIN `'._DB_PREFIX_.'wk_paypal_commerce_order` pco
+            FROM wk_paypal_commerce_refund` pcr
+            LEFT JOIN wk_paypal_commerce_order` pco
             ON pcr.`order_trans_id` = pco.`id_paypal_commerce_order`
             WHERE pcr.`order_trans_id` = ' .(int) $idTrans.'
             ORDER BY pcr.`id_paypal_commerce_refund` DESC'
@@ -116,8 +116,8 @@ class WkPaypalCommerceRefund extends ObjectModel
     {
         $totalRefund = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             'SELECT SUM(pcr.`refund_amount`) AS sum_amount_refunded, pco.`id_currency`
-            FROM `'._DB_PREFIX_.'wk_paypal_commerce_refund` pcr
-            LEFT JOIN `'._DB_PREFIX_.'wk_paypal_commerce_order` pco
+            FROM wk_paypal_commerce_refund` pcr
+            LEFT JOIN wk_paypal_commerce_order` pco
             ON pcr.`order_trans_id` = pco.`id_paypal_commerce_order`
             WHERE pcr.`order_trans_id` = ' .(int)$idTrans.'
             GROUP BY pcr.`order_trans_id`'

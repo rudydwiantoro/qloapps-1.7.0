@@ -187,7 +187,7 @@ class CombinationCore extends ObjectModel
             }
 
             $result = Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'product_attribute_combination` (`id_attribute`, `id_product_attribute`)
+				INSERT INTO product_attribute_combination` (`id_attribute`, `id_product_attribute`)
 				VALUES '.implode(',', $sql_values)
             );
         }
@@ -207,7 +207,7 @@ class CombinationCore extends ObjectModel
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT a.id_attribute AS id
-			FROM `'._DB_PREFIX_.'product_attribute_combination` a
+			FROM product_attribute_combination` a
 			'.Shop::addSqlAssociation('attribute', 'a').'
 			WHERE a.id_product_attribute = '.(int)$this->id);
 
@@ -218,7 +218,7 @@ class CombinationCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT a.`id_image` as id
-			FROM `'._DB_PREFIX_.'product_attribute_image` a
+			FROM product_attribute_image` a
 			'.Shop::addSqlAssociation('product_attribute', 'a').'
 			WHERE a.`id_product_attribute` = '.(int)$this->id.'
 		');
@@ -227,7 +227,7 @@ class CombinationCore extends ObjectModel
     public function setImages($ids_image)
     {
         if (Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'product_attribute_image`
+			DELETE FROM product_attribute_image`
 			WHERE `id_product_attribute` = '.(int)$this->id) === false) {
             return false;
         }
@@ -241,7 +241,7 @@ class CombinationCore extends ObjectModel
 
             if (is_array($sql_values) && count($sql_values)) {
                 Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
+					INSERT INTO product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES '.implode(',', $sql_values)
                 );
             }
@@ -338,7 +338,7 @@ class CombinationCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT product_attribute_shop.`price`
-			FROM `'._DB_PREFIX_.'product_attribute` pa
+			FROM product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
 			WHERE pa.`id_product_attribute` = '.(int)$id_product_attribute
         );

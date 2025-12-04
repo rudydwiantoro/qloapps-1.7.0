@@ -135,7 +135,7 @@ class ShopGroupCore extends ObjectModel
         if ($check == 'all' || $check == 'customer') {
             $total_customer = (int)Db::getInstance()->getValue('
 				SELECT count(*)
-				FROM `'._DB_PREFIX_.'customer`
+				FROM customer`
 				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
             if ($total_customer) {
@@ -146,7 +146,7 @@ class ShopGroupCore extends ObjectModel
         if ($check == 'all' || $check == 'order') {
             $total_order = (int)Db::getInstance()->getValue('
 				SELECT count(*)
-				FROM `'._DB_PREFIX_.'orders`
+				FROM orders`
 				WHERE `id_shop` IN ('.implode(', ', $list_shops).')'
             );
             if ($total_order) {

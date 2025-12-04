@@ -108,7 +108,7 @@ class AdminAccessControllerCore extends AdminController
             foreach ($hotels as $hotelInfo) {
                 $idHotel = $hotelInfo['id'];
                 $hotelAccess[$profile['id_profile']][$idHotel] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                    'SELECT * FROM `'._DB_PREFIX_.'htl_access`
+                    'SELECT * FROM htl_access`
                     WHERE `id_profile` = '.(int)$profile['id_profile'].' AND `id_hotel` = '.(int)$idHotel
                 );
             }
@@ -188,11 +188,11 @@ class AdminAccessControllerCore extends AdminController
             $where = '`id_hotel`';
 
             if ($idHotel == -1) {
-                $sql = 'UPDATE `'._DB_PREFIX_.'htl_access`
+                $sql = 'UPDATE htl_access`
                 SET `access` = '.(int)$enabled.'
                 WHERE `id_profile` = '.(int)$idProfile;
             } else {
-                $sql = 'UPDATE `'._DB_PREFIX_.'htl_access`
+                $sql = 'UPDATE htl_access`
                 SET `access` = '.(int)$enabled.'
                 WHERE `id_hotel` = '.(int)$idHotel.' AND `id_profile` = '.(int)$idProfile;
             }
@@ -225,30 +225,30 @@ class AdminAccessControllerCore extends AdminController
             $join = '';
             if (Tools::isSubmit('addFromParent')) {
                 $where = 't.`id_parent`';
-                $join = 'LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)';
+                $join = 'LEFT JOIN tab` t ON (t.`id_tab` = a.`id_tab`)';
             }
 
             if ($id_tab == -1) {
                 if ($perm == 'all') {
                     $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
+					UPDATE access` a
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
                 } else {
                     $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a
+					UPDATE access` a
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
                 }
             } else {
                 if ($perm == 'all') {
                     $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
+					UPDATE access` a '.$join.'
 					SET `view` = '.(int)$enabled.', `add` = '.(int)$enabled.', `edit` = '.(int)$enabled.', `delete` = '.(int)$enabled.'
 					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
                 } else {
                     $sql = '
-					UPDATE `'._DB_PREFIX_.'access` a '.$join.'
+					UPDATE access` a '.$join.'
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE '.$where.' = '.(int)$id_tab.' AND `id_profile` = '.(int)$id_profile;
                 }
@@ -281,12 +281,12 @@ class AdminAccessControllerCore extends AdminController
 
             if ($id_module == -1) {
                 $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
+					UPDATE module_access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_profile` = '.(int)$id_profile;
             } else {
                 $sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
+					UPDATE module_access`
 					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
 					WHERE `id_module` = '.(int)$id_module.'
 						AND `id_profile` = '.(int)$id_profile;

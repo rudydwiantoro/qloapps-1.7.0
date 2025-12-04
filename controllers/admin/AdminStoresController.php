@@ -162,10 +162,10 @@ class AdminStoresControllerCore extends AdminController
 
         $this->_select = 'cl.`name` country, st.`name` state';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+			LEFT JOIN country_lang` cl
 				ON (cl.`id_country` = a.`id_country`
 				AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` st
+			LEFT JOIN state` st
 				ON (st.`id_state` = a.`id_state`)';
 
         return parent::renderList();
@@ -560,7 +560,7 @@ class AdminStoresControllerCore extends AdminController
     public function beforeUpdateOptions()
     {
         if (isset($_POST['PS_SHOP_STATE_ID']) && $_POST['PS_SHOP_STATE_ID'] != '0') {
-            $sql = 'SELECT `active` FROM `'._DB_PREFIX_.'state`
+            $sql = 'SELECT `active` FROM state`
 					WHERE `id_country` = '.(int)Tools::getValue('PS_SHOP_COUNTRY_ID').'
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
             $isStateOk = Db::getInstance()->getValue($sql);

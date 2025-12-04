@@ -36,7 +36,7 @@ function migrate_orders()
         define('PS_TAX_INC', 0);
     }
 
-    $col_order_detail_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'order_detail`');
+    $col_order_detail_old = Db::getInstance()->executeS('SHOW FIELDS FROM order_detail`');
     foreach ($col_order_detail_old as $k => $field) {
         if ($field['Field'] != 'id_order_invoice') {
             $col_order_detail[$k] = $field['Field'];
@@ -47,10 +47,10 @@ function migrate_orders()
         return array('error' => 1, 'msg' => 'unable to get fields list from order_detail table');
     }
 
-    $insert_order_detail = 'INSERT INTO `'._DB_PREFIX_.'order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
+    $insert_order_detail = 'INSERT INTO order_detail_2` (`'.implode('`, `', $col_order_detail).'`) VALUES ';
 
     $col_orders = array();
-    $col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'orders`');
+    $col_orders_old = Db::getInstance()->executeS('SHOW FIELDS FROM orders`');
 
     if (!$col_orders_old) {
         return array('error' => 1, 'msg' => 'unable to get fields list from orders table');
@@ -60,7 +60,7 @@ function migrate_orders()
         $col_orders[$k] = $field['Field'];
     }
 
-    $insert_order = 'INSERT INTO `'._DB_PREFIX_.'orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
+    $insert_order = 'INSERT INTO orders_2` (`'.implode('`, `', $col_orders).'`) VALUES ';
 
     // create temporary tables
     $res = mo_duplicateTables();
@@ -70,7 +70,7 @@ function migrate_orders()
 
     // this was done like that previously
     $wrapping_tax_rate = 1 + ((float)Db::getInstance()->getValue('SELECT value
-		FROM `'._DB_PREFIX_.'configuration`
+		FROM configuration`
 		WHERE name = "PS_GIFT_WRAPPING_TAX"') / 100);
 
     $step = 3000;
@@ -80,7 +80,7 @@ function migrate_orders()
         $nb_loop = ceil($count_orders / $step);
     }
     for ($i = 0; $i < $nb_loop; $i++) {
-        $order_res = Db::getInstance()->query('SELECT * FROM `'._DB_PREFIX_.'orders` LIMIT '.(int)$start.', '.(int)$step);
+        $order_res = Db::getInstance()->query('SELECT * FROM orders` LIMIT '.(int)$start.', '.(int)$step);
         $start = intval(($i+1) * $step);
         $cpt = 0;
         $flush_limit = 200;
@@ -91,7 +91,7 @@ function migrate_orders()
             $price_display_method = mo_getPriceDisplayMethod((int)$default_group_id);
             $order_details_list = Db::getInstance()->query('
 			SELECT od.*
-			FROM `'._DB_PREFIX_.'order_detail` od
+			FROM order_detail` od
 			WHERE od.`id_order` = '.(int)$order['id_order']);
 
             while ($order_details = Db::getInstance()->nextRow($order_details_list)) {
@@ -222,7 +222,7 @@ function mo_ps_round($val)
     static $ps_price_round_mode;
     if (empty($ps_price_round_mode)) {
         $ps_price_round_mode = Db::getInstance()->getValue('SELECT value
-			FROM `'._DB_PREFIX_.'configuration`
+			FROM configuration`
 			WHERE name = "PS_PRICE_ROUND_MODE"');
     }
 
@@ -240,20 +240,20 @@ function mo_duplicateTables()
 {
     $res = true;
     $res &= Db::getInstance()->execute('CREATE TABLE
-		`'._DB_PREFIX_.'orders_2` LIKE `'._DB_PREFIX_.'orders`');
+		orders_2` LIKE orders`');
     $res &= Db::getInstance()->execute('CREATE TABLE
-		`'._DB_PREFIX_.'order_detail_2` LIKE `'._DB_PREFIX_.'order_detail`');
+		order_detail_2` LIKE order_detail`');
     return $res;
 }
 
 function mo_renameTables()
 {
     $res = true;
-    $res &= Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'orders`');
-    $res &= Db::getInstance()->execute('DROP TABLE `'._DB_PREFIX_.'order_detail`');
+    $res &= Db::getInstance()->execute('DROP TABLE orders`');
+    $res &= Db::getInstance()->execute('DROP TABLE order_detail`');
 
-    $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'orders_2` TO `'._DB_PREFIX_.'orders`');
-    $res &= Db::getInstance()->execute('RENAME TABLE `'._DB_PREFIX_.'order_detail_2` TO `'._DB_PREFIX_.'order_detail`');
+    $res &= Db::getInstance()->execute('RENAME TABLE orders_2` TO orders`');
+    $res &= Db::getInstance()->execute('RENAME TABLE order_detail_2` TO order_detail`');
     return $res;
 }
 
@@ -261,7 +261,7 @@ function mo_getCustomerDefaultGroup($id_customer)
 {
     static $cache;
     if (!isset($cache[$id_customer])) {
-        $cache[$id_customer] = Db::getInstance()->getValue('SELECT `id_default_group` FROM `'._DB_PREFIX_.'customer` WHERE `id_customer` = '.(int)$id_customer);
+        $cache[$id_customer] = Db::getInstance()->getValue('SELECT `id_default_group` FROM customer` WHERE `id_customer` = '.(int)$id_customer);
     }
 
     return $cache[$id_customer];
@@ -274,7 +274,7 @@ function mo_getPriceDisplayMethod($id_group)
     if (!isset($cache[$id_group])) {
         $cache[$id_group] = Db::getInstance()->getValue('
 			SELECT `price_display_method`
-			FROM `'._DB_PREFIX_.'group`
+			FROM group`
 			WHERE `id_group` = '.(int)$id_group);
     }
 

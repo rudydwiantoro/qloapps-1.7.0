@@ -45,7 +45,7 @@ class QcmcChannelManagerBooking extends ObjectModel
      */
     public static function getChannelManagerBookings($idOrder = 0, $orderWay = 'ASC')
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'qcmc_channel_manager_booking` WHERE 1';
+        $sql = 'SELECT * FROM qcmc_channel_manager_booking` WHERE 1';
 
         if ($idOrder) {
             $sql .= ' AND `id_order` = '.(int)$idOrder;

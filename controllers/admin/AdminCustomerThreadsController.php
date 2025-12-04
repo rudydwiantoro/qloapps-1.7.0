@@ -368,7 +368,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             cm.private, IF(COUNT(CASE WHEN cm.`private` = 1 THEN 1 END), 1, 0) AS `has_private`,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
-				FROM `'._DB_PREFIX_.'customer_message` cm2
+				FROM customer_message` cm2
 				INNER JOIN '._DB_PREFIX_.'employee e
 					ON e.`id_employee` = cm2.`id_employee`
 				WHERE cm2.id_employee > 0
@@ -378,15 +378,15 @@ class AdminCustomerThreadsControllerCore extends AdminController
             IFNULL(CONCAT(LEFT(emp.`firstname`, 1),". ",emp.`lastname`), "--") AS employee';
 
         $this->_join = '
-            LEFT JOIN `'._DB_PREFIX_.'employee` emp
+            LEFT JOIN employee` emp
                 ON emp.`id_employee` = a.`id_employee`
-			LEFT JOIN `'._DB_PREFIX_.'customer` c
+			LEFT JOIN customer` c
 				ON c.`id_customer` = a.`id_customer`
-			LEFT JOIN `'._DB_PREFIX_.'customer_message` cm
+			LEFT JOIN customer_message` cm
 				ON cm.`id_customer_thread` = a.`id_customer_thread`
-			LEFT JOIN `'._DB_PREFIX_.'lang` l
+			LEFT JOIN lang` l
 				ON l.`id_lang` = a.`id_lang`
-			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
+			LEFT JOIN contact_lang` cl
 				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 
         $this->_group = 'GROUP BY cm.id_customer_thread';
@@ -1178,7 +1178,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $id_thread = Tools::getValue('id_thread');
         $messages = CustomerThread::getMessageCustomerThreads($id_thread);
         if (count($messages)) {
-            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer_message` set `read` = 1 WHERE `id_employee` = '.(int)$this->context->employee->id.' AND `id_customer_thread` = '.(int)$id_thread);
+            Db::getInstance()->execute('UPDATE customer_message` set `read` = 1 WHERE `id_employee` = '.(int)$this->context->employee->id.' AND `id_customer_thread` = '.(int)$id_thread);
         }
     }
 
@@ -1312,7 +1312,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
-						 FROM `'._DB_PREFIX_.'customer_message_sync_imap`
+						 FROM customer_message_sync_imap`
 						 WHERE `md5_header` = \''.pSQL($md5).'\'');
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
@@ -1389,7 +1389,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                     }
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+                Db::getInstance()->execute('INSERT INTO customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
             }
         }
         imap_expunge($mbox);

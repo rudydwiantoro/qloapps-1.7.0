@@ -223,7 +223,7 @@ class CurrencyCore extends ObjectModel
     {
         $tab = Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'currency` c
+		FROM currency` c
 		'.Shop::addSqlAssociation('currency', 'c').
         ' WHERE `deleted` = 0'.
         ($active ? ' AND c.`active` = 1' : '').
@@ -241,8 +241,8 @@ class CurrencyCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'currency` c
-		LEFT JOIN `'._DB_PREFIX_.'currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
+		FROM currency` c
+		LEFT JOIN currency_shop` cs ON (cs.`id_currency` = c.`id_currency`)
 		'.($id_shop ? ' WHERE cs.`id_shop` = '.(int)$id_shop : '').'
 		ORDER BY `name` ASC');
     }
@@ -268,8 +268,8 @@ class CurrencyCore extends ObjectModel
         }
 
         $sql = 'SELECT c.*
-				FROM `'._DB_PREFIX_.'module_currency` mc
-				LEFT JOIN `'._DB_PREFIX_.'currency` c ON c.`id_currency` = mc.`id_currency`
+				FROM module_currency` mc
+				LEFT JOIN currency` c ON c.`id_currency` = mc.`id_currency`
 				WHERE c.`deleted` = 0
 					AND mc.`id_module` = '.(int)$id_module.'
 					AND c.`active` = 1
@@ -289,7 +289,7 @@ class CurrencyCore extends ObjectModel
         }
 
         $sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'module_currency`
+				FROM module_currency`
 				WHERE `id_module` = '.(int)$id_module.'
 					AND `id_shop` = '.(int)$id_shop;
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -299,7 +299,7 @@ class CurrencyCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT *
-		FROM `'._DB_PREFIX_.'currency`
+		FROM currency`
 		WHERE `deleted` = 0
 		AND `id_currency` = '.(int)($id_currency));
     }
@@ -466,7 +466,7 @@ class CurrencyCore extends ObjectModel
 
         if (!isset(self::$countActiveCurrencies[$id_shop])) {
             self::$countActiveCurrencies[$id_shop] = Db::getInstance()->getValue('
-				SELECT COUNT(DISTINCT c.id_currency) FROM `'._DB_PREFIX_.'currency` c
+				SELECT COUNT(DISTINCT c.id_currency) FROM currency` c
 				LEFT JOIN '._DB_PREFIX_.'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = '.(int)$id_shop.')
 				WHERE c.`active` = 1
 			');

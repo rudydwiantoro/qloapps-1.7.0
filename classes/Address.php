@@ -325,9 +325,9 @@ class AddressCore extends ObjectModel
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
-			FROM `'._DB_PREFIX_.'address` a
-			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
-			LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
+			FROM address` a
+			LEFT JOIN country` c ON c.`id_country` = a.`id_country`
+			LEFT JOIN state` s ON s.`id_state` = a.`id_state`
 			WHERE a.`id_address` = '.(int)$id_address);
 
         self::$_idZones[$id_address] = (int)((int)$result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
@@ -350,8 +350,8 @@ class AddressCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
 			SELECT c.`active`
-			FROM `'._DB_PREFIX_.'address` a
-			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			FROM address` a
+			LEFT JOIN country` c ON c.`id_country` = a.`id_country`
 			WHERE a.`id_address` = '.(int)$id_address);
             Cache::store($cache_id, $result);
             return $result;
@@ -368,7 +368,7 @@ class AddressCore extends ObjectModel
     {
         $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(`id_order`) AS used
-		FROM `'._DB_PREFIX_.'orders`
+		FROM orders`
 		WHERE `id_address_delivery` = '.(int)$this->id.'
 		OR `id_address_invoice` = '.(int)$this->id);
 
@@ -382,7 +382,7 @@ class AddressCore extends ObjectModel
         }
         if ($id_address) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM `'._DB_PREFIX_.'address`
+			SELECT `id_country`, `id_state`, `vat_number`, `postcode` FROM address`
 			WHERE `id_address` = '.(int)$id_address);
         } else {
             $result = false;
@@ -417,7 +417,7 @@ class AddressCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `id_address`
-				FROM `'._DB_PREFIX_.'address`
+				FROM address`
 				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
             );
             Cache::store($cache_id, $result);
@@ -537,10 +537,10 @@ class AddressCore extends ObjectModel
         return Db::getInstance()->executeS(
             'SELECT  a.`id_address`, a.`firstname`, a.`lastname`, a.`address1`, a.`postcode`, a.`city`,
             cl.`name` AS `country_name`, s.`name` AS `state_name`
-            FROM `'._DB_PREFIX_.'address` a
-            LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
+            FROM address` a
+            LEFT JOIN country_lang` cl
             ON cl.`id_country` = a.`id_country` AND cl.`id_lang` ='.(int) $idLang.'
-            LEFT JOIN `'._DB_PREFIX_.'state` s
+            LEFT JOIN state` s
             ON s.`id_country` = cl.`id_country` AND s.`id_state` = a.`id_state`
             WHERE id_customer > 0 AND a.`deleted` = 0 AND
                 (a.`address1` LIKE \'%'.$query.'%\' OR

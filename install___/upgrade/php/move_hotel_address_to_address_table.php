@@ -28,8 +28,8 @@ function move_hotel_address_to_address_table()
         hbi.`city`, hbi.`zipcode` as `postcode`, hbil.`hotel_name` as `alias`, hbil.`hotel_name` as `lastname`,
         hbil.`hotel_name` as `firstname`, hbi.`address` as `address1`, hbi.`phone`, NOW() as `date_add`,
         NOW() as `date_upd`
-        FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-        INNER JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+        FROM htl_branch_info` hbi
+        INNER JOIN htl_branch_info_lang` hbil
         ON (hbil.`id` = hbi.`id` AND hbil.`id_lang` = '.(int)$defaultLangId.')';
     if ($addresses = Db::getInstance()->executeS($sql)) {
         foreach($addresses as &$address) {

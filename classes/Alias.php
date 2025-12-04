@@ -57,7 +57,7 @@ class AliasCore extends ObjectModel
             } else {
                 $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
-				FROM `'._DB_PREFIX_.'alias` a
+				FROM alias` a
 				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
                 if ($row) {
@@ -104,7 +104,7 @@ class AliasCore extends ObjectModel
 
         $aliases = Db::getInstance()->executeS('
 		SELECT a.alias
-		FROM `'._DB_PREFIX_.'alias` a
+		FROM alias` a
 		WHERE `search` = \''.pSQL($this->search).'\'');
 
         $aliases = array_map('implode', $aliases);

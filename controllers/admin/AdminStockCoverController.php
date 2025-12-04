@@ -144,7 +144,7 @@ class AdminStockCoverControllerCore extends AdminController
 
             $this->_select = 'a.id_product_attribute as id, a.id_product, stock_view.reference, stock_view.ean13,
 							stock_view.upc, stock_view.usable_quantity as stock';
-            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+            $this->_join = 'INNER JOIN product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
             $this->_join .= ' INNER JOIN
 						  (
 						  	SELECT SUM(s.usable_quantity) as usable_quantity, s.id_product_attribute, s.reference, s.ean13, s.upc
@@ -175,9 +175,9 @@ class AdminStockCoverControllerCore extends AdminController
 
         // query
         $this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations, SUM(s.usable_quantity) as stock';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)
+        $this->_join = 'LEFT JOIN product_attribute` pa ON (pa.id_product = a.id_product)
 						'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
-						INNER JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product)';
+						INNER JOIN stock` s ON (s.id_product = a.id_product)';
         $this->_group = 'GROUP BY a.id_product';
         $this->_where = 'AND a.advanced_stock_management = 1';
 

@@ -33,10 +33,10 @@ class AdminRoomTypeGlobalDemandController extends ModuleAdminController
 
         $this->toolbar_title = $this->l('Manage Additional Facilities');
 
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_lang` asl
+        $this->_join .= ' LEFT JOIN htl_room_type_global_demand_lang` asl
         ON (a.id_global_demand = asl.id_global_demand)';
 
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'htl_room_type_global_demand_advance_option` dao
+        $this->_join .= ' LEFT JOIN htl_room_type_global_demand_advance_option` dao
         ON (a.id_global_demand = dao.id_global_demand)';
 
         $this->_select .= ' a.`price` as global_price, asl.`name` as global_name,';

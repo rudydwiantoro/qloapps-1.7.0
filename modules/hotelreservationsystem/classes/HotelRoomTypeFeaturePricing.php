@@ -145,10 +145,10 @@ class HotelRoomTypeFeaturePricing extends ObjectModel
         $skipFeaturePriceId = null,
         $active = null
     ) {
-        $sql = 'SELECT *, GROUP_CONCAT(rtfpg.`id_group`) AS id_group FROM `'._DB_PREFIX_.'htl_room_type_feature_pricing_restriction` rtfpr
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_feature_pricing` rtfp
+        $sql = 'SELECT *, GROUP_CONCAT(rtfpg.`id_group`) AS id_group FROM htl_room_type_feature_pricing_restriction` rtfpr
+            LEFT JOIN htl_room_type_feature_pricing` rtfp
             ON (rtfpr.`id_feature_price` = rtfp.`id_feature_price` AND rtfp.`id_product`='.(int) $idRoomType.')
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_feature_pricing_group` rtfpg
+            LEFT JOIN htl_room_type_feature_pricing_group` rtfpg
             ON (rtfp.`id_feature_price` = rtfpg.`id_feature_price` '.($groups ? ' AND rtfpg.`id_group` IN ('.pSQL(implode(', ',$groups)).')' : ' ' ).')
             WHERE 1 '.( !is_null($active) ? ' AND rtfp.`active`= '.(int) $active: ' ').' ' .(!is_null($skipFeaturePriceId) ? ' AND rtfpr.`id_feature_price`!='.(int) $skipFeaturePriceId : ' ');
         $sqlWhere = '';
@@ -492,10 +492,10 @@ class HotelRoomTypeFeaturePricing extends ObjectModel
         $idLang = Context::getContext()->language->id;
         return Db::getInstance()->executeS(
             'SELECT hrfp.*, hrfpr.`date_from`, hrfpr.`date_to`, hrfpr.`date_selection_type`, hrfpr.`is_special_days_exists`, hrfpr.`special_days`, hrfpl.`feature_price_name`
-            FROM `'._DB_PREFIX_.'htl_room_type_feature_pricing` hrfp
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_feature_pricing_lang` hrfpl
+            FROM htl_room_type_feature_pricing` hrfp
+            LEFT JOIN htl_room_type_feature_pricing_lang` hrfpl
             ON(hrfp.`id_feature_price` = hrfpl.`id_feature_price` AND hrfpl.`id_lang` = '.(int)$idLang.')
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_feature_pricing_restriction` hrfpr
+            LEFT JOIN htl_room_type_feature_pricing_restriction` hrfpr
             ON (hrfpr.`id_feature_price` = hrfp.`id_feature_price`)
             WHERE `id_product` = '.(int)$id_product.' AND `id_cart` = '.(int)$id_cart.' AND `id_guest` = '.(int)$id_guest.' AND `id_room` = '.(int)$id_room
         );
@@ -547,8 +547,8 @@ class HotelRoomTypeFeaturePricing extends ObjectModel
         }
 
         $idfeaturePrices = Db::getInstance()->executeS(
-            'SELECT hrfp.`id_feature_price`  FROM `'._DB_PREFIX_.'htl_room_type_feature_pricing` hrfp
-            LEFT JOIN `'._DB_PREFIX_.'htl_room_type_feature_pricing_restriction` hrfpr
+            'SELECT hrfp.`id_feature_price`  FROM htl_room_type_feature_pricing` hrfp
+            LEFT JOIN htl_room_type_feature_pricing_restriction` hrfpr
             ON (hrfpr.`id_feature_price` = hrfp.`id_feature_price`)
             WHERE 1'.
             ($id_cart ? ' AND hrfp.`id_cart` = '.(int) $id_cart : '').
@@ -647,7 +647,7 @@ class HotelRoomTypeFeaturePricing extends ObjectModel
     public function getWsFeaturePriceRestriction()
     {
         return Db::getInstance()->executeS(
-            'SELECT *, id_feature_price_restriction AS `id` FROM `'._DB_PREFIX_.'htl_room_type_feature_pricing_restriction`
+            'SELECT *, id_feature_price_restriction AS `id` FROM htl_room_type_feature_pricing_restriction`
             WHERE `id_feature_price` ='.(int)$this->id.' ORDER BY `id_feature_price` ASC'
         );
 

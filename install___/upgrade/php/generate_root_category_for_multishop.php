@@ -29,28 +29,28 @@ require_once('generate_ntree.php');
 function generate_root_category_for_multishop()
 {
     Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'category` SET `level_depth`=`level_depth`+1
+		UPDATE category` SET `level_depth`=`level_depth`+1
 	');
 
     Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'category` (`id_parent`, `level_depth`, `active`, `date_add`, `date_upd`, `is_root_category`) VALUES
+		INSERT INTO category` (`id_parent`, `level_depth`, `active`, `date_add`, `date_upd`, `is_root_category`) VALUES
 		(0, 0, 1, NOW(), NOW(), 0)
 	');
     $id = Db::getInstance()->insert_id();
     // set vars config
-    Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
+    Db::getInstance()->execute('INSERT INTO configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 	(\'PS_ROOT_CATEGORY\', '.(int)$id.', NOW(), NOW()),
 	(\'PS_HOME_CATEGORY\', 1, NOW(), NOW())
 	');
 
     $langs = Db::getInstance()->executeS('
 		SELECT `id_lang`
-		FROM `'._DB_PREFIX_.'lang`
+		FROM lang`
 	');
 
     $shops = Db::getInstance()->executeS('
 		SELECT `id_shop`
-		FROM `'._DB_PREFIX_.'shop`
+		FROM shop`
 	');
 
     $data = array();
@@ -71,7 +71,7 @@ function generate_root_category_for_multishop()
 
     $categories = Db::getInstance()->executeS('
 		SELECT `id_category`
-		FROM `'._DB_PREFIX_.'category`
+		FROM category`
 	');
     $data = array();
     if (is_array($shops) && is_array($categories)) {
@@ -87,12 +87,12 @@ function generate_root_category_for_multishop()
     }
 
     Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'category`
+		UPDATE category`
 		SET `id_parent` = '.(int)$id.'
 		WHERE `id_parent` = 0 AND `id_category` <> '.(int)$id.'
 	');
     Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'shop`
+		UPDATE shop`
 		SET `id_category` = 1
 		WHERE `id_shop` = 1
 	');

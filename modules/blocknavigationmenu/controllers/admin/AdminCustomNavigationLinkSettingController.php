@@ -33,10 +33,10 @@ class AdminCustomNavigationLinkSettingController extends ModuleAdminController
         $this->identifier = 'id_navigation_link';
         parent::__construct();
 
-        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'htl_custom_navigation_link_lang` cel
+        $this->_join .= 'LEFT JOIN htl_custom_navigation_link_lang` cel
         ON (a.id_navigation_link = cel.id_navigation_link AND cel.`id_lang` = '.(int) $this->context->language->id.')';
 
-        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'cms_lang` cmsl
+        $this->_join .= 'LEFT JOIN cms_lang` cmsl
         ON (a.id_cms = cmsl.id_cms AND cmsl.`id_lang` = '.(int) $this->context->language->id.')';
 
         $this->_select = ' IF(a.`id_cms`, cmsl.`meta_title`, cel.`name`) as name';

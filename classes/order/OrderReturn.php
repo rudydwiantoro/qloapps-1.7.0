@@ -170,7 +170,7 @@ class OrderReturnCore extends ObjectModel
     {
         if (!$data = Db::getInstance()->getRow('
 		SELECT COUNT(`id_order_return`) AS total
-		FROM `'._DB_PREFIX_.'order_return_detail`
+		FROM order_return_detail`
 		WHERE `id_order_return` = '.(int)$this->id)) {
             return false;
         }
@@ -188,9 +188,9 @@ class OrderReturnCore extends ObjectModel
      */
     public function getOrderRefundRequestedBookings($idOrder, $idOrderReturn = 0, $onlyBookingIds = 0, $customerView = 0, $skipReqCompletedNonRefunded = 0)
     {
-        $sql = 'SELECT hbd.*, ord.*, orr.`state` as id_return_state FROM `'._DB_PREFIX_.'order_return` orr';
-        $sql .= ' INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
-        $sql .= ' INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (hbd.`id` = ord.`id_htl_booking`)';
+        $sql = 'SELECT hbd.*, ord.*, orr.`state` as id_return_state FROM order_return` orr';
+        $sql .= ' INNER JOIN order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
+        $sql .= ' INNER JOIN htl_booking_detail` hbd ON (hbd.`id` = ord.`id_htl_booking`)';
         $sql .= ' WHERE orr.`id_order` = '.(int)$idOrder;
 
         if ($idOrderReturn) {
@@ -326,10 +326,10 @@ class OrderReturnCore extends ObjectModel
      */
     public function getOrderRefundRequestedProducts($idOrder, $idOrderReturn = 0, $onlyIds = 0, $skipReqCompletedNonRefunded = 0)
     {
-        $sql = 'SELECT spod.*, ord.*, orr.`state` as id_return_state, p.`allow_multiple_quantity` FROM `'._DB_PREFIX_.'order_return` orr';
-        $sql .= ' INNER JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
-        $sql .= ' INNER JOIN `'._DB_PREFIX_.'service_product_order_detail` spod ON (spod.`id_service_product_order_detail` = ord.`id_service_product_order_detail`)';
-        $sql .= ' LEFT  JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = spod.`id_product`)';
+        $sql = 'SELECT spod.*, ord.*, orr.`state` as id_return_state, p.`allow_multiple_quantity` FROM order_return` orr';
+        $sql .= ' INNER JOIN order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
+        $sql .= ' INNER JOIN service_product_order_detail` spod ON (spod.`id_service_product_order_detail` = ord.`id_service_product_order_detail`)';
+        $sql .= ' LEFT  JOIN product` p ON (p.`id_product` = spod.`id_product`)';
         $sql .= ' WHERE orr.`id_order` = '.(int)$idOrder;
 
         if ($idOrderReturn) {
@@ -370,14 +370,14 @@ class OrderReturnCore extends ObjectModel
         $sql = 'SELECT orr.`id_order`, orr.`state`, orr.`id_order_return`, orr.`payment_mode`, orr.`id_transaction`,
             orr.`id_return_type`, orr.`return_type`, ors.`id_cart_rule`, orr.`date_add`, orr.`date_upd`, orr.`refunded_amount`,
             hbd.`is_cancelled`, SUM(IF(ord.`id_htl_booking`, 1, 0)) AS total_rooms, SUM(IF(ord.`id_service_product_order_detail`, 1, 0)) AS total_products
-            FROM `'._DB_PREFIX_.'order_return` orr
-            LEFT JOIN `'._DB_PREFIX_.'order_return_detail` ord
+            FROM order_return` orr
+            LEFT JOIN order_return_detail` ord
             ON (ord.`id_order_return` = orr.`id_order_return`)
-            LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd
+            LEFT JOIN htl_booking_detail` hbd
             ON (hbd.`id` = ord.`id_htl_booking`)
-            LEFT JOIN `'._DB_PREFIX_.'service_product_order_detail` rtspod
+            LEFT JOIN service_product_order_detail` rtspod
             ON (rtspod.`id_service_product_order_detail` = ord.`id_service_product_order_detail`)
-            LEFT JOIN `'._DB_PREFIX_.'order_slip` ors
+            LEFT JOIN order_slip` ors
             ON (ors.`id_order_slip` = orr.`id_return_type` AND orr.`return_type` = '.(int) self::RETURN_TYPE_ORDER_SLIP.')
             WHERE orr.`id_customer` = '.(int)$customer_id.
             ($only_customer ? ' AND orr.`by_admin` = 0' : '').
@@ -415,10 +415,10 @@ class OrderReturnCore extends ObjectModel
         if (!$idLang) {
             $idLang = Context::getContext()->language->id;
         }
-        $sql = 'SELECT orr.*, ord.*, orsl.`name`, ors.`refunded`, ors.`denied`, ors.`color` FROM `'._DB_PREFIX_.'order_return` orr';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_return_state` ors ON (orr.`state` = ors.`id_order_return_state`)';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = '.(int)$idLang.')';
+        $sql = 'SELECT orr.*, ord.*, orsl.`name`, ors.`refunded`, ors.`denied`, ors.`color` FROM order_return` orr';
+        $sql .= ' LEFT JOIN order_return_detail` ord ON (orr.`id_order_return` = ord.`id_order_return`)';
+        $sql .= ' LEFT JOIN order_return_state` ors ON (orr.`state` = ors.`id_order_return_state`)';
+        $sql .= ' LEFT JOIN order_return_state_lang` orsl ON (ors.`id_order_return_state` = orsl.`id_order_return_state` AND orsl.`id_lang` = '.(int)$idLang.')';
         $sql .= ' WHERE orr.`id_order` = '.(int)$idOrder;
 
         if ($idOrderReturn) {
@@ -486,7 +486,7 @@ class OrderReturnCore extends ObjectModel
 
     public static function deleteOrderReturnDetail($id_order_return, $id_order_detail, $id_customization = 0)
     {
-        return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int)$id_order_detail.' AND `id_order_return` = '.(int)$id_order_return.' AND `id_customization` = '.(int)$id_customization);
+        return Db::getInstance()->execute('DELETE FROM order_return_detail` WHERE `id_order_detail` = '.(int)$id_order_detail.' AND `id_order_return` = '.(int)$id_order_return.' AND `id_customization` = '.(int)$id_customization);
     }
 
     /**
@@ -498,10 +498,10 @@ class OrderReturnCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT product_quantity, date_add, orsl.name as state
-			FROM `'._DB_PREFIX_.'order_return_detail` ord
-			LEFT JOIN `'._DB_PREFIX_.'order_return` o
+			FROM order_return_detail` ord
+			LEFT JOIN order_return` o
 			ON o.id_order_return = ord.id_order_return
-			LEFT JOIN `'._DB_PREFIX_.'order_return_state_lang` orsl
+			LEFT JOIN order_return_state_lang` orsl
 			ON orsl.id_order_return_state = o.state AND orsl.id_lang = '.(int)Context::getContext()->language->id.'
 			WHERE ord.`id_order_detail` = '.(int)$id_order_detail);
     }
@@ -772,8 +772,8 @@ class OrderReturnCore extends ObjectModel
 
     public function getRefundedAmount($idOrder, $idOrderReturn = 0, $idHtlBooking = 0)
     {
-        $sql = 'SELECT SUM(ord.`refunded_amount`) FROM `'._DB_PREFIX_.'order_return_detail` ord';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_return` orr ON (orr.`id_order_return` = ord.`id_order_return`)';
+        $sql = 'SELECT SUM(ord.`refunded_amount`) FROM order_return_detail` ord';
+        $sql .= ' LEFT JOIN order_return` orr ON (orr.`id_order_return` = ord.`id_order_return`)';
         $sql .= ' WHERE orr.`id_order` = '.(int)$idOrder;
 
         if ($idOrderReturn) {

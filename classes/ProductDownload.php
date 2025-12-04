@@ -178,7 +178,7 @@ class ProductDownloadCore extends ObjectModel
         }
         self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
+		FROM product_download`
 		WHERE `id_product` = '.(int)$id_product.'
 		'.($active ? ' AND `active` = 1' : '').'
 		ORDER BY `id_product_download` DESC');
@@ -199,7 +199,7 @@ class ProductDownloadCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `id_product_download`
-		FROM `'._DB_PREFIX_.'product_download`
+		FROM product_download`
 		WHERE `filename` = \''.pSQL($filename).'\'');
     }
 
@@ -213,7 +213,7 @@ class ProductDownloadCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `filename`
-			FROM `'._DB_PREFIX_.'product_download`
+			FROM product_download`
 			WHERE `id_product` = '.(int)$id_product.'
 				AND `active` = 1
 		');
@@ -229,7 +229,7 @@ class ProductDownloadCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT `display_filename`
-		FROM `'._DB_PREFIX_.'product_download`
+		FROM product_download`
 		WHERE `filename` = \''.pSQL($filename).'\'');
     }
 

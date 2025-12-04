@@ -66,17 +66,17 @@ $context = Context::getContext();
 
 $sqlSelect = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, image_shop.`id_image` id_image, il.`legend`, p.`cache_default_attribute`';
 
-$sqlFrom = ' FROM `'._DB_PREFIX_.'product` p '.Shop::addSqlAssociation('product', 'p');
+$sqlFrom = ' FROM product` p '.Shop::addSqlAssociation('product', 'p');
 
-$sqlJoin ='	LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $context->language->id.Shop::addSqlRestrictionOnLang('pl').')
-		LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+$sqlJoin ='	LEFT JOIN product_lang` pl ON (pl.`id_product` = p.`id_product` AND pl.`id_lang` = '.(int) $context->language->id.Shop::addSqlRestrictionOnLang('pl').')
+		LEFT JOIN image_shop` image_shop
 			ON (image_shop.`id_product` = p.`id_product` AND image_shop.`cover`=1 AND image_shop.`id_shop`='.(int) $context->shop->id.')
-		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int) $context->language->id.')';
+		LEFT JOIN image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int) $context->language->id.')';
 
 $sqlWhere =	' WHERE (pl.name LIKE \'%'.pSQL($query).'%\' OR p.reference LIKE \'%'.pSQL($query).'%\')'.
         (!empty($excludeIds) ? ' AND p.id_product NOT IN ('.$excludeIds.') ' : ' ').
         (!empty($excludePackItself) ? ' AND p.id_product <> '.(int) $excludePackItself.' ' : ' ').
-        ($excludeVirtuals ? 'AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))' : '').
+        ($excludeVirtuals ? 'AND NOT EXISTS (SELECT 1 FROM product_download` pd WHERE (pd.id_product = p.id_product))' : '').
         ($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '').
         ($bookingProduct ? 'AND p.`booking_product` = '.(int) $bookingProduct : '');
 
@@ -85,9 +85,9 @@ $sqlGroupBy = ' GROUP BY p.id_product';
 if ($idHotel && $bookingProduct) {
     // To get hotel info for the booking product only
     $sqlSelect .= ', hbil.`hotel_name`, hbil.`id` AS id_hotel ';
-    $sqlJoin .= '  LEFT JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+    $sqlJoin .= '  LEFT JOIN htl_room_type` hrt
             ON hrt.`id_product` = p.`id_product`
-            LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+            LEFT JOIN htl_branch_info_lang` hbil
             ON  pl.`id_lang` = hbil.`id_lang` AND hbil.`id` = hrt.`id_hotel`';
     $sqlWhere .= ' AND hbil.`id`='.(int) $idHotel ;
 }
@@ -109,14 +109,14 @@ if ($items && ($excludeIds || (isset($_SERVER['HTTP_REFERER']) && Tools::strpos(
         if (Combination::isFeatureActive() && $item['cache_default_attribute']) {
             $sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
 						a.`id_attribute`
-					FROM `'._DB_PREFIX_.'product_attribute` pa
+					FROM product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
-					LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-					LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-					LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-					LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$context->language->id.')
-					LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$context->language->id.')
-					LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
+					LEFT JOIN product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+					LEFT JOIN attribute` a ON a.`id_attribute` = pac.`id_attribute`
+					LEFT JOIN attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+					LEFT JOIN attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$context->language->id.')
+					LEFT JOIN attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$context->language->id.')
+					LEFT JOIN product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
 					WHERE pa.`id_product` = '.(int)$item['id_product'].'
 					GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
 					ORDER BY pa.`id_product_attribute`';

@@ -688,27 +688,27 @@ class StatsCheckUp extends Module
         ) AS nbImages,
         (
             SELECT COUNT(DISTINCT o.`id_order`)
-			FROM `'._DB_PREFIX_.'orders` o
+			FROM orders` o
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND o.valid = 1
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order` AND hbd.`id_hotel` = hbi.`id`
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = hbi.`id`
                 )
             )
         ) AS nbOrders,
         (
             SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'htl_room_information` hri
+            FROM htl_room_information` hri
             WHERE hri.`id_hotel` = hbi.`id`
         ) AS totalRooms
-        FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-        LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+        FROM htl_branch_info` hbi
+        LEFT JOIN htl_branch_info_lang` hbil
         ON (hbil.`id` = hbi.`id` AND hbil.`id_lang` = '.(int) $id_lang .')
         WHERE 1 '.HotelBranchInformation::addHotelRestriction(false, 'hbi', 'id').'
         GROUP BY (hbi.`id`)
@@ -737,14 +737,14 @@ class StatsCheckUp extends Module
             WHERE i.`id_product` = p.`id_product`
         ) AS nbImages,
         (
-            SELECT COUNT(DISTINCT hbd.`id_order`) FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = hbd.`id_order`)
+            SELECT COUNT(DISTINCT hbd.`id_order`) FROM htl_booking_detail` hbd
+            LEFT JOIN orders` o ON (o.`id_order` = hbd.`id_order`)
             WHERE hbd.`id_product` = p.`id_product` AND o.`valid` = 1
             AND hbd.`date_to` > "'.pSQL($date_from).'" AND hbd.`date_from` < "'.pSQL($date_to).'"
         ) AS nbOrders,
         (
             SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'htl_room_information` hri
+            FROM htl_room_information` hri
             WHERE hri.`id_product` = p.`id_product`
         ) AS totalRooms
         FROM '._DB_PREFIX_.'product p
@@ -780,30 +780,30 @@ class StatsCheckUp extends Module
         ) AS nbImages,
         (
             SELECT COUNT(DISTINCT spod.`id_order`)
-			FROM `'._DB_PREFIX_.'service_product_order_detail` spod
-            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = spod.`id_order`)
+			FROM service_product_order_detail` spod
+            LEFT JOIN orders` o ON (o.`id_order` = spod.`id_order`)
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND o.valid = 1
             AND spod.`id_product` = p.`id_product`
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false).'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order`' . HotelBranchInformation::addHotelRestriction(false, 'spod').'
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = 0 AND spod.`id_htl_booking_detail` = 0
                 )
             )
         ) AS nbOrders,
         (
             SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'htl_room_type_service_product` rsp
-            INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+            FROM htl_room_type_service_product` rsp
+            INNER JOIN htl_room_type` hrt
             ON (rsp.`id_element` = hrt.`id_product` AND rsp.`element_type` = '.(int)RoomTypeServiceProduct::WK_ELEMENT_TYPE_ROOM_TYPE.')
             WHERE rsp.`id_product` = p.`id_product`
             '.HotelBranchInformation::addHotelRestriction(false, 'hrt').'

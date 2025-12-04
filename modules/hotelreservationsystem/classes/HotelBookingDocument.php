@@ -74,7 +74,7 @@ class HotelBookingDocument extends ObjectModel
     {
         return Db::getInstance()->executeS(
             'SELECT *
-            FROM `'._DB_PREFIX_.'htl_booking_document`
+            FROM htl_booking_document`
             WHERE `id_htl_booking` = '.(int) $idHtlBooking
         );
     }
@@ -83,7 +83,7 @@ class HotelBookingDocument extends ObjectModel
     {
         return (int) Db::getInstance()->getValue(
             'SELECT COUNT(*)
-            FROM `'._DB_PREFIX_.'htl_booking_document`
+            FROM htl_booking_document`
             WHERE `id_htl_booking` = '.(int) $idHtlBooking
         );
     }

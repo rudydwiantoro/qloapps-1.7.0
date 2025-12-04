@@ -749,7 +749,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 // Adding last position to the attribute if not exist
                 if ($id_attribute <= 0) {
                     $sql = 'SELECT `position`+1
-							FROM `'._DB_PREFIX_.'attribute`
+							FROM attribute`
 							WHERE `id_attribute_group` = '.(int)Tools::getValue('id_attribute_group').'
 							ORDER BY position DESC';
                     // set the position of the new group attribute in $_POST for postProcess() method
@@ -789,7 +789,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 // Adding last position to the attribute if not exist
                 if ($id_attribute_group <= 0) {
                     $sql = 'SELECT `position`+1
-							FROM `'._DB_PREFIX_.'attribute_group`
+							FROM attribute_group`
 							ORDER BY position DESC';
                 // set the position of the new group attribute in $_POST for postProcess() method
                     $_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);

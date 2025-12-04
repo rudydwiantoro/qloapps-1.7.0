@@ -26,7 +26,7 @@
 
 function p16012_pack_rework()
 {
-    Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_PACK_STOCK_TYPE", "0", NOW(), NOW())');
+    Db::getInstance()->execute('INSERT INTO configuration` (`id_configuration`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, "PS_PACK_STOCK_TYPE", "0", NOW(), NOW())');
     $all_product_in_pack = Db::getInstance()->ExecuteS('SELECT `id_product_item` FROM '._DB_PREFIX_.'pack GROUP BY `id_product_item`');
     foreach ($all_product_in_pack as $value) {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'pack

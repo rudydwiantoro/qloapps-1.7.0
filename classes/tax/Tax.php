@@ -133,7 +133,7 @@ class TaxCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 		SELECT `id_tax`
-		FROM `'._DB_PREFIX_.'order_detail_tax`
+		FROM order_detail_tax`
 		WHERE `id_tax` = '.(int)$this->id
         );
     }
@@ -178,8 +178,8 @@ class TaxCore extends ObjectModel
     {
         $tax = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT t.`id_tax`
-			FROM `'._DB_PREFIX_.'tax` t
-			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
+			FROM tax` t
+			LEFT JOIN tax_lang` tl ON (tl.id_tax = t.id_tax)
 			WHERE tl.`name` = \''.pSQL($tax_name).'\' '.
             ($active == 1 ? ' AND t.`active` = 1' : ''));
 

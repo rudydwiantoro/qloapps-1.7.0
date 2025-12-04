@@ -83,9 +83,9 @@ function p1606module_exceptions()
         }
     }
 
-    $hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'hook_module_exceptions`');
-    $sql_insert = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_hook_module_exceptions`, `id_shop`, `id_module`, `id_hook`, `file_name`) VALUES ';
-    $sql_delete = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions` WHERE ';
+    $hook_module_exceptions = Db::getInstance()->executeS('SELECT * FROM hook_module_exceptions`');
+    $sql_insert = 'INSERT INTO hook_module_exceptions` (`id_hook_module_exceptions`, `id_shop`, `id_module`, `id_hook`, `file_name`) VALUES ';
+    $sql_delete = 'DELETE FROM hook_module_exceptions` WHERE ';
     
     foreach ($hook_module_exceptions as $exception) {
         foreach ($modules_controllers as $module => $controllers) {

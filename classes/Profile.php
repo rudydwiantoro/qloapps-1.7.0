@@ -53,8 +53,8 @@ class ProfileCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT p.`id_profile`, `name`
-		FROM `'._DB_PREFIX_.'profile` p
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)$id_lang.')
+		FROM profile` p
+		LEFT JOIN profile_lang` pl ON (p.`id_profile` = pl.`id_profile` AND `id_lang` = '.(int)$id_lang.')
 		ORDER BY `id_profile` ASC');
     }
 
@@ -71,8 +71,8 @@ class ProfileCore extends ObjectModel
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `name`
-			FROM `'._DB_PREFIX_.'profile` p
-			LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
+			FROM profile` p
+			LEFT JOIN profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
 			WHERE p.`id_profile` = '.(int)$id_profile.'
 			AND pl.`id_lang` = '.(int)$id_lang
         );
@@ -99,8 +99,8 @@ class ProfileCore extends ObjectModel
         if (empty($profileEmployees)) {
             if (parent::delete()) {
                 return (
-                    Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
-                    && Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
+                    Db::getInstance()->execute('DELETE FROM access` WHERE `id_profile` = '.(int)$this->id)
+                    && Db::getInstance()->execute('DELETE FROM module_access` WHERE `id_profile` = '.(int)$this->id)
                 );
             }
         }
@@ -143,8 +143,8 @@ class ProfileCore extends ObjectModel
             } else {
                 $result = Db::getInstance()->executeS('
 				SELECT *
-				FROM `'._DB_PREFIX_.'access` a
-				LEFT JOIN `'._DB_PREFIX_.'tab` t ON t.id_tab = a.id_tab
+				FROM access` a
+				LEFT JOIN tab` t ON t.id_tab = a.id_tab
 				WHERE `id_profile` = '.(int)$id_profile);
 
                 foreach ($result as $row) {

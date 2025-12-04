@@ -160,7 +160,7 @@ class DashProducts extends Module
 		foreach ($orders as $order) {
 			$bookingInfo = Db::getInstance()->getRow(
 				'SELECT COUNT(*) AS `total_rooms`, hbd.`id_hotel`, hbd.`hotel_name`
-				FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+				FROM htl_booking_detail` hbd
 				WHERE `id_order` = '.(int)$order['id_order']
 			);
 
@@ -257,8 +257,8 @@ class DashProducts extends Module
 				COUNT(hbd.`id_room`) AS `total`,
 				hbd.`total_price_tax_excl` AS `price`,
 				SUM(hbd.`total_price_tax_excl`) AS `sales`
-			FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = hbd.`id_order`)
+			FROM htl_booking_detail` hbd
+			LEFT JOIN orders` o ON (o.`id_order` = hbd.`id_order`)
 			WHERE o.`invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 			AND o.`valid` = 1 AND hbd.`is_refunded` = 0.'.
 			(!is_null($id_hotel) ? HotelBranchInformation::addHotelRestriction($id_hotel, 'hbd') : '').'
@@ -544,8 +544,8 @@ class DashProducts extends Module
 	public function getTotalProductSales($date_from, $date_to, $id_product)
 	{
 		$sql = 'SELECT SUM(od.`product_quantity` * od.`product_price`) AS total
-				FROM `'._DB_PREFIX_.'order_detail` od
-				JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
+				FROM order_detail` od
+				JOIN orders` o ON o.`id_order` = od.`id_order`
 				WHERE od.`product_id` = '.(int)$id_product.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 					AND o.valid = 1
@@ -558,7 +558,7 @@ class DashProducts extends Module
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT count(`id_product`) as count
-		FROM `'._DB_PREFIX_.'htl_cart_booking_data` cp
+		FROM htl_cart_booking_data` cp
 		WHERE cp.`id_product` = '.(int)$id_product.'
 		AND cp.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"');
 	}
@@ -567,7 +567,7 @@ class DashProducts extends Module
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
 			'SELECT COUNT(hbd.`id_product`) AS `count`
-			FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+			FROM htl_booking_detail` hbd
 			WHERE hbd.`is_refunded` = 0 AND hbd.`is_back_order` = 0 AND hbd.`id_product` = '.(int)$id_product.'
 			AND hbd.`date_add` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"'
 		);
@@ -591,11 +591,11 @@ class DashProducts extends Module
 		} else {
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT p.id_object, SUM(pv.counter) AS `counter`
-			FROM `'._DB_PREFIX_.'page_viewed` pv
-			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-			LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
-			INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON hrt.`id_product` = p.`id_object`
+			FROM page_viewed` pv
+			LEFT JOIN date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+			LEFT JOIN page` p ON pv.`id_page` = p.`id_page`
+			LEFT JOIN page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+			INNER JOIN htl_room_type` hrt ON hrt.`id_product` = p.`id_object`
 			WHERE pt.`name` = \'product\'
 			'.Shop::addSqlRestriction(false, 'pv').'
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
@@ -615,12 +615,12 @@ class DashProducts extends Module
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 			'SELECT hbi.`id` AS `id_hotel`, cl.`name` AS `hotel_name`, pv.`counter` AS `views`
-			FROM `'._DB_PREFIX_.'page_viewed` pv
-			LEFT JOIN `'._DB_PREFIX_.'page` p ON (p.`id_page` = pv.`id_page`)
-			LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON (pt.`id_page_type` = p.`id_page_type`)
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = p.`id_object`)
-			LEFT JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON (hbi.`id_category` = cl.`id_category`)
-			LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON (pv.`id_date_range` = dr.`id_date_range`)
+			FROM page_viewed` pv
+			LEFT JOIN page` p ON (p.`id_page` = pv.`id_page`)
+			LEFT JOIN page_type` pt ON (pt.`id_page_type` = p.`id_page_type`)
+			LEFT JOIN category_lang` cl ON (cl.`id_category` = p.`id_object`)
+			LEFT JOIN htl_branch_info` hbi ON (hbi.`id_category` = cl.`id_category`)
+			LEFT JOIN date_range` dr ON (pv.`id_date_range` = dr.`id_date_range`)
 			WHERE pt.`name` = "'.pSQL('category').'"
 			AND dr.`time_start` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 			AND dr.`time_end` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"

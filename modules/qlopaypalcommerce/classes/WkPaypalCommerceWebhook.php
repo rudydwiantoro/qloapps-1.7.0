@@ -41,7 +41,7 @@ class WkPaypalCommerceWebhook
         $refundID = $eventData['resource']['id'];
 
         $id = Db::getInstance()->getValue(
-            'SELECT `id_paypal_commerce_refund` FROM `'._DB_PREFIX_.'wk_paypal_commerce_refund`
+            'SELECT `id_paypal_commerce_refund` FROM wk_paypal_commerce_refund`
             WHERE `paypal_refund_id` =  "' . pSQL($refundID) .'"'
         );
 
@@ -176,7 +176,7 @@ class WkPaypalCommerceWebhook
     public function updateOrderCapturePaypalOrderStatus($transaction_id, $payment_status)
     {
         return Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'wk_paypal_commerce_order`
+            'UPDATE wk_paypal_commerce_order`
             SET `pp_payment_status` = "'.pSQL($payment_status).'"
             WHERE `pp_transaction_id` = "'.pSQL($transaction_id).'"
             '
@@ -186,7 +186,7 @@ class WkPaypalCommerceWebhook
     public function updateOrderPaypalOrderStatus($transaction_id, $payment_status, $orderData)
     {
         return Db::getInstance()->execute(
-            'UPDATE `'._DB_PREFIX_.'wk_paypal_commerce_order`
+            'UPDATE wk_paypal_commerce_order`
             SET `pp_payment_status` = "'.pSQL($payment_status).'",
             `response` = "'.pSQL(Tools::jsonEncode($orderData)).'"
             WHERE `pp_transaction_id` = "'.pSQL($transaction_id).'"

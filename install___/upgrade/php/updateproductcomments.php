@@ -49,6 +49,6 @@ function updateproductcomments()
         Db::getInstance()->execute('ALTER TABLE '._DB_PREFIX_.'product_comment_criterion DROP `name`');
         Db::getInstance()->execute('ALTER TABLE '._DB_PREFIX_.'product_comment_criterion ADD `id_product_comment_criterion_type` tinyint(1) NOT NULL AFTER `id_product_comment_criterion`');
         Db::getInstance()->execute('ALTER TABLE '._DB_PREFIX_.'product_comment_criterion ADD `active` tinyint(1) NOT NULL AFTER `id_product_comment_criterion_type`');
-        Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'product_comment` ADD `title` VARCHAR(64) NULL AFTER `id_guest`;');
+        Db::getInstance()->execute('ALTER IGNORE TABLE product_comment` ADD `title` VARCHAR(64) NULL AFTER `id_guest`;');
     }
 }

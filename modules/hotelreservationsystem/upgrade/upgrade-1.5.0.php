@@ -213,7 +213,7 @@ class UpgradeHotelreservationSystem150
 
     public function moveHotelImagesToNewDirectory()
     {
-        $images = Db::getInstance()->executeS('SELECT `id`, `id_hotel`, `hotel_image_id` FROM `'._DB_PREFIX_.'htl_image`');
+        $images = Db::getInstance()->executeS('SELECT `id`, `id_hotel`, `hotel_image_id` FROM htl_image`');
         foreach($images as $image) {
             if (!file_exists(_PS_HOTEL_IMG_DIR_.$image['id_hotel'].'/')) {
                 // Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.

@@ -128,10 +128,10 @@ class ServiceProductOrderDetail extends ObjectModel
         $idProduct = 0,
         $sellingPreferenceType = 0
     ) {
-        $sql = 'SELECT spo.* FROM `'._DB_PREFIX_.'service_product_order_detail` spo';
+        $sql = 'SELECT spo.* FROM service_product_order_detail` spo';
 
         if ($sellingPreferenceType) {
-            $sql .= ' INNER JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = spo.`id_order_detail` AND od.`id_order` = '.(int)$idOrder.')';
+            $sql .= ' INNER JOIN order_detail` od ON (od.`id_order_detail` = spo.`id_order_detail` AND od.`id_order` = '.(int)$idOrder.')';
         }
 
         $sql .= ' WHERE 1 AND spo.`id_order` = '.(int)$idOrder;
@@ -199,11 +199,11 @@ class ServiceProductOrderDetail extends ObjectModel
             hbd.`id_room`, hbd.`adults`, hbd.`children`, hbd.`date_from`, hbd.`date_to`, hbd.`room_type_name`, p.`max_quantity`,
             spod.`id_product` as id_product,  od.`product_allow_multiple_quantity`, od.`product_price_calculation_method`, od.`product_auto_add`, od.`product_price_addition_type`, IF(p.`id_product`, 0, 1) as `product_deleted`';
         }
-        $sql .= ' FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'service_product_order_detail` spod ON(spod.`id_htl_booking_detail` = hbd.`id`)';
+        $sql .= ' FROM htl_booking_detail` hbd
+            LEFT JOIN service_product_order_detail` spod ON(spod.`id_htl_booking_detail` = hbd.`id`)';
 
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON(od.`id_order_detail` = spod.`id_order_detail`)';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product` p ON(spod.`id_product` = p.`id_product`)';
+        $sql .= ' LEFT JOIN order_detail` od ON(od.`id_order_detail` = spod.`id_order_detail`)';
+        $sql .= ' LEFT JOIN product` p ON(spod.`id_product` = p.`id_product`)';
         $sql .= ' WHERE spod.`id_htl_booking_detail` IS NOT NULL';
 
         if ($idOrder) {
@@ -353,11 +353,11 @@ class ServiceProductOrderDetail extends ObjectModel
             $sql .= ', hbd.`id_product` as `room_type_id_product`, hbd.`id_room`, od.`product_allow_multiple_quantity`, p.`max_quantity`,
                 od.`product_auto_add`, od.`product_price_calculation_method`, od.`product_price_addition_type`';
         }
-        $sql .= ' FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            INNER JOIN `'._DB_PREFIX_.'service_product_order_detail` spod ON(spod.`id_htl_booking_detail` = hbd.`id`)';
+        $sql .= ' FROM htl_booking_detail` hbd
+            INNER JOIN service_product_order_detail` spod ON(spod.`id_htl_booking_detail` = hbd.`id`)';
 
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON(od.`id_order_detail` = spod.`id_order_detail`)';
-        $sql .= ' LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = spod.`id_product`)';
+        $sql .= ' LEFT JOIN order_detail` od ON(od.`id_order_detail` = spod.`id_order_detail`)';
+        $sql .= ' LEFT JOIN product` p ON (p.`id_product` = spod.`id_product`)';
 
         $sql .= ' WHERE hbd.`id` = '.(int)$idHotelBookingDetail;
 
@@ -453,7 +453,7 @@ class ServiceProductOrderDetail extends ObjectModel
         $idProduct = 0,
         $idProductOption = 0
     ) {
-        $sql = 'SELECT `id_service_product_order_detail` FROM `'._DB_PREFIX_.'service_product_order_detail` WHERE 1';
+        $sql = 'SELECT `id_service_product_order_detail` FROM service_product_order_detail` WHERE 1';
 
         if ($idOrder) {
             $sql .= ' AND `id_order` = '.(int)$idOrder;

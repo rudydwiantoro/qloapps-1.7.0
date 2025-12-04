@@ -154,17 +154,17 @@ class StatsBestCategories extends ModuleGrid
         $id_lang = $this->getLang();
 
         //If column 'order_detail.original_wholesale_price' does not exist, create it
-        Db::getInstance(_PS_USE_SQL_SLAVE_)->query('SHOW COLUMNS FROM `'._DB_PREFIX_.'order_detail` LIKE "original_wholesale_price"');
+        Db::getInstance(_PS_USE_SQL_SLAVE_)->query('SHOW COLUMNS FROM order_detail` LIKE "original_wholesale_price"');
         if (Db::getInstance()->NumRows() == 0) {
-            Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'order_detail` ADD `original_wholesale_price` DECIMAL( 20, 6 ) NOT NULL DEFAULT  "0.000000"');
+            Db::getInstance()->execute('ALTER TABLE order_detail` ADD `original_wholesale_price` DECIMAL( 20, 6 ) NOT NULL DEFAULT  "0.000000"');
         }
 
         // Get best hotels
         $this->query = 'SELECT hbi.`id`, hbil.`hotel_name` AS hotel_name,
         (
             SELECT IFNULL(SUM(DATEDIFF(LEAST(hbd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hbd.`date_from`, "'.pSQL($date_from).'"))), 0)
-            FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
-            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = hbd.`id_order`)
+            FROM htl_booking_detail` hbd
+            LEFT JOIN orders` o ON (o.`id_order` = hbd.`id_order`)
             WHERE hbd.`id_hotel` = hbi.`id` AND o.`valid` = 1 AND is_refunded = 0
             AND hbd.`date_to` > "'.pSQL($date_from).'" AND hbd.`date_from` < "'.pSQL($date_to).'"
         ) AS totalRoomsBooked,
@@ -177,8 +177,8 @@ class StatsBestCategories extends ModuleGrid
                     WHEN hri.`id_status` = '.(int) HotelRoomInformation::STATUS_TEMPORARY_INACTIVE.' THEN IF(hrdd.`date_to` > "'.pSQL($date_from).'" AND hrdd.`date_from` < "'.pSQL($date_to).'", SUM(ABS(DATEDIFF(LEAST(hrdd.`date_to`, "'.pSQL($date_to).'"), GREATEST(hrdd.`date_from`, "'.pSQL($date_from).'")))), 0)
                     ELSE 0
                 END AS disabled_room_nights
-                FROM `'._DB_PREFIX_.'htl_room_information` hri
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_disable_dates` hrdd
+                FROM htl_room_information` hri
+                LEFT JOIN htl_room_disable_dates` hrdd
                 ON (hrdd.`id_room` = hri.`id`)
                 GROUP BY hri.`id`
             ) AS t
@@ -186,32 +186,32 @@ class StatsBestCategories extends ModuleGrid
         ) AS totalRooms,
         (
 			SELECT COUNT(DISTINCT o.`id_order`)
-			FROM `'._DB_PREFIX_.'orders` o
+			FROM orders` o
 			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND o.valid = 1
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order` AND hbd.`id_hotel` = hbi.`id`
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = hbi.`id`
                 )
             )
         ) AS totalOrders,
         (
             SELECT ROUND(SUM(total_paid_tax_excl / o.`conversion_rate`), 2)
-            FROM `'._DB_PREFIX_.'orders` o
+            FROM orders` o
             WHERE o.valid = 1 AND `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order` AND hbd.`id_hotel` = hbi.`id`
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = hbi.`id`
                 )
             )
@@ -226,24 +226,24 @@ class StatsBestCategories extends ModuleGrid
                     END
                 ), 2)
             , 0)
-            FROM `'._DB_PREFIX_.'order_detail` od
-            LEFT JOIN `'._DB_PREFIX_.'orders` o ON (od.`id_order` = o.`id_order`)
-            LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = od.`product_id`)
+            FROM order_detail` od
+            LEFT JOIN orders` o ON (od.`id_order` = o.`id_order`)
+            LEFT JOIN product` p ON (p.`id_product` = od.`product_id`)
             WHERE o.valid = 1 AND o.`invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
             AND (
                 EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'htl_booking_detail` hbd
+                    FROM htl_booking_detail` hbd
                     WHERE hbd.`id_order` = o.`id_order` AND hbd.`id_hotel` = hbi.`id`
                 ) OR EXISTS (
                     SELECT 1
-                    FROM `'._DB_PREFIX_.'service_product_order_detail` spod
+                    FROM service_product_order_detail` spod
                     WHERE spod.`id_order` = o.`id_order` AND spod.`id_hotel` = hbi.`id`
                 )
             )
         ) AS totalOperatingCost
-        FROM `'._DB_PREFIX_.'htl_branch_info` hbi
-        LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbil
+        FROM htl_branch_info` hbi
+        LEFT JOIN htl_branch_info_lang` hbil
         ON (hbil.`id` = hbi.`id` AND hbil.`id_lang` = '.(int)$id_lang .')
         WHERE 1 '.HotelBranchInformation::addHotelRestriction(false, 'hbi', 'id').'
         GROUP BY (hbi.`id`)';

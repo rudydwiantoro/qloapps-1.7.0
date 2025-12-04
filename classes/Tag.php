@@ -61,7 +61,7 @@ class TagCore extends ObjectModel
         } elseif ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang)) {
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
-			FROM `'._DB_PREFIX_.'tag` t
+			FROM tag` t
 			WHERE `name` = \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
 
             if ($row) {
@@ -127,7 +127,7 @@ class TagCore extends ObjectModel
         $data = rtrim($data, ',');
 
         $result = Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
+		INSERT INTO product_tag` (`id_tag`, `id_product`, `id_lang`)
 		VALUES '.$data);
 
         if ($list != array()) {
@@ -142,29 +142,29 @@ class TagCore extends ObjectModel
         if (!Module::getBatchMode()) {
             if ($tag_list != null) {
                 $tag_list_query = ' AND pt.id_tag IN ('.implode(',', $tag_list).')';
-                Db::getInstance()->execute('DELETE pt FROM `'._DB_PREFIX_.'tag_count` pt WHERE 1=1 '.$tag_list_query);
+                Db::getInstance()->execute('DELETE pt FROM tag_count` pt WHERE 1=1 '.$tag_list_query);
             } else {
                 $tag_list_query = '';
             }
 
 
 
-            Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+            Db::getInstance()->execute('REPLACE INTO tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT cg.id_group, pt.id_tag, pt.id_lang, id_shop, COUNT(pt.id_tag) AS times
-				FROM `'._DB_PREFIX_.'product_tag` pt
-				INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
+				FROM product_tag` pt
+				INNER JOIN product_shop` product_shop
 					USING (id_product)
-				JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
+				JOIN (SELECT DISTINCT id_group FROM category_group`) cg
 				WHERE product_shop.`active` = 1
-				AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
-								LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
+				AND EXISTS(SELECT 1 FROM category_product` cp
+								LEFT JOIN category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
 								WHERE cgo.`id_group` = cg.id_group AND product_shop.`id_product` = cp.`id_product`)
 				'.$tag_list_query.'
 				GROUP BY pt.id_tag, pt.id_lang, cg.id_group, id_shop ORDER BY NULL');
-            Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+            Db::getInstance()->execute('REPLACE INTO tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT 0, pt.id_tag, pt.id_lang, id_shop, COUNT(pt.id_tag) AS times
-				FROM `'._DB_PREFIX_.'product_tag` pt
-				INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
+				FROM product_tag` pt
+				INNER JOIN product_shop` product_shop
 					USING (id_product)
 				WHERE product_shop.`active` = 1
 				'.$tag_list_query.'
@@ -179,8 +179,8 @@ class TagCore extends ObjectModel
             $groups = FrontController::getCurrentCustomerGroups();
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
-			FROM `'._DB_PREFIX_.'tag_count` pt
-			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			FROM tag_count` pt
+			LEFT JOIN tag` t ON (t.id_tag = pt.id_tag)
 			WHERE pt.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
 			AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
 			ORDER BY times DESC
@@ -188,8 +188,8 @@ class TagCore extends ObjectModel
         } else {
             return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
-			FROM `'._DB_PREFIX_.'tag_count` pt
-			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			FROM tag_count` pt
+			LEFT JOIN tag` t ON (t.id_tag = pt.id_tag)
 			WHERE pt.id_group = 0 AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
 			ORDER BY times DESC
 			LIMIT '.(int)$nb);
@@ -226,12 +226,12 @@ class TagCore extends ObjectModel
         $in = $associated ? 'IN' : 'NOT IN';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT pl.name, pl.id_product
-		FROM `'._DB_PREFIX_.'product` p
-		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON p.id_product = pl.id_product'.Shop::addSqlRestrictionOnLang('pl').'
+		FROM product` p
+		LEFT JOIN product_lang` pl ON p.id_product = pl.id_product'.Shop::addSqlRestrictionOnLang('pl').'
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE pl.id_lang = '.(int)$id_lang.'
 		AND product_shop.active = 1
-		'.($this->id ? ('AND p.id_product '.$in.' (SELECT pt.id_product FROM `'._DB_PREFIX_.'product_tag` pt WHERE pt.id_tag = '.(int)$this->id.')') : '').'
+		'.($this->id ? ('AND p.id_product '.$in.' (SELECT pt.id_product FROM product_tag` pt WHERE pt.id_tag = '.(int)$this->id.')') : '').'
 		ORDER BY pl.name');
     }
 

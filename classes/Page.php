@@ -72,7 +72,7 @@ class PageCore extends ObjectModel
         }
 
         $sql = 'SELECT `id_page`
-				FROM `'._DB_PREFIX_.'page`
+				FROM page`
 				WHERE `id_page_type` = '.(int)$page_type_id.$where;
         $result = Db::getInstance()->getRow($sql);
         if (isset($result['id_page']) && $result['id_page']) {
@@ -110,7 +110,7 @@ class PageCore extends ObjectModel
         $context = Context::getContext();
 
         // Try to increment the visits counter
-        $sql = 'UPDATE `'._DB_PREFIX_.'page_viewed`
+        $sql = 'UPDATE page_viewed`
 				SET `counter` = `counter` + 1
 				WHERE `id_date_range` = '.(int)$id_date_range.'
 					AND `id_page` = '.(int)$id_page.'

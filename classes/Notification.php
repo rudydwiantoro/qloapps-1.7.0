@@ -46,7 +46,7 @@ class NotificationCore
         $notifications = array();
         $employee_infos = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT id_last_order, id_last_customer_message, id_last_customer
-		FROM `'._DB_PREFIX_.'employee`
+		FROM employee`
 		WHERE `id_employee` = '.(int)$cookie->id_employee);
 
         foreach ($this->types as $type) {
@@ -70,8 +70,8 @@ class NotificationCore
             case 'order':
                 $sql = '
 					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`
-					FROM `'._DB_PREFIX_.'orders` as o
-					LEFT JOIN `'._DB_PREFIX_.'customer` as c ON (c.`id_customer` = o.`id_customer`)
+					FROM orders` as o
+					LEFT JOIN customer` as c ON (c.`id_customer` = o.`id_customer`)
                     LEFT JOIN '._DB_PREFIX_.'htl_booking_detail hbd ON (hbd.id_order = o.id_order)
 					WHERE o.`id_order` > '.(int)$id_last_element.
                     Shop::addSqlRestriction(false, 'o'). HotelBranchInformation::addHotelRestriction(false, 'hbd').'
@@ -83,8 +83,8 @@ class NotificationCore
             case 'customer_message':
                 $sql = '
 					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, c.`date_add` as date_upd
-					FROM `'._DB_PREFIX_.'customer_message` as c
-					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
+					FROM customer_message` as c
+					LEFT JOIN customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
 						AND c.`id_employee` = 0
 						AND ct.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
@@ -142,7 +142,7 @@ class NotificationCore
         if (in_array($type, $this->types)) {
             // We update the last item viewed
             return Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'employee`
+			UPDATE employee`
 			SET `id_last_'.bqSQL($type).'` = (
 				SELECT IFNULL(MAX(`id_'.$type.'`), 0)
 				FROM `'._DB_PREFIX_.(($type == 'order') ? bqSQL($type).'s' : bqSQL($type)).'`

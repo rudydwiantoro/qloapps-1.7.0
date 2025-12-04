@@ -65,7 +65,7 @@ class OrderReturnDetailCore extends ObjectModel
     public static function getReturnDetailByIdBookingDetail($idHtlBooking)
     {
         $idOrderReturnDetail = Db::getInstance()->getValue('
-            SELECT `id_order_return_detail` FROM `'._DB_PREFIX_.'order_return_detail` ord
+            SELECT `id_order_return_detail` FROM order_return_detail` ord
             WHERE `id_htl_booking` = '.(int)$idHtlBooking
         );
 

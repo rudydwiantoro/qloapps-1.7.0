@@ -200,8 +200,8 @@ class AdminEmployeesControllerCore extends AdminController
     public function renderList()
     {
         $this->_select = 'pl.`name` AS profile';
-        $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
-		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
+        $this->_join = 'LEFT JOIN profile` p ON a.`id_profile` = p.`id_profile`
+		LEFT JOIN profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
             .(int)$this->context->language->id.')';
         $this->_use_found_rows = false;
 

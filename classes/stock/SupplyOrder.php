@@ -523,7 +523,7 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 			SELECT SUM(`quantity_expected`)
-			FROM `'._DB_PREFIX_.'supply_order_detail`
+			FROM supply_order_detail`
 			WHERE `id_supply_order` = '.(int)$this->id
         );
     }
@@ -532,7 +532,7 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 			SELECT SUM(`quantity_received`)
-			FROM `'._DB_PREFIX_.'supply_order_detail`
+			FROM supply_order_detail`
 			WHERE `id_supply_order` = '.(int)$this->id
         );
     }
@@ -541,7 +541,7 @@ class SupplyOrderCore extends ObjectModel
     {
         return Db::getInstance()->getValue('
 			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
-			FROM `'._DB_PREFIX_.'supply_order_detail`
+			FROM supply_order_detail`
 			WHERE `id_supply_order` = '.(int)$this->id
         );
     }

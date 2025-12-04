@@ -33,7 +33,7 @@ function move_translations_module_file()
     // Get all languages
     $languages = Db::getInstance()->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'lang`
+		FROM lang`
 	');
 
     // Get the list of modules

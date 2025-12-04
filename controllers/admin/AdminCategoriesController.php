@@ -151,9 +151,9 @@ class AdminCategoriesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
+            $this->_join .= ' LEFT JOIN category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';
         } else {
-            $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
+            $this->_join .= ' LEFT JOIN category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = a.id_shop_default) ';
         }
 
 
@@ -829,9 +829,9 @@ class AdminCategoriesControllerCore extends AdminController
     {
         /* Delete or link products which were not in others categories */
         $fatherless_products = Db::getInstance()->executeS('
-			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
+			SELECT p.`id_product` FROM product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			WHERE NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
+			WHERE NOT EXISTS (SELECT 1 FROM category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
         foreach ($fatherless_products as $id_poor_product) {
             $poor_product = new Product((int)$id_poor_product['id_product']);

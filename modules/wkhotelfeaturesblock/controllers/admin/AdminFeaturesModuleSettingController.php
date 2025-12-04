@@ -34,7 +34,7 @@ class AdminFeaturesModuleSettingController extends ModuleAdminController
         $this->identifier = 'id_features_block';
         parent::__construct();
 
-        $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'htl_features_block_data_lang` hfl
+        $this->_join .= 'LEFT JOIN htl_features_block_data_lang` hfl
         ON (a.id_features_block = hfl.id_features_block AND hfl.`id_lang` = '.(int) $this->context->language->id.')';
 
         $this->_select = ' hfl.`feature_title`';

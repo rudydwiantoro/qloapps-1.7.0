@@ -126,10 +126,10 @@ class AdminStockManagementControllerCore extends AdminController
             $this->_select = 'a.ean13 as ean13,
             a.upc as upc,
             a.reference as reference,
-            (SELECT SUM(physical_quantity) FROM `'._DB_PREFIX_.'stock` WHERE id_product = a.id_product) as physical_quantity,
-            (SELECT SUM(usable_quantity) FROM `'._DB_PREFIX_.'stock` WHERE id_product = a.id_product) as usable_quantity,
+            (SELECT SUM(physical_quantity) FROM stock` WHERE id_product = a.id_product) as physical_quantity,
+            (SELECT SUM(usable_quantity) FROM stock` WHERE id_product = a.id_product) as usable_quantity,
             a.id_product as id, COUNT(pa.id_product_attribute) as variations';
-            $this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
+            $this->_join = 'LEFT JOIN product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
             $this->_where = 'AND a.is_virtual = 0 AND a.advanced_stock_management = 1 ';
             $this->_group = 'GROUP BY a.id_product';
 
@@ -172,8 +172,8 @@ class AdminStockManagementControllerCore extends AdminController
             $this->table = 'product_attribute';
             $this->list_id = 'product_attribute';
             $this->_select = 'a.id_product_attribute as id, a.id_product, a.reference, a.ean13, a.upc, SUM(s.physical_quantity) as physical_quantity, SUM(s.usable_quantity) as usable_quantity';
-            $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
-            $this->_join .= 'LEFT JOIN `'._DB_PREFIX_.'stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = a.id_product_attribute )';
+            $this->_join = 'INNER JOIN product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+            $this->_join .= 'LEFT JOIN stock` s ON (s.id_product = a.id_product AND s.id_product_attribute = a.id_product_attribute )';
             $this->_where = 'AND a.id_product = '.$product_id;
             $this->_group = 'GROUP BY a.id_product_attribute';
 
@@ -813,9 +813,9 @@ class AdminStockManagementControllerCore extends AdminController
         $id_warehouse = Tools::getValue('id_warehouse', -1);
 
         $this->_select = 'w.id_currency, a.id_product as id, (a.price_te * a.physical_quantity) as valuation, w.name as warehouse';
-        $this->_join = 'INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
-        $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON (w.id_warehouse = a.id_warehouse)';
-        $this->_join .= ' RIGHT JOIN `'._DB_PREFIX_.'product_lang` AS b ON (b.id_product = a.id_product)';
+        $this->_join = 'INNER JOIN product` p ON (p.id_product = a.id_product AND p.advanced_stock_management = 1)';
+        $this->_join .= ' LEFT JOIN warehouse` AS w ON (w.id_warehouse = a.id_warehouse)';
+        $this->_join .= ' RIGHT JOIN product_lang` AS b ON (b.id_product = a.id_product)';
 
         $this->_where = 'AND a.id_product = '.(int)$id_product.' AND a.id_product_attribute = '.(int)$id_product_attribute;
         $this->_where .= ' AND b.id_lang = '.(int)$lang_id.' AND b.id_shop = p.id_shop_default';

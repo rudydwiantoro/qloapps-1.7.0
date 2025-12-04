@@ -123,8 +123,8 @@ class OrderStateCore extends ObjectModel
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
-			FROM `'._DB_PREFIX_.'order_state` os
-			LEFT JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$id_lang.')
+			FROM order_state` os
+			LEFT JOIN order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$id_lang.')
 			WHERE deleted = 0
 			ORDER BY `name` ASC');
             Cache::store($cache_id, $result);
@@ -145,7 +145,7 @@ class OrderStateCore extends ObjectModel
         if (Configuration::get('PS_INVOICE')) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `invoice`
-			FROM `'._DB_PREFIX_.'order_state`
+			FROM order_state`
 			WHERE `id_order_state` = '.(int)$id_order_state);
         }
         return (bool)$result;

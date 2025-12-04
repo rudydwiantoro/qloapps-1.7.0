@@ -310,8 +310,8 @@ class OrderDetailCore extends ObjectModel
             return false;
         }
         $sql = 'SELECT *
-		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (od.`product_id`=pd.`id_product`)
+		FROM order_detail` od
+		LEFT JOIN product_download` pd ON (od.`product_id`=pd.`id_product`)
 		WHERE od.`download_hash` = \''.pSQL(strval($hash)).'\'
 		AND pd.`active` = 1';
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -319,7 +319,7 @@ class OrderDetailCore extends ObjectModel
 
     public static function incrementDownload($id_order_detail, $increment = 1)
     {
-        $sql = 'UPDATE `'._DB_PREFIX_.'order_detail`
+        $sql = 'UPDATE order_detail`
 			SET `download_nb` = `download_nb` + '.(int)$increment.'
 			WHERE `id_order_detail`= '.(int)$id_order_detail.'
 			LIMIT 1';
@@ -345,8 +345,8 @@ class OrderDetailCore extends ObjectModel
     public static function getTaxCalculatorStatic($id_order_detail)
     {
         $sql = 'SELECT t.*, d.`tax_computation_method`
-				FROM `'._DB_PREFIX_.'order_detail_tax` t
-				LEFT JOIN `'._DB_PREFIX_.'order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
+				FROM order_detail_tax` t
+				LEFT JOIN order_detail` d ON (d.`id_order_detail` = t.`id_order_detail`)
 				WHERE d.`id_order_detail` = '.(int)$id_order_detail;
 
         $computation_method = 1;
@@ -397,8 +397,8 @@ class OrderDetailCore extends ObjectModel
             // Get all associated room type IDs for this service product and cart
             $associatedRoomTypes = Db::getInstance()->executeS(
                 'SELECT hcbd.`id_product`
-                FROM `'._DB_PREFIX_.'htl_cart_booking_data` hcbd
-                INNER JOIN `'._DB_PREFIX_.'service_product_cart_detail` spcd
+                FROM htl_cart_booking_data` hcbd
+                INNER JOIN service_product_cart_detail` spcd
                 ON spcd.`htl_cart_booking_id` = hcbd.`id`
                 WHERE spcd.`id_product` = '.(int)$this->product_id.'
                 AND spcd.`id_cart` = '.(int)$idCart
@@ -557,10 +557,10 @@ class OrderDetailCore extends ObjectModel
 
         if ($values) {
             if ($replace) {
-                Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$this->id);
+                Db::getInstance()->execute('DELETE FROM order_detail_tax` WHERE id_order_detail='.(int)$this->id);
             }
 
-            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
+            $sql = 'INSERT INTO order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
                 VALUES '.$values;
 
             return Db::getInstance()->execute($sql);
@@ -586,7 +586,7 @@ class OrderDetailCore extends ObjectModel
      */
     public static function getList($id_order)
     {
-        return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order);
+        return Db::getInstance()->executeS('SELECT * FROM order_detail` WHERE `id_order` = '.(int)$id_order);
     }
 
     public function getTaxList()
@@ -596,7 +596,7 @@ class OrderDetailCore extends ObjectModel
 
     public static function getTaxListStatic($id_order_detail)
     {
-        $sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
+        $sql = 'SELECT * FROM order_detail_tax`
 					WHERE `id_order_detail` = '.(int)$id_order_detail;
         return Db::getInstance()->executeS($sql);
     }
@@ -936,7 +936,7 @@ class OrderDetailCore extends ObjectModel
 				FROM '._DB_PREFIX_.'order_detail od
 				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
 				'.Shop::addSqlAssociation('product', 'p').
-                (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+                (Combination::isFeatureActive() ? 'LEFT JOIN product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)Context::getContext()->shop->id.')':'').'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')

@@ -201,8 +201,8 @@ class AdminSearchControllerCore extends AdminController
 
     public function setControllerAccesses()
     {
-        $sql = 'SELECT a.`view`, t.`class_name` FROM `'._DB_PREFIX_.'access` a
-            LEFT JOIN `'._DB_PREFIX_.'tab` t ON (t.`id_tab` = a.`id_tab`)
+        $sql = 'SELECT a.`view`, t.`class_name` FROM access` a
+            LEFT JOIN tab` t ON (t.`id_tab` = a.`id_tab`)
             WHERE t.`class_name` IN ("'.implode('", "', array_keys($this->controllerAccess)).'")
             AND a.`id_profile` = '.(int) $this->context->employee->id_profile.'
         ';

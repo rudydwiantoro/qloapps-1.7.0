@@ -383,10 +383,10 @@ class AdminCartRulesControllerCore extends AdminController
         foreach (array('country', 'carrier', 'group', 'product_rule_group', 'shop') as $type) {
             Db::getInstance()->delete('cart_rule_'.$type, '`id_cart_rule` = '.(int)$id_cart_rule);
         }
-        Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
-			WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
-        Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
-			WHERE `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule`)');
+        Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule_group`
+			WHERE cart_rule_product_rule`.`id_product_rule_group` = cart_rule_product_rule_group`.`id_product_rule_group`)');
+        Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM cart_rule_product_rule`
+			WHERE cart_rule_product_rule_value`.`id_product_rule` = cart_rule_product_rule`.`id_product_rule`)');
         Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = '.(int)$id_cart_rule.' OR `id_cart_rule_2` = '.(int)$id_cart_rule);
 
         $this->afterAdd($current_object);
@@ -421,7 +421,7 @@ class AdminCartRulesControllerCore extends AdminController
                 foreach ($array as $id) {
                     $values[] = '('.(int)$currentObject->id.','.(int)$id.')';
                 }
-                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_'.$type.'` (`id_cart_rule`, `id_'.$type.'`) VALUES '.implode(',', $values));
+                Db::getInstance()->execute('INSERT INTO cart_rule_'.$type.'` (`id_cart_rule`, `id_'.$type.'`) VALUES '.implode(',', $values));
             }
         }
         // Add cart rule restrictions
@@ -430,7 +430,7 @@ class AdminCartRulesControllerCore extends AdminController
             foreach ($array as $id) {
                 $values[] = '('.(int)$currentObject->id.','.(int)$id.')';
             }
-            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
+            Db::getInstance()->execute('INSERT INTO cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) VALUES '.implode(',', $values));
         }
         // Add product rule restrictions
         if (Tools::getValue('product_restriction') && is_array($ruleGroupArray = Tools::getValue('product_rule_group')) && count($ruleGroupArray)) {
@@ -443,12 +443,12 @@ class AdminCartRulesControllerCore extends AdminController
                     }
 
                     if ($ruleArray) {
-                        Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
+                        Db::getInstance()->execute('INSERT INTO cart_rule_product_rule_group` (`id_cart_rule`, `quantity`)
                         VALUES ('.(int)$currentObject->id.', '.(int)Tools::getValue('product_rule_group_'.$ruleGroupId.'_quantity').')');
                         $id_product_rule_group = Db::getInstance()->Insert_ID();
 
                         foreach ($ruleArray as $ruleId) {
-                            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule` (`id_product_rule_group`, `type`)
+                            Db::getInstance()->execute('INSERT INTO cart_rule_product_rule` (`id_product_rule_group`, `type`)
                             VALUES ('.(int)$id_product_rule_group.', "'.pSQL(Tools::getValue('product_rule_'.$ruleGroupId.'_'.$ruleId.'_type')).'")');
                             $id_product_rule = Db::getInstance()->Insert_ID();
                             $values = array();
@@ -459,7 +459,7 @@ class AdminCartRulesControllerCore extends AdminController
                             }
                             $values = array_unique($values);
                             if (count($values)) {
-                                Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
+                                Db::getInstance()->execute('INSERT INTO cart_rule_product_rule_value` (`id_product_rule`, `id_item`) VALUES '.implode(',', $values));
                             }
                         }
                     }
@@ -470,8 +470,8 @@ class AdminCartRulesControllerCore extends AdminController
         // If the new rule has no cart rule restriction, then it must be added to the white list of the other cart rules that have restrictions
         if (!Tools::getValue('cart_rule_restriction')) {
             Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-				SELECT id_cart_rule, '.(int)$currentObject->id.' FROM `'._DB_PREFIX_.'cart_rule` WHERE cart_rule_restriction = 1
+			INSERT INTO cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+				SELECT id_cart_rule, '.(int)$currentObject->id.' FROM cart_rule` WHERE cart_rule_restriction = 1
 			)');
         }
         // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
@@ -493,10 +493,10 @@ class AdminCartRulesControllerCore extends AdminController
 			)
 			');
             foreach ($ruleCombinations as $incompatibleRule) {
-                Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
+                Db::getInstance()->execute('UPDATE cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');
                 Db::getInstance()->execute('
-				INSERT IGNORE INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
-					SELECT id_cart_rule, '.(int)$incompatibleRule['id_cart_rule'].' FROM `'._DB_PREFIX_.'cart_rule`
+				INSERT IGNORE INTO cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
+					SELECT id_cart_rule, '.(int)$incompatibleRule['id_cart_rule'].' FROM cart_rule`
 					WHERE active = 1
 					AND id_cart_rule != '.(int)$currentObject->id.'
 					AND id_cart_rule != '.(int)$incompatibleRule['id_cart_rule'].'
@@ -593,13 +593,13 @@ class AdminCartRulesControllerCore extends AdminController
                 $results = Db::getInstance()->executeS('
 				SELECT DISTINCT name, hbl.`hotel_name`, p.id_product as id
 				FROM '._DB_PREFIX_.'product p
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
+				LEFT JOIN product_lang` pl
 					ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
                 '.Shop::addSqlAssociation('product', 'p').'
-                LEFT JOIN `'._DB_PREFIX_.'htl_room_type` hrt
+                LEFT JOIN htl_room_type` hrt
                 ON (p.`id_product` = hrt.`id_product`)
-                LEFT JOIN `'._DB_PREFIX_.'htl_branch_info_lang` hbl
+                LEFT JOIN htl_branch_info_lang` hbl
                 ON (hrt.`id_hotel` = hbl.`id` AND hbl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
                 WHERE p.`booking_product` = 1
 				ORDER BY name');
@@ -660,7 +660,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $results = Db::getInstance()->executeS('
 				SELECT DISTINCT name, c.id_category as id
 				FROM '._DB_PREFIX_.'category c
-				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+				LEFT JOIN category_lang` cl
 					ON (c.`id_category` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('cl').')
 				'.Shop::addSqlAssociation('category', 'c').'
@@ -694,8 +694,8 @@ class AdminCartRulesControllerCore extends AdminController
             $query_multishop = Shop::isFeatureActive() ? 's.`name` AS `from_shop_name`,' : '';
             $search_query = trim(Tools::getValue('q'));
             $customers = Db::getInstance()->executeS('SELECT c.`id_customer`, c.`email`, '.$query_multishop.' CONCAT(c.`firstname`, \' \', c.`lastname`) as cname
-                FROM `'._DB_PREFIX_.'customer` c
-                LEFT JOIN `'._DB_PREFIX_.'shop` s ON (c.`id_shop` = s.`id_shop`)
+                FROM customer` c
+                LEFT JOIN shop` s ON (c.`id_shop` = s.`id_shop`)
                 WHERE c.`deleted` = 0 AND c.`is_guest` = 0 AND c.`active` = 1
                 AND (
                     c.`id_customer` = '.(int)$search_query.'

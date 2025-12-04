@@ -132,8 +132,8 @@ class ReferrerCore extends ObjectModel
     {
         $join = $where = '';
         if ($id_product) {
-            $join = 'LEFT JOIN `'._DB_PREFIX_.'page` p ON cp.`id_page` = p.`id_page`
-					 LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
+            $join = 'LEFT JOIN page` p ON cp.`id_page` = p.`id_page`
+					 LEFT JOIN page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
             $where = ' AND pt.`name` = \'product\'
 					  AND p.`id_object` = '.(int)$id_product;
         }
@@ -169,8 +169,8 @@ class ReferrerCore extends ObjectModel
         $join = $where = '';
         if ($id_product) {
             $join = 'LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
-					 LEFT JOIN `'._DB_PREFIX_.'page` p ON cp.`id_page` = p.`id_page`
-					 LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
+					 LEFT JOIN page` p ON cp.`id_page` = p.`id_page`
+					 LEFT JOIN page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
             $where = ' AND pt.`name` = \'product\'
 					  AND p.`id_object` = '.(int)$id_product;
         }

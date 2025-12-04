@@ -134,7 +134,7 @@ class CMSCore extends ObjectModel
     {
         if (!$res = Db::getInstance()->executeS('
 			SELECT cp.`id_cms`, cp.`position`, cp.`id_cms_category`
-			FROM `'._DB_PREFIX_.'cms` cp
+			FROM cms` cp
 			WHERE cp.`id_cms_category` = '.(int)$this->id_cms_category.'
 			ORDER BY cp.`position` ASC'
         )) {
@@ -154,7 +154,7 @@ class CMSCore extends ObjectModel
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
         return (Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'cms`
+			UPDATE cms`
 			SET `position`= `position` '.($way ? '- 1' : '+ 1').'
 			WHERE `position`
 			'.($way
@@ -162,7 +162,7 @@ class CMSCore extends ObjectModel
                 : '< '.(int)$moved_cms['position'].' AND `position` >= '.(int)$position).'
 			AND `id_cms_category`='.(int)$moved_cms['id_cms_category'])
         && Db::getInstance()->execute('
-			UPDATE `'._DB_PREFIX_.'cms`
+			UPDATE cms`
 			SET `position` = '.(int)$position.'
 			WHERE `id_cms` = '.(int)$moved_cms['id_cms'].'
 			AND `id_cms_category`='.(int)$moved_cms['id_cms_category']));
@@ -172,14 +172,14 @@ class CMSCore extends ObjectModel
     {
         $sql = '
 		SELECT `id_cms`
-		FROM `'._DB_PREFIX_.'cms`
+		FROM cms`
 		WHERE `id_cms_category` = '.(int)$id_category.'
 		ORDER BY `position`';
 
         $result = Db::getInstance()->executeS($sql);
 
         for ($i = 0, $total = count($result); $i < $total; ++$i) {
-            $sql = 'UPDATE `'._DB_PREFIX_.'cms`
+            $sql = 'UPDATE cms`
 					SET `position` = '.(int)$i.'
 					WHERE `id_cms_category` = '.(int)$id_category.'
 						AND `id_cms` = '.(int)$result[$i]['id_cms'];
@@ -192,7 +192,7 @@ class CMSCore extends ObjectModel
     {
         $sql = '
 		SELECT MAX(position) + 1
-		FROM `'._DB_PREFIX_.'cms`
+		FROM cms`
 		WHERE `id_cms_category` = '.(int)$id_category;
 
         return (Db::getInstance()->getValue($sql));
@@ -232,8 +232,8 @@ class CMSCore extends ObjectModel
     public static function getUrlRewriteInformations($id_cms)
     {
         $sql = 'SELECT l.`id_lang`, c.`link_rewrite`
-				FROM `'._DB_PREFIX_.'cms_lang` AS c
-				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
+				FROM cms_lang` AS c
+				LEFT JOIN  lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'
 				AND l.`active` = 1';
 
@@ -251,7 +251,7 @@ class CMSCore extends ObjectModel
 
         $sql = '
 			SELECT `content`
-			FROM `'._DB_PREFIX_.'cms_lang`
+			FROM cms_lang`
 			WHERE `id_cms` = '.(int)$id_cms.' AND `id_lang` = '.(int)$id_lang.' AND `id_shop` = '.(int)$id_shop;
 
         return Db::getInstance()->getRow($sql);

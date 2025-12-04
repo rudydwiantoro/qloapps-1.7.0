@@ -371,7 +371,7 @@ abstract class AdminTabCore
         foreach ($this->_includeTab as $subtab => $extraVars) {
             /* New tab loading */
             $classname = 'Admin'.$subtab;
-            if (($module = Db::getInstance()->getValue('SELECT `module` FROM `'._DB_PREFIX_.'tab` WHERE `class_name` = \''.pSQL($classname).'\'')) && file_exists(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php')) {
+            if (($module = Db::getInstance()->getValue('SELECT `module` FROM tab` WHERE `class_name` = \''.pSQL($classname).'\'')) && file_exists(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php')) {
                 include_once(_PS_MODULE_DIR_.'/'.$module.'/'.$classname.'.php');
             } elseif (file_exists(_PS_ADMIN_DIR_.'/tabs/'.$classname.'.php')) {
                 include_once('tabs/'.$classname.'.php');

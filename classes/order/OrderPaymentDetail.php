@@ -49,8 +49,8 @@ class OrderPaymentDetailCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
             SELECT opd.*, op.`id_currency`, op.`payment_method`, op.`conversion_rate`, op.`transaction_id`, op.`card_number`, op.`card_brand`, op.`card_expiration`, op.`card_holder`
-            FROM `'._DB_PREFIX_.'order_payment_detail` opd
-            INNER JOIN `'._DB_PREFIX_.'order_payment`op ON (op.`id_order_payment` = opd.`id_order_payment`)
+            FROM order_payment_detail` opd
+            INNER JOIN order_payment`op ON (op.`id_order_payment` = opd.`id_order_payment`)
             WHERE `id_order` = '.(int)$id_order
         );
     }
@@ -65,9 +65,9 @@ class OrderPaymentDetailCore extends ObjectModel
     {
         return Db::getInstance()->executeS('
             SELECT opd.`id_order_payment_detail`, opd.`id_order_payment`, opd.`id_order`, opd.`date_add`, op.*, opd.`amount` as `amount`
-            FROM `'._DB_PREFIX_.'order_payment_detail` opd
-            INNER JOIN `'._DB_PREFIX_.'order_payment` op ON (opd.`id_order_payment` = op.`id_order_payment`)
-            INNER JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.`id_order_payment_detail` = opd.`id_order_payment_detail`)
+            FROM order_payment_detail` opd
+            INNER JOIN order_payment` op ON (opd.`id_order_payment` = op.`id_order_payment`)
+            INNER JOIN order_invoice_payment` oip ON (oip.`id_order_payment_detail` = opd.`id_order_payment_detail`)
             WHERE oip.`id_order_invoice` = '.(int)$id_invoice
         );
     }

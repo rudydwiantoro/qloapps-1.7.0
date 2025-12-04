@@ -61,8 +61,8 @@ class StatsProduct extends ModuleGraph
     {
         $date_between = ModuleGraph::getDateBetween();
         $sql = 'SELECT COUNT(DISTINCT o.`id_order`)
-        FROM `'._DB_PREFIX_.'orders` o
-        INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd
+        FROM orders` o
+        INNER JOIN htl_booking_detail` hbd
         ON (hbd.`id_order` = o.`id_order` AND hbd.`id_product` = '.(int) $id_product.')
         AND o.`valid` = 1 AND o.`date_add` BETWEEN '.$date_between;
 
@@ -73,8 +73,8 @@ class StatsProduct extends ModuleGraph
     {
         $date_between = ModuleGraph::getDateBetween();
         $sql = 'SELECT SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`))
-        FROM `'._DB_PREFIX_.'orders` o
-        INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd
+        FROM orders` o
+        INNER JOIN htl_booking_detail` hbd
         ON (hbd.`id_order` = o.`id_order` AND hbd.`id_product` = '.(int) $id_product.')
         AND o.`valid` = 1 AND o.`date_add` BETWEEN '.$date_between;
 
@@ -85,8 +85,8 @@ class StatsProduct extends ModuleGraph
     {
         $date_between = ModuleGraph::getDateBetween();
         $sql = 'SELECT SUM(hbd.`total_price_tax_excl` / o.`conversion_rate`)
-        FROM `'._DB_PREFIX_.'orders` o
-        INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd
+        FROM orders` o
+        INNER JOIN htl_booking_detail` hbd
         ON (hbd.`id_order` = o.`id_order` AND hbd.`id_product` = '.(int) $id_product.')
         AND o.`valid` = 1 AND o.`date_add` BETWEEN '.$date_between;
 
@@ -97,10 +97,10 @@ class StatsProduct extends ModuleGraph
     {
         $date_between = ModuleGraph::getDateBetween();
         $sql = 'SELECT SUM(pv.`counter`) AS total
-        FROM `'._DB_PREFIX_.'page_viewed` pv
-        LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-        LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-        LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+        FROM page_viewed` pv
+        LEFT JOIN date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+        LEFT JOIN page` p ON pv.`id_page` = p.`id_page`
+        LEFT JOIN page_type` pt ON pt.`id_page_type` = p.`id_page_type`
         WHERE pt.`name` = "product"
         AND p.`id_object` = '.(int) $id_product.'
         AND dr.`time_start` BETWEEN '.$date_between.'
@@ -114,10 +114,10 @@ class StatsProduct extends ModuleGraph
     {
         $sql = 'SELECT p.`id_product`, p.reference, pl.`name`,
         (SELECT COUNT(hri.`id`)
-            FROM `'._DB_PREFIX_.'htl_room_information` hri WHERE hri.`id_product` = p.`id_product`) AS total_rooms
-            FROM `'._DB_PREFIX_.'product` p
-            INNER JOIN `'._DB_PREFIX_.'htl_room_type` hrt ON (hrt.`id_product` = p.`id_product`)
-            LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang`='.(int)$this->context->language->id.'
+            FROM htl_room_information` hri WHERE hri.`id_product` = p.`id_product`) AS total_rooms
+            FROM product` p
+            INNER JOIN htl_room_type` hrt ON (hrt.`id_product` = p.`id_product`)
+            LEFT JOIN product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang`='.(int)$this->context->language->id.'
         )
         WHERE p.`booking_product` = 1
         '.HotelBranchInformation::addHotelRestriction(false, 'hrt');
@@ -135,10 +135,10 @@ class StatsProduct extends ModuleGraph
         $sql = 'SELECT o.`date_add`, o.`id_order`, o.`id_customer`, c.`firstname`, c.`lastname`, od.`product_quantity`,
         (od.`product_price` * od.`product_quantity`) AS total, od.`tax_name`, od.`product_name`, o.`id_currency`,
         SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)) AS total_booked
-        FROM `'._DB_PREFIX_.'orders` o
-        LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.`id_order` = od.`id_order`
-        LEFT JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (od.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
-        LEFT JOIN `'._DB_PREFIX_.'customer` c ON c.`id_customer` = o.`id_customer`
+        FROM orders` o
+        LEFT JOIN order_detail` od ON o.`id_order` = od.`id_order`
+        LEFT JOIN htl_booking_detail` hbd ON (od.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
+        LEFT JOIN customer` c ON c.`id_customer` = o.`id_customer`
         WHERE o.`date_add` BETWEEN '.$this->getDate().'
         AND o.valid = 1
         AND od.product_id = '.(int)$id_product.' GROUP BY od.`id_order`';
@@ -362,9 +362,9 @@ class StatsProduct extends ModuleGraph
                 $this->_formats['y'] = 'd';
 
                 $this->query[0] = 'SELECT o.`date_add`, SUM(DATEDIFF(hbd.`date_to`, hbd.`date_from`)) AS total
-                FROM `'._DB_PREFIX_.'order_detail` od
-                LEFT JOIN `'._DB_PREFIX_.'orders` o ON o.`id_order` = od.`id_order`
-                INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (o.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
+                FROM order_detail` od
+                LEFT JOIN orders` o ON o.`id_order` = od.`id_order`
+                INNER JOIN htl_booking_detail` hbd ON (o.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
                 WHERE od.`product_id` = '.(int)$this->id_product.'
                 '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
                 AND o.valid = 1
@@ -372,10 +372,10 @@ class StatsProduct extends ModuleGraph
                 GROUP BY o.`date_add`';
 
                 $this->query[1] = 'SELECT dr.`time_start` AS date_add, (SUM(pv.`counter`) / 100) AS total
-                FROM `'._DB_PREFIX_.'page_viewed` pv
-                LEFT JOIN `'._DB_PREFIX_.'date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
-                LEFT JOIN `'._DB_PREFIX_.'page` p ON pv.`id_page` = p.`id_page`
-                LEFT JOIN `'._DB_PREFIX_.'page_type` pt ON pt.`id_page_type` = p.`id_page_type`
+                FROM page_viewed` pv
+                LEFT JOIN date_range` dr ON pv.`id_date_range` = dr.`id_date_range`
+                LEFT JOIN page` p ON pv.`id_page` = p.`id_page`
+                LEFT JOIN page_type` pt ON pt.`id_page_type` = p.`id_page_type`
                 WHERE pt.`name` = \'product\'
                 '.Shop::addSqlRestriction(false, 'pv').'
                 AND p.`id_object` = '.(int)$this->id_product.'
@@ -386,9 +386,9 @@ class StatsProduct extends ModuleGraph
 
             case 3:
                 $this->query = 'SELECT product_attribute_id, COUNT(hbd.`id_room`) AS total
-                FROM `'._DB_PREFIX_.'orders` o
-                LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.`id_order` = od.`id_order`
-                INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (o.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
+                FROM orders` o
+                LEFT JOIN order_detail` od ON o.`id_order` = od.`id_order`
+                INNER JOIN htl_booking_detail` hbd ON (o.`id_order` = hbd.`id_order` AND od.`product_id` = hbd.`id_product`)
                 WHERE od.`product_id` = '.(int)$this->id_product.'
                 '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
                 AND o.valid = 1
@@ -408,9 +408,9 @@ class StatsProduct extends ModuleGraph
     private function getHotelCategories($idLang)
     {
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-            'SELECT c.*, cl.`name` FROM `'._DB_PREFIX_.'category` c
-            INNER JOIN `'._DB_PREFIX_.'htl_branch_info` hbi ON (hbi.`id_category` = c.`id_category`)
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
+            'SELECT c.*, cl.`name` FROM category` c
+            INNER JOIN htl_branch_info` hbi ON (hbi.`id_category` = c.`id_category`)
+			LEFT JOIN category_lang` cl
             ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)$idLang.')'
         );
         return $result;

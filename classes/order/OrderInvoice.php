@@ -139,10 +139,10 @@ class OrderInvoiceCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *, od.`selling_preference_type` as selling_preference_type
-		FROM `'._DB_PREFIX_.'order_detail` od
-		LEFT JOIN `'._DB_PREFIX_.'product` p
+		FROM order_detail` od
+		LEFT JOIN product` p
 		ON p.id_product = od.product_id
-		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
+		LEFT JOIN product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)$this->id_order.'
 		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : '').' ORDER BY od.`product_name`');
     }
@@ -163,7 +163,7 @@ class OrderInvoiceCore extends ObjectModel
 
         $id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_order_invoice`
-			FROM `'._DB_PREFIX_.'order_invoice`
+			FROM order_invoice`
 			WHERE number = '.(int)$id_invoice);
 
         return ($id_order_invoice ? new OrderInvoice($id_order_invoice) : false);
@@ -753,8 +753,8 @@ class OrderInvoiceCore extends ObjectModel
         if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') || Configuration::get('PS_ATCP_SHIPWRAP')) {
             $shipping_breakdown = Db::getInstance()->executeS(
                 'SELECT t.id_tax, t.rate, oit.amount as total_amount
-				 FROM `'._DB_PREFIX_.'tax` t
-				 INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+				 FROM tax` t
+				 INNER JOIN order_invoice_tax` oit ON oit.id_tax = t.id_tax
 				 WHERE oit.type = "shipping" AND oit.id_order_invoice = '.(int)$this->id
             );
 
@@ -813,8 +813,8 @@ class OrderInvoiceCore extends ObjectModel
 
         $wrapping_breakdown = Db::getInstance()->executeS(
             'SELECT t.id_tax, t.rate, oit.amount as total_amount
-			FROM `'._DB_PREFIX_.'tax` t
-			INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+			FROM tax` t
+			INNER JOIN order_invoice_tax` oit ON oit.id_tax = t.id_tax
 			WHERE oit.type = "wrapping" AND oit.id_order_invoice = '.(int)$this->id
         );
 
@@ -870,7 +870,7 @@ class OrderInvoiceCore extends ObjectModel
     {
         $result = Db::getInstance()->executeS('
 		SELECT `ecotax_tax_rate` as `rate`, SUM(`ecotax` * `product_quantity`) as `ecotax_tax_excl`, SUM(`ecotax` * `product_quantity`) as `ecotax_tax_incl`
-		FROM `'._DB_PREFIX_.'order_detail`
+		FROM order_detail`
 		WHERE `id_order` = '.(int)$this->id_order.'
 		AND `id_order_invoice` = '.(int)$this->id.'
 		GROUP BY `ecotax_tax_rate`');
@@ -898,9 +898,9 @@ class OrderInvoiceCore extends ObjectModel
     {
         $order_invoice_list = Db::getInstance()->executeS('
 			SELECT oi.*
-			FROM `'._DB_PREFIX_.'order_invoice` oi
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
-            INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (oi.id_order = hbd.id_order)
+			FROM order_invoice` oi
+			LEFT JOIN orders` o ON (o.`id_order` = oi.`id_order`)
+            INNER JOIN htl_booking_detail` hbd ON (oi.id_order = hbd.id_order)
 			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o')
@@ -921,9 +921,9 @@ class OrderInvoiceCore extends ObjectModel
     {
         $order_invoice_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT oi.*
-			FROM `'._DB_PREFIX_.'order_invoice` oi
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
-            INNER JOIN `'._DB_PREFIX_.'htl_booking_detail` hbd ON (oi.id_order = hbd.id_order)
+			FROM order_invoice` oi
+			LEFT JOIN orders` o ON (o.`id_order` = oi.`id_order`)
+            INNER JOIN htl_booking_detail` hbd ON (oi.id_order = hbd.id_order)
 			WHERE '.(int)$id_order_state.' = o.current_state
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o')
             .HotelBranchInformation::addHotelRestriction(false, 'hbd').'
@@ -944,8 +944,8 @@ class OrderInvoiceCore extends ObjectModel
     {
         $order_invoice_list = Db::getInstance()->executeS('
 			SELECT oi.*
-			FROM `'._DB_PREFIX_.'order_invoice` oi
-			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
+			FROM order_invoice` oi
+			LEFT JOIN orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE DATE_ADD(oi.delivery_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.delivery_date >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
@@ -976,7 +976,7 @@ class OrderInvoiceCore extends ObjectModel
     public static function getCarrierId($id_order_invoice)
     {
         $sql = 'SELECT `id_carrier`
-				FROM `'._DB_PREFIX_.'order_carrier`
+				FROM order_carrier`
 				WHERE `id_order_invoice` = '.(int)$id_order_invoice;
 
         return Db::getInstance()->getValue($sql);
@@ -1126,12 +1126,12 @@ class OrderInvoiceCore extends ObjectModel
 			FROM (
 				SELECT
 					op.amount as paid, SUM(oi.total_paid_tax_incl) to_paid
-				FROM `'._DB_PREFIX_.'order_invoice_payment` oip1
-				INNER JOIN `'._DB_PREFIX_.'order_invoice_payment` oip2
+				FROM order_invoice_payment` oip1
+				INNER JOIN order_invoice_payment` oip2
 					ON oip2.id_order_payment = oip1.id_order_payment
-				INNER JOIN `'._DB_PREFIX_.'order_invoice` oi
+				INNER JOIN order_invoice` oi
 					ON oi.id_order_invoice = oip2.id_order_invoice
-				INNER JOIN `'._DB_PREFIX_.'order_payment` op
+				INNER JOIN order_payment` op
 					ON op.id_order_payment = oip2.id_order_payment
 				WHERE oip1.id_order_invoice = '.(int)$this->id.'
 				GROUP BY op.id_order_payment
@@ -1197,7 +1197,7 @@ class OrderInvoiceCore extends ObjectModel
     {
         $is_correct = true;
         foreach ($taxes_amount as $id_tax => $amount) {
-            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
+            $sql = 'INSERT INTO order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
 					VALUES ('.(int)$this->id.', \'shipping\', '.(int)$id_tax.', '.(float)$amount.')';
 
             $is_correct &= Db::getInstance()->execute($sql);
@@ -1210,7 +1210,7 @@ class OrderInvoiceCore extends ObjectModel
     {
         $is_correct = true;
         foreach ($taxes_amount as $id_tax => $amount) {
-            $sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
+            $sql = 'INSERT INTO order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
 					VALUES ('.(int)$this->id.', \'wrapping\', '.(int)$id_tax.', '.(float)$amount.')';
 
             $is_correct &= Db::getInstance()->execute($sql);
@@ -1249,7 +1249,7 @@ class OrderInvoiceCore extends ObjectModel
             $address = OrderInvoice::getCurrentFormattedShopAddress($id_shop);
             $escaped_address = $db->escape($address, true, true);
 
-            $db->execute('UPDATE `'._DB_PREFIX_.'order_invoice` INNER JOIN `'._DB_PREFIX_.'orders` USING (`id_order`)
+            $db->execute('UPDATE order_invoice` INNER JOIN orders` USING (`id_order`)
                 SET `shop_address` = \''.$escaped_address.'\' WHERE `shop_address` IS NULL AND `id_shop` = '.$id_shop);
         }
     }

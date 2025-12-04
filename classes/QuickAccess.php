@@ -60,8 +60,8 @@ class QuickAccessCore extends ObjectModel
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
-		FROM `'._DB_PREFIX_.'quick_access` qa
-		LEFT JOIN `'._DB_PREFIX_.'quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int)$id_lang.')
+		FROM quick_access` qa
+		LEFT JOIN quick_access_lang` qal ON (qa.`id_quick_access` = qal.`id_quick_access` AND qal.`id_lang` = '.(int)$id_lang.')
 		ORDER BY `name` ASC');
     }
 

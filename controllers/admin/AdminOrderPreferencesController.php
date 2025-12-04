@@ -400,7 +400,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
      */
     public function beforeUpdateOptions()
     {
-        $sql = 'SELECT `id_cms` FROM `'._DB_PREFIX_.'cms`
+        $sql = 'SELECT `id_cms` FROM cms`
         WHERE id_cms = '.(int)Tools::getValue('PS_CONDITIONS_CMS_ID');
         if (Tools::getValue('PS_CONDITIONS') && (Tools::getValue('PS_CONDITIONS_CMS_ID') == 0 || !Db::getInstance()->getValue($sql))) {
             $this->errors[] = Tools::displayError('Please assign a valid CMS page for Terms and Conditions.');
