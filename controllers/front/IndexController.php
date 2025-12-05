@@ -37,9 +37,20 @@ class IndexControllerCore extends FrontController
         parent::initContent();
         $this->addJS(_THEME_JS_DIR_.'index.js');
 
-        $this->context->smarty->assign(array('HOOK_HOME' => Hook::exec('displayHome'),
-            'HOOK_HOME_TAB' => Hook::exec('displayHomeTab'),
-            'HOOK_HOME_TAB_CONTENT' => Hook::exec('displayHomeTabContent')
+        // Simple hook content with database query
+        try {
+            // Load our simple hotel data module
+            require_once(_PS_ROOT_DIR_.'/modules/simplehoteldata/simplehoteldata.php');
+            $module = new SimpleHotelData();
+            $hook_content = $module->hookDisplayHomeTabContent(array());
+        } catch (Exception $e) {
+            $hook_content = '<div style="padding: 20px; border: 2px solid #dc3545; margin: 20px 0;">Error loading hotel data: ' . $e->getMessage() . '</div>';
+        }
+
+        $this->context->smarty->assign(array(
+            'HOOK_HOME' => '',
+            'HOOK_HOME_TAB' => '<li class="active"><a href="#home_tab_content" data-toggle="tab">Hotel Info</a></li>',
+            'HOOK_HOME_TAB_CONTENT' => '<div id="home_tab_content" class="tab-pane active">' . $hook_content . '</div>'
         ));
         $this->setTemplate(_PS_THEME_DIR_.'index.tpl');
     }
